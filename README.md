@@ -20,7 +20,7 @@ To develop a new feature, we're creating a new branch based on ``preproduction``
 
     git pull origin preproduction
     git checkout preproduction
-    git checkout -b feature/exampleName preproduction
+    git checkout -b feature/exampleName
 
 Replace ``exampleName`` by an explicit name of your feature.
 
