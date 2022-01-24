@@ -27,8 +27,6 @@ class LoginController extends AbstractController
                 'error' => $error,
             ]);
         }
-
         return $this->redirectToRoute('temporary');
-
     }
 }

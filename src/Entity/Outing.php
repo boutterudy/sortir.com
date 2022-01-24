@@ -45,30 +45,30 @@ class Outing
     private $about;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutlets")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $organizer;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="outlets")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="outings")
      */
     private $users;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="outlets")
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="outlets")
+     * @ORM\ManyToOne(targetEntity=Status::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Place::class, inversedBy="outlets")
+     * @ORM\ManyToOne(targetEntity=Place::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $place;
