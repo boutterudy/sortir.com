@@ -7,6 +7,8 @@
     git clone https://github.com/boutterudy/sortir.com.git  
     cd sortir.com  
     composer install
+    php bin/console doctrine:database:create
+    php bin/console doctrine:migrations:migrate
 
 ## Git usage
 To create a cleaner history of modifications, as explained [here](https://medium.com/@peterjussi/a-basic-git-workflow-for-smaller-projects-d8694d50297d#8d1a), you should run that command to configure git auto setup rebase:
