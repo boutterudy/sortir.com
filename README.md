@@ -19,6 +19,7 @@ On this project, we're using two mains branches:
 To develop a new feature, we're creating a new branch based on ``preproduction`` branch using these commands:
 
     git pull origin preproduction
+    git checkout preproduction
     git checkout -b feature/exampleName preproduction
 
 Replace ``exampleName`` by an explicit name of your feature.
