@@ -1,0 +1,21 @@
+@import "variables.css";
+@import "forms.css";
+@import "buttons.css";
+
+* {
+    font-family: var(--primary-font);
+}
+
+body {
+    margin: 8px 16px;
+}
+
+/* Remove default styles */
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+a:hover {
+    font-weight: 600;
+}

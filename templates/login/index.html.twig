@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/login.css') }}">
+{% endblock %}
+
+{% block body %}
+    <form id="login-form" action="{{ path('login') }}" method="post">
+        {% if error %}
+            <div id="errors">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+        <div id="form-top">
+            <div class="input-wrapper">
+                <label for="username">Identifiant :</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+            </div>
+
+            <div class="input-wrapper">
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="_password"/>
+            </div>
+        </div>
+
+        <div id="form-bottom">
+            <button type="submit">Connexion</button>
+            <div id="form-options">
+                <label>
+                    <input type="checkbox" name="_remember_me" />
+                    Se souvenir de moi
+                </label>
+                <a id="reset-password" href="">Mot de passe oublié</a>
+            </div>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    </form>
+{% endblock %}

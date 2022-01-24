@@ -1,0 +1,31 @@
+#navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;;
+    align-items: center;
+}
+
+#navbar-left p {
+    font-size: 36px;
+    font-weight: 900;
+}
+
+#navbar-left p a:hover {
+    font-weight: inherit;
+}
+
+#navbar-right ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    list-style: none;
+}
+
+#navbar-right ul li {
+    margin-right: 16px;
+}
+
+#navbar-right ul li:last-of-type {
+    margin-right: 0;
+}
