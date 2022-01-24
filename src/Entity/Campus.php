@@ -25,9 +25,9 @@ class Campus
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="campus")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="campus")
      */
-    private $outlets;
+    private $outings;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="campus")
@@ -36,7 +36,7 @@ class Campus
 
     public function __construct()
     {
-        $this->outlets = new ArrayCollection();
+        $this->outings = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -58,29 +58,29 @@ class Campus
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
     public function getOutlets(): Collection
     {
-        return $this->outlets;
+        return $this->outings;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->setCampus($this);
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
+        if ($this->outings->removeElement($outing)) {
             // set the owning side to null (unless already changed)
-            if ($outlet->getCampus() === $this) {
-                $outlet->setCampus(null);
+            if ($outing->getCampus() === $this) {
+                $outing->setCampus(null);
             }
         }
 
@@ -115,5 +115,13 @@ class Campus
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getOutings(): Collection
+    {
+        return $this->outings;
     }
 }

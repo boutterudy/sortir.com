@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\StateRepository;
+use App\Repository\StatusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=StateRepository::class)
+ * @ORM\Entity(repositoryClass=StatusRepository::class)
  */
 class Status
 {
@@ -25,13 +25,13 @@ class Status
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="status")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="status")
      */
-    private $outlets;
+    private $outings;
 
     public function __construct()
     {
-        $this->outlets = new ArrayCollection();
+        $this->outings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,29 +52,29 @@ class Status
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOutings(): Collection
     {
-        return $this->outlets;
+        return $this->outings;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->setStatus($this);
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setStatus($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
+        if ($this->outings->removeElement($outing)) {
             // set the owning side to null (unless already changed)
-            if ($outlet->getStatus() === $this) {
-                $outlet->setStatus(null);
+            if ($outing->getStatus() === $this) {
+                $outing->setStatus(null);
             }
         }
 

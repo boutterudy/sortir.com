@@ -40,9 +40,9 @@ class Place
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="place")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="place")
      */
-    private $outlets;
+    private $outings;
 
     /**
      * @ORM\ManyToOne(targetEntity=Town::class, inversedBy="places")
@@ -52,7 +52,7 @@ class Place
 
     public function __construct()
     {
-        $this->outlets = new ArrayCollection();
+        $this->outings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,29 +109,29 @@ class Place
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOutings(): Collection
     {
-        return $this->outlets;
+        return $this->outings;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->setPlace($this);
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setPlace($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
+        if ($this->outings->removeElement($outing)) {
             // set the owning side to null (unless already changed)
-            if ($outlet->getPlace() === $this) {
-                $outlet->setPlace(null);
+            if ($outing->getPlace() === $this) {
+                $outing->setPlace(null);
             }
         }
 

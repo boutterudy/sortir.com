@@ -73,14 +73,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $imageFile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="organizer")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
      */
     private $organizedOutlets;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Outlet::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users")
      */
-    private $outlets;
+    private $outing;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
@@ -91,7 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->organizedOutlets = new ArrayCollection();
-        $this->outlets = new ArrayCollection();
+        $this->outing = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -268,14 +268,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
     public function getOrganizedOutlets(): Collection
     {
         return $this->organizedOutlets;
     }
 
-    public function addOrganizedOutlet(Outlet $organizedOutlet): self
+    public function addOrganizedOutlet(Outing $organizedOutlet): self
     {
         if (!$this->organizedOutlets->contains($organizedOutlet)) {
             $this->organizedOutlets[] = $organizedOutlet;
@@ -285,7 +285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeOrganizedOutlet(Outlet $organizedOutlet): self
+    public function removeOrganizedOutlet(Outing $organizedOutlet): self
     {
         if ($this->organizedOutlets->removeElement($organizedOutlet)) {
             // set the owning side to null (unless already changed)
@@ -298,27 +298,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOuting(): Collection
     {
-        return $this->outlets;
+        return $this->outing;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->addUser($this);
+        if (!$this->outing->contains($outing)) {
+            $this->outing[] = $outing;
+            $outing->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
-            $outlet->removeUser($this);
+        if ($this->outing->removeElement($outing)) {
+            $outing->removeUser($this);
         }
 
         return $this;

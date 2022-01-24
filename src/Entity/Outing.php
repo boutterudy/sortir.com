@@ -8,9 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OutletRepository::class)
+ * @ORM\Entity(repositoryClass=OutingRepository::class)
  */
-class Outlet
+class Outing
 {
     /**
      * @ORM\Id
@@ -72,6 +72,11 @@ class Outlet
      * @ORM\JoinColumn(nullable=false)
      */
     private $place;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $maxUsers;
 
     public function __construct()
     {
@@ -211,6 +216,18 @@ class Outlet
     public function setPlace(?Place $place): self
     {
         $this->place = $place;
+
+        return $this;
+    }
+
+    public function getMaxUsers(): ?int
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers(int $maxUsers): self
+    {
+        $this->maxUsers = $maxUsers;
 
         return $this;
     }
