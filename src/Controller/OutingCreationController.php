@@ -11,9 +11,9 @@ class OutingCreationController extends AbstractController
     /**
      * @Route("/outing/creation", name="outing_creation")
      */
-    public function index(): Response
+    public function create(): Response
     {
-        return $this->render('outing_creation/index.html.twig', [
+        return $this->render('outing_creation/outlet_creation.html.twig', [
             'controller_name' => 'OutingCreationController',
         ]);
     }
