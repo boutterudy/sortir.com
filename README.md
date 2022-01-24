@@ -35,5 +35,6 @@ Then finally merge your new feature to preproduction branch:
     git fetch
     git pull origin preproduction
     git merge feature/exampleName
+    git push origin preproduction
     git branch -d feature/exampleName
     git push origin --delete feature/exampleName
