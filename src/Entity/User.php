@@ -75,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
      */
-    private $organizedOutlets;
+    private $organizedOutings;
 
     /**
      * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users")
@@ -270,27 +270,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection|Outing[]
      */
-    public function getOrganizedOutlets(): Collection
+    public function getOrganizedOutings(): Collection
     {
-        return $this->organizedOutlets;
+        return $this->organizedOutings;
     }
 
-    public function addOrganizedOutlet(Outing $organizedOutlet): self
+    public function addOrganizedOuting(Outing $organizedOuting): self
     {
-        if (!$this->organizedOutlets->contains($organizedOutlet)) {
-            $this->organizedOutlets[] = $organizedOutlet;
-            $organizedOutlet->setOrganizer($this);
+        if (!$this->organizedOutings->contains($organizedOuting)) {
+            $this->organizedOutings[] = $organizedOuting;
+            $organizedOuting->setOrganizer($this);
         }
 
         return $this;
     }
 
-    public function removeOrganizedOutlet(Outing $organizedOutlet): self
+    public function removeOrganizedOuting(Outing $organizedOuting): self
     {
-        if ($this->organizedOutlets->removeElement($organizedOutlet)) {
+        if ($this->organizedOutings->removeElement($organizedOuting)) {
             // set the owning side to null (unless already changed)
-            if ($organizedOutlet->getOrganizer() === $this) {
-                $organizedOutlet->setOrganizer(null);
+            if ($organizedOuting->getOrganizer() === $this) {
+                $organizedOuting->setOrganizer(null);
             }
         }
 
