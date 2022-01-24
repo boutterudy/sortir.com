@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users")
      */
-    private $outing;
+    private $outings;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
@@ -90,8 +90,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->organizedOutlets = new ArrayCollection();
-        $this->outing = new ArrayCollection();
+        $this->organizedOutings = new ArrayCollection();
+        $this->outings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -300,15 +300,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection|Outing[]
      */
-    public function getOuting(): Collection
+    public function getOutings(): Collection
     {
-        return $this->outing;
+        return $this->outings;
     }
 
     public function addOuting(Outing $outing): self
     {
-        if (!$this->outing->contains($outing)) {
-            $this->outing[] = $outing;
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
             $outing->addUser($this);
         }
 
@@ -317,7 +317,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeOuting(Outing $outing): self
     {
-        if ($this->outing->removeElement($outing)) {
+        if ($this->outings->removeElement($outing)) {
             $outing->removeUser($this);
         }
 
