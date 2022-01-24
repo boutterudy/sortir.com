@@ -71,22 +71,24 @@ class AppFixtures extends Fixture
             ->setIsAdmin(true)
             ->setIsActive(true)
             ->setPassword($this->hasher->hashPassword($user, 'test'))
-            ->setCampus($faker->randomElement($campuses));
+            ->setCampus($faker->randomElement($campuses))
+            ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($user);
 
 
-        for ($i = 0; $i < 5 ; $i++){
+        for ($i = 0; $i < 10 ; $i++){
             $user = new User();
             $user->setNickName($faker->userName())
                 ->setLastName($faker->name())
                 ->setFirstName($faker->firstName())
                 ->setPhoneNumber($faker->phoneNumber())
                 ->setEmail($faker->email())
-                ->setIsAdmin(true)
-                ->setIsActive(true)
+                ->setIsAdmin(false)
+                ->setIsActive($faker->randomElement([true,false]))
                 ->setPassword($this->hasher->hashPassword($user, $user->getNickName()))
-                ->setCampus($faker->randomElement($campuses));
+                ->setCampus($faker->randomElement($campuses))
+                ->setRoles(['ROLE_USER']);
 
             $manager->persist($user);
 
@@ -98,14 +100,6 @@ class AppFixtures extends Fixture
             $status = new Status();
             $status->setLibelle($faker->currencyCode());
             $manager->persist($status);
-        }
-
-        $users = $this->userRepository->findAll();
-        foreach ($users as $user){
-            $user->setRoles(['ROLE_USER']);
-            if($user->getIsAdmin()){
-                $user->setRoles(['ROLE_ADMIN']);
-            }
         }
 
         $manager->flush();
