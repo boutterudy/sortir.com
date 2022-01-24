@@ -60,7 +60,7 @@ class Campus
     /**
      * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOutings(): Collection
     {
         return $this->outings;
     }
@@ -117,11 +117,4 @@ class Campus
         return $this;
     }
 
-    /**
-     * @return Collection|Outing[]
-     */
-    public function getOutings(): Collection
-    {
-        return $this->outings;
-    }
 }
