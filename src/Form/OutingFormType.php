@@ -2,6 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\Outlet;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\Outing;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -53,7 +61,11 @@ class OutingFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+<<<<<<< HEAD
             'data_class' => Outing::class,
+=======
+            'data_class' => Outlet::class,
+>>>>>>> origin/feature/create_hangout
         ]);
     }
 }
