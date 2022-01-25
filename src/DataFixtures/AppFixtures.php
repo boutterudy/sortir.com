@@ -128,7 +128,7 @@ class AppFixtures extends Fixture
             $daysDuration = random_int(1,14);
             $outing->setName($faker->firstName())
                 ->setStartAt($faker->dateTimeBetween('- 6 months', '+ 6 months'))
-                ->setLimitSubscriptionDate($outing->getStartAt()->modify('- 1 week'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-7*60*60*24))
                 ->setDuration(\DateInterval::createFromDateString($daysDuration . ' days'))
                 ->setAbout($faker->realText)
                 ->setMaxUsers(random_int(5,20))

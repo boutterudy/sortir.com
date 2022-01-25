@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire à la sortie {{ outing.name() }}{% endblock %}
+
+{% block body %}
+    <h1>Sortie {{ outing.name }}</h1>
+    <h3>Début le <i>{{ outing.startAt | date('d/m/Y') }}</i></h3>
+    <h3>Durée : <i>{{ outing.duration | date("%d") }} jours</i></h3>
+    <h3>Campus concerné : {{ outing.campus.name }}</h3>
+    <h3>Sortie organisée pas {{ outing.organizer.nickName }} du campus de {{ outing.organizer.campus.name }}</h3>
+    <h4>Date limite d'inscription : <span style="color: red;font-weight: bold">{{ outing.limitSubscriptionDate | date('d/m/Y') }}</span> - {{ outing.maxUsers }} participants maximum ( {{ outing.users | length }} inscrits pour le moment)</h4>
+    <div>
+        <h5>Informations concernant cette sortie :</h5>
+        <p>{{ outing.about }}</p>
+        <p>Adresse :</p>
+        <p><i>{{ outing.place.name }}</i></p>
+        <p><i>{{ outing.place.town.name }}</i></p>
+    </div>
+    <br>
+    {% if app.user %}
+        {{ form_start(subscriptionForm) }}
+        {{ form_widget(subscriptionForm) }}
+        <button>S'inscrire</button>
+        {{ form_end(subscriptionForm) }}
+    {% else %}
+    Veuillez vous connecter pour vous inscrire
+    {% endif %}
+
+{% endblock %}
