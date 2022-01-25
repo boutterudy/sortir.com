@@ -10,7 +10,7 @@
 {% block body %}
     <form id="login-form" action="{{ path('login') }}" method="post">
         {% if error %}
-            <div id="errors">
+            <div id="errors" class="form-error">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
         {% endif %}

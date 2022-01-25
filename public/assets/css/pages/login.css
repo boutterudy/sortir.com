@@ -49,7 +49,5 @@
 
 #errors {
     text-align: center;
-    font-weight: 700;
-    color: var(--error-color);
     margin-bottom: 10px;
 }

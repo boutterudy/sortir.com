@@ -1,12 +1,12 @@
 <nav id="navbar">
     <div id="navbar-left">
-        <p><a href="{{ path('login') }}">Sortir.com</a></p>
+        <p><a href="{{ app.user ? path('temporary') : path('login') }}">Sortir.com</a></p>
     </div>
     <div id="navbar-right">
         {% if app.user %}
             <ul>
-                <li><a href="">Accueil</a></li>
-                <li><a href="">Mon profil</a></li>
+                <li><a href="{{ path('temporary') }}">Accueil</a></li>
+                <li><a href="{{ path('show_profile', { username: app.user.nickName }) }}">Mon profil</a></li>
                 <li><a href="">Villes</a></li>
                 <li><a href="">Campus</a></li>
                 <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>

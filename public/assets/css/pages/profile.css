@@ -1,0 +1,38 @@
+#profile h1 {
+    text-align: center;
+}
+
+#profile-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#profile-picture-wrapper img {
+    width: 400px;
+    height: auto;
+    border-radius: 20px;
+}
+
+#informations-wrapper .group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+}
+
+#informations-wrapper .group label {
+    min-width: 130px;
+}
+
+#informations-wrapper .group p {
+    font-weight: 500;
+}
+
+#profile-actions {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 24px;
+}
