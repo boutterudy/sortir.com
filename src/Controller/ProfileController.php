@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("/profile/{username}", name="show_profile")
+     * @Route("/profil/{username}", name="show_profile")
      */
     public function show(UserRepository $userRepository, string $username): Response
     {
@@ -27,7 +27,7 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/profile/{username}/edit", name="edit_profile")
+     * @Route("/profil/{username}/edit", name="edit_profile")
      */
     public function edit(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, Request $request, UserRepository $userRepository, string $username): Response
     {
