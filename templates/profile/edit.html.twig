@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/profile.css') }}">
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <section id="profile">
+        <h1>Mon profil</h1>
+        <div id="profile-details">
+            <div id="profile-picture-wrapper">
+                <img src="{{ asset('assets/images/default-profile.svg')}}">
+            </div>
+            <div id="informations-wrapper">
+
+                <div class="form-error">
+                    {{ form_errors(form.nickName) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.nickName) }} :</label>
+                    {{ form_widget(form.nickName) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.firstName) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.firstName) }} :</label>
+                    {{ form_widget(form.firstName) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.lastName) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.lastName) }} :</label>
+                    {{ form_widget(form.lastName) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.phoneNumber) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.phoneNumber) }} :</label>
+                    {{ form_widget(form.phoneNumber) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.email) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.email) }} :</label>
+                    {{ form_widget(form.email) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.password.first) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.password.first) }} :</label>
+                    {{ form_widget(form.password.first) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.password.second) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.password.second) }} :</label>
+                    {{ form_widget(form.password.second) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.campus) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.campus) }} :</label>
+                    {{ form_widget(form.campus) }}
+                </div>
+
+                <div class="form-error">
+                    {{ form_errors(form.imageFile) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(form.imageFile) }} :</label>
+                    {{ form_widget(form.imageFile) }}
+                </div>
+
+                {{ form_widget(form._token) }}
+
+            </div>
+        </div>
+    </section>
+    <div id="profile-actions">
+        <a href="{{ app.request.headers.get('referer') }}"><button class="outline">Retour</button></a>
+        <button type="submit">Enregistrer</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
