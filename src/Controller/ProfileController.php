@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProfileController extends AbstractController
 {
@@ -29,7 +30,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil/{username}/edit", name="edit_profile")
      */
-    public function edit(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, Request $request, UserRepository $userRepository, string $username): Response
+    public function edit(SluggerInterface $slugger, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, Request $request, UserRepository $userRepository, string $username): Response
     {
         // Get User entity
         $user = $userRepository->findOneByNickName($username);
@@ -46,15 +47,44 @@ class ProfileController extends AbstractController
                    $user->getPassword()
                 ));
 
-                $entityManager->flush();
+                $profilePictureFile = $form->get('imageFile')->getData();
 
-                return $this->redirectToRoute('show_profile', [
-                    'username' => $user->getNickName()
-                ]);
+                // Check if any profile picture as been uploaded
+                if($profilePictureFile) {
+
+                    $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePictureFile->guessExtension();
+
+                    // Move the file to the directory where images are stored
+                    try {
+                        $profilePictureFile->move(
+                            $this->getParameter('profile_pictures_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        $error = "Une erreur est survenue durant le transfert de votre photo de profil.";
+                    }
+
+                    // updates the 'imageFile' property to store the profile picture name
+                    // instead of its contents
+                    $user->setImageFile($newFilename);
+
+                }
+
+                if(!$error) {
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('show_profile', [
+                        'username' => $user->getNickName()
+                    ]);
+                }
             }
 
-            return $this->renderForm('profile/edit.html.twig', [
+            return $this->render('profile/edit.html.twig', [
                 'form' => $form->createView(),
+                'error' => isset($error) ? $error : null,
             ]);
         }
 
