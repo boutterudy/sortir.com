@@ -6,6 +6,9 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -47,44 +50,61 @@ class ProfileController extends AbstractController
                    $user->getPassword()
                 ));
 
-                $profilePictureFile = $form->get('imageFile')->getData();
+                $profilePicture = $form->get('imageFile')->getData();
 
-                // Check if any profile picture as been uploaded
-                if($profilePictureFile) {
-
-                    $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // Check if profile picture is uploaded
+                if($profilePicture) {
+                    $originalFilename = pathinfo($profilePicture->getClientOriginalName(), PATHINFO_FILENAME);
                     // this is needed to safely include the file name as part of the URL
                     $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePictureFile->guessExtension();
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePicture->guessExtension();
 
-                    // Move the file to the directory where images are stored
+                    $profilePicturesDirectory = $this->getParameter('profile_pictures_directory');
+
+                    // Move the file to the directory where brochures are stored
                     try {
-                        $profilePictureFile->move(
-                            $this->getParameter('profile_pictures_directory'),
+                        $profilePicture->move(
+                            $profilePicturesDirectory,
                             $newFilename
                         );
                     } catch (FileException $e) {
-                        $error = "Une erreur est survenue durant le transfert de votre photo de profil.";
+                        $error = "Une erreur est survenue, merci de réessayer.";
                     }
 
-                    // updates the 'imageFile' property to store the profile picture name
+                    $oldProfilePicture = $user->getImageFile();
+
+                    // Remove old image
+                    if(!isset($error)) {
+                        if($oldProfilePicture !== '') {
+                            $filesystem = new Filesystem();
+                            try {
+                                $filesystem->remove($profilePicturesDirectory."/".$oldProfilePicture);
+                            } catch (IOException $e) {
+                                $error = "Une erreur est survenue, merci de réessayer.";
+                            }
+                        }
+                    }
+
+                    // updates the 'imageFile' property to store the profile picture file name
                     // instead of its contents
                     $user->setImageFile($newFilename);
-
                 }
 
-                if(!$error) {
+                if(!isset($error)) {
+                    $newUsername = $user->getNickName();
+
+                    // Flush data
                     $entityManager->flush();
 
                     return $this->redirectToRoute('show_profile', [
-                        'username' => $user->getNickName()
+                        'username' => $newUsername
                     ]);
                 }
             }
 
             return $this->render('profile/edit.html.twig', [
                 'form' => $form->createView(),
-                'error' => isset($error) ? $error : null,
+                'uploadError' => $error ?? null,
             ]);
         }
 

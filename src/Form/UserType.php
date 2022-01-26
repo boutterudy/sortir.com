@@ -57,7 +57,7 @@ class UserType extends AbstractType
                             'image/svg+xml',
                             'image/gif',
                         ],
-                        'mimeTypesMessage' => 'Merci de sélectionner un fichier JPEG, PNG, SVG ou GIF.'
+                        'mimeTypesMessage' => 'Type de fichier non pris en charge. Merci de sélectionner un fichier JPEG, PNG, SVG ou GIF.'
                     ])
                 ],
             ])

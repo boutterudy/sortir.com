@@ -2,7 +2,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+}
+
+#profile-picture-wrapper {
+    margin-right: 64px;
 }
 
 #profile-picture-wrapper img {
@@ -28,7 +32,15 @@
 
 #profile-actions {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     margin-top: 24px;
+}
+
+#profile-actions * {
+    margin-right: 32px;
+}
+
+#profile input {
+    width: 250px;
 }
