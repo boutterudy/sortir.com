@@ -76,7 +76,7 @@ class AppFixtures extends Fixture
         $userAdmin->setNickName('Admin')
             ->setLastName('Istrateur')
             ->setFirstName('Admin')
-            ->setPhoneNumber($faker->phoneNumber())
+            ->setPhoneNumber('0102030405')
             ->setEmail($faker->email())
             ->setIsAdmin(true)
             ->setIsActive(true)
@@ -87,17 +87,22 @@ class AppFixtures extends Fixture
 
 
         for ($i = 0; $i < 50 ; $i++){
+            $phoneNumber = '0';
+            for($j = 0; $j < 9 ; $j++){
+                $phoneNumber.= random_int(0,9);
+            }
+            echo $phoneNumber . ' ' . $i;
+
             $user = new User();
             $user->setNickName($faker->userName())
                 ->setLastName($faker->name())
                 ->setFirstName($faker->firstName())
-                ->setPhoneNumber($faker->phoneNumber())
+                ->setPhoneNumber($phoneNumber)
                 ->setEmail($faker->email())
                 ->setIsAdmin(false)
                 ->setIsActive($faker->randomElement([true,false]))
                 ->setPassword($this->hasher->hashPassword($user, $user->getNickName()))
                 ->setCampus($faker->randomElement($campuses));
-
             $manager->persist($user);
         }
 
