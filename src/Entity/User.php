@@ -97,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull(message="Chaque utilisateur doit être rattaché à un campus")
-     * @Assert\Type("App\Entity\Campus", message="Ce campus n'est pas valide"
+     * @Assert\Type("App\Entity\Campus", message="Ce campus n'est pas valide")
      */
     private $campus;
 
