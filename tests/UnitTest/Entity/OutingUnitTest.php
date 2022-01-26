@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\UnitTest\Entity;
 
 use App\Entity\Outing;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 class OutingUnitTest extends TestCase
 {
@@ -21,7 +21,6 @@ class OutingUnitTest extends TestCase
             ->setLimitSubscriptionDate($dateTime)
             ->setMaxUsers(15)
             ->setAbout('10 jours au musée, oui c\'est long');
-
 
         $this->assertTrue($outing->getName() === 'Musée');
         $this->assertTrue($outing->getStartAt() === $dateTime);

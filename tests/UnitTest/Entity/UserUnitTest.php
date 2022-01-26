@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\UnitTest\Entity;
 
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 class UserUnitTest extends TestCase
 {
-    public function testIsTrue(): void
+    public function testGetterIsTrue(): void
     {
         $user = new User();
 
@@ -19,8 +19,7 @@ class UserUnitTest extends TestCase
             ->setPassword('password')
             ->setIsAdmin(true)
             ->setIsActive(true)
-            ->setImageFile('randomImage.png')
-            ->setRoles(['ROLE_ADMIN']);
+            ->setImageFile('randomImage.png');
 
         $this->assertTrue($user->getNickName() === 'pseudo');
         $this->assertTrue($user->getLastName() === 'Nom de famille');
@@ -31,10 +30,9 @@ class UserUnitTest extends TestCase
         $this->assertTrue($user->getIsAdmin() === true);
         $this->assertTrue($user->getIsActive() === true);
         $this->assertTrue($user->getImageFile() === 'randomImage.png');
-        $this->assertTrue($user->getRoles()[0] === 'ROLE_ADMIN');
     }
 
-    public function testIsFalse(): void
+    public function testGetterIsFalse(): void
     {
         $user = new User();
 
@@ -46,8 +44,7 @@ class UserUnitTest extends TestCase
             ->setPassword('password')
             ->setIsAdmin(true)
             ->setIsActive(true)
-            ->setImageFile('randomImage.png')
-            ->setRoles(['ROLE_ADMIN']);
+            ->setImageFile('randomImage.png');
 
 
         $this->assertFalse($user->getNickName() === 'nick');
@@ -59,6 +56,5 @@ class UserUnitTest extends TestCase
         $this->assertFalse($user->getIsAdmin() === false);
         $this->assertFalse($user->getIsActive() === false);
         $this->assertFalse($user->getImageFile() === 'avatar.png');
-        $this->assertFalse($user->getRoles()[0] === 'ROLE_USER');
     }
 }

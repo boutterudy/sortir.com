@@ -71,8 +71,7 @@ class AppFixtures extends Fixture
             ->setIsAdmin(true)
             ->setIsActive(true)
             ->setPassword($this->hasher->hashPassword($user, 'test'))
-            ->setCampus($faker->randomElement($campuses))
-            ->setRoles(['ROLE_ADMIN']);
+            ->setCampus($faker->randomElement($campuses));
 
         $manager->persist($user);
 
@@ -87,8 +86,7 @@ class AppFixtures extends Fixture
                 ->setIsAdmin(false)
                 ->setIsActive($faker->randomElement([true,false]))
                 ->setPassword($this->hasher->hashPassword($user, $user->getNickName()))
-                ->setCampus($faker->randomElement($campuses))
-                ->setRoles(['ROLE_USER']);
+                ->setCampus($faker->randomElement($campuses));
 
             $manager->persist($user);
 
@@ -96,13 +94,28 @@ class AppFixtures extends Fixture
             $town->setName($faker->city())
                 ->setPostalCode($faker->postcode());
             $manager->persist($town);
-
-            $status = new Status();
-            $status->setLibelle($faker->currencyCode());
-            $manager->persist($status);
         }
-
         $manager->flush();
+
+        $status = new Status();
+        $status->setLibelle('Créée');
+        $manager->persist($status);
+        $status = new Status();
+        $status->setLibelle('Ouverte');
+        $manager->persist($status);
+        $status = new Status();
+        $status->setLibelle('Clôturée');
+        $manager->persist($status);
+        $status = new Status();
+        $status->setLibelle('Activité en cours');
+        $manager->persist($status);
+        $status = new Status();
+        $status->setLibelle('Passée');
+        $manager->persist($status);
+        $status = new Status();
+        $status->setLibelle('Annulée');
+        $manager->persist($status);
+
 
         $towns = $this->townRepository->findAll();
         for ($i = 0; $i < 20; $i++)
@@ -120,22 +133,31 @@ class AppFixtures extends Fixture
 
         $users = $this->userRepository->findAll();
         $places = $this->placeRepository->findAll();
-        $statuses = $this->statusRepository->findAll();
-
+        $statusPast = $this->statusRepository->findOneBy(['libelle'=>'Passée']);
+        $statusInProgress = $this->statusRepository->findOneBy(['libelle'=>'Activité en cours']);
+        $statusOpened = $this->statusRepository->findOneBy(['libelle'=>'Ouverte']);
         for ($i = 0; $i < 30; $i++)
         {
             $outing = new Outing();
-            $daysDuration = random_int(1,14);
             $outing->setName($faker->firstName())
                 ->setStartAt($faker->dateTimeBetween('- 6 months', '+ 6 months'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-7*60*60*24))
-                ->setDuration(\DateInterval::createFromDateString($daysDuration . ' days'))
+                ->setDuration(random_int(60,360))
                 ->setAbout($faker->realText)
                 ->setMaxUsers(random_int(5,20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
-                ->setStatus($faker->randomElement($statuses))
                 ->setOrganizer($faker->randomElement($users));
+            $status = new Status();
+            if($outing->getStartAt() < new \DateTime()){
+                $status = $statusPast;
+            }elseif ($outing->getStartAt() == new \DateTime()){
+                $status = $statusInProgress;
+            }else{
+                $status = $statusOpened;
+            }
+
+            $outing ->setStatus($status);
 
             $manager->persist($outing);
         }
