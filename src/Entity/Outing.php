@@ -30,7 +30,7 @@ class Outing
     private $startAt;
 
     /**
-     * @ORM\Column(type="dateinterval")
+     * @ORM\Column(type="integer")
      */
     private $duration;
 
@@ -108,18 +108,6 @@ class Outing
     public function setStartAt(\DateTimeInterface $startAt): self
     {
         $this->startAt = $startAt;
-
-        return $this;
-    }
-
-    public function getDuration(): ?\DateInterval
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(\DateInterval $duration): self
-    {
-        $this->duration = $duration;
 
         return $this;
     }
@@ -231,4 +219,17 @@ class Outing
 
         return $this;
     }
+
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+        return $this;
+    }
+
+
 }

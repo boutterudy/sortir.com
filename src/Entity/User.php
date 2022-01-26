@@ -26,10 +26,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $nickName;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
     /**
      * @var string The hashed password
@@ -134,18 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
+        return $this->isAdmin?['ROLE_ADMIN']:['ROLE_USER'];
     }
 
     /**
