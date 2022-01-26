@@ -52,31 +52,41 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('fr-FR');
 
-        for($i = 0 ; $i < 5 ; $i++){
-            $campus = new Campus();
-            $campus->setName($faker->company());
 
-            $manager->persist($campus);
-        }
+        $campusNantes = new Campus();
+        $campusNantes->setName('Nantes');
+        $manager->persist($campusNantes);
+
+        $campusRennes = new Campus();
+        $campusRennes->setName('Rennes');
+        $manager->persist($campusRennes);
+
+        $campusQuimper = new Campus();
+        $campusQuimper->setName('Quimper');
+        $manager->persist($campusQuimper);
+
+        $campusNiort = new Campus();
+        $campusNiort->setName('Niort');
+        $manager->persist($campusNiort);
+
         $manager->flush();
-
         $campuses = $this->campusRepository->findAll();
 
-        $user = new User();
-        $user->setNickName('Usertest')
-            ->setLastName('Test')
-            ->setFirstName('User')
+        $userAdmin = new User();
+        $userAdmin->setNickName('Admin')
+            ->setLastName('Istrateur')
+            ->setFirstName('Admin')
             ->setPhoneNumber($faker->phoneNumber())
             ->setEmail($faker->email())
             ->setIsAdmin(true)
             ->setIsActive(true)
-            ->setPassword($this->hasher->hashPassword($user, 'test'))
+            ->setPassword($this->hasher->hashPassword($userAdmin, 'Admin'))
             ->setCampus($faker->randomElement($campuses));
 
-        $manager->persist($user);
+        $manager->persist($userAdmin);
 
 
-        for ($i = 0; $i < 10 ; $i++){
+        for ($i = 0; $i < 50 ; $i++){
             $user = new User();
             $user->setNickName($faker->userName())
                 ->setLastName($faker->name())
@@ -89,78 +99,214 @@ class AppFixtures extends Fixture
                 ->setCampus($faker->randomElement($campuses));
 
             $manager->persist($user);
-
-            $town = new Town();
-            $town->setName($faker->city())
-                ->setPostalCode($faker->postcode());
-            $manager->persist($town);
         }
+
+
+        $townNantes = new Town();
+        $townNantes->setName('Nantes')
+            ->setPostalCode('44000');
+        $manager->persist($townNantes);
+
+        $townRennes = new Town();
+        $townRennes->setName('Rennes')
+            ->setPostalCode('35000');
+        $manager->persist($townRennes);
+
+        $townQuimper = new Town();
+        $townQuimper->setName('Quimper')
+            ->setPostalCode('29000');
+        $manager->persist($townQuimper);
+
+        $townNiort = new Town();
+        $townNiort->setName('Niort')
+            ->setPostalCode('79000');
+        $manager->persist($townNiort);
+
         $manager->flush();
-
-        $status = new Status();
-        $status->setLibelle('Créée');
-        $manager->persist($status);
-        $status = new Status();
-        $status->setLibelle('Ouverte');
-        $manager->persist($status);
-        $status = new Status();
-        $status->setLibelle('Clôturée');
-        $manager->persist($status);
-        $status = new Status();
-        $status->setLibelle('Activité en cours');
-        $manager->persist($status);
-        $status = new Status();
-        $status->setLibelle('Passée');
-        $manager->persist($status);
-        $status = new Status();
-        $status->setLibelle('Annulée');
-        $manager->persist($status);
-
-
         $towns = $this->townRepository->findAll();
-        for ($i = 0; $i < 20; $i++)
-        {
-            $place = new Place();
-            $place->setName($faker->name)
-                ->setStreet($faker->address())
-                ->setLatitude($faker->latitude())
-                ->setLongitude($faker->longitude())
-                ->setTown($faker->randomElement($towns));
-            $manager->persist($place);
-        }
 
+        $statusCreating = new Status();
+        $statusCreating->setLibelle('En création');
+        $manager->persist($statusCreating);
+
+        $statusOpened = new Status();
+        $statusOpened->setLibelle('Ouverte');
+        $manager->persist($statusOpened);
+
+        $statusClosed = new Status();
+        $statusClosed->setLibelle('Clôturée');
+        $manager->persist($statusClosed);
+
+        $statusInProgress = new Status();
+        $statusInProgress->setLibelle('En cours');
+        $manager->persist($statusInProgress);
+
+        $statusEnded = new Status();
+        $statusEnded->setLibelle('Terminée');
+        $manager->persist($statusEnded);
+
+        $statusCanceled = new Status();
+        $statusCanceled->setLibelle('Annulée');
+        $manager->persist($statusCanceled);
+
+        $statusFiled = new Status();
+        $statusFiled->setLibelle('Archivée');
+        $manager->persist($statusFiled);
+
+        $statuses = $this->statusRepository->findAll();
+
+        foreach ($towns as $town) {
+            for ($i = 0; $i < 10; $i++)
+            {
+                $place = new Place();
+                $place->setName($faker->name)
+                    ->setStreet($faker->address())
+                    ->setLatitude($faker->latitude())
+                    ->setLongitude($faker->longitude())
+                    ->setTown($town);
+                $manager->persist($place);
+            }
+        }
         $manager->flush();
 
         $users = $this->userRepository->findAll();
         $places = $this->placeRepository->findAll();
-        $statusPast = $this->statusRepository->findOneBy(['libelle'=>'Passée']);
-        $statusInProgress = $this->statusRepository->findOneBy(['libelle'=>'Activité en cours']);
-        $statusOpened = $this->statusRepository->findOneBy(['libelle'=>'Ouverte']);
-        for ($i = 0; $i < 30; $i++)
+
+        $activities = ['Musée', 'Bowling', 'Lasergame', 'Karting', 'Parapente', 'Ski nautique', 'Surf', 'Pâte à modeler', 'Equitation', 'Danse classique'];
+
+        //Création d'activités 'En création'
+        for ($i = 0; $i < 10; $i++)
         {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
             $outing = new Outing();
-            $outing->setName($faker->firstName())
-                ->setStartAt($faker->dateTimeBetween('- 6 months', '+ 6 months'))
-                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-7*60*60*24))
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('+ 1 month', '+ 6 months'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
                 ->setDuration(random_int(60,360))
                 ->setAbout($faker->realText)
                 ->setMaxUsers(random_int(5,20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
-                ->setOrganizer($faker->randomElement($users));
-            $status = new Status();
-            if($outing->getStartAt() < new \DateTime()){
-                $status = $statusPast;
-            }elseif ($outing->getStartAt() == new \DateTime()){
-                $status = $statusInProgress;
-            }else{
-                $status = $statusOpened;
-            }
-
-            $outing ->setStatus($status);
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusCreating);
 
             $manager->persist($outing);
         }
+
+        //Création d'activités 'Ouverte'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('+ 2 weeks', '+ 6 weeks'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusOpened);
+
+            $manager->persist($outing);
+        }
+
+        //Création d'activités 'Clôturée'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('+ 1 day', '+ ' . $daysToSubscribe . ' days'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusClosed);
+
+            $manager->persist($outing);
+        }
+
+        //Création d'activités 'En cours'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt(new \DateTime())
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusInProgress);
+
+            $manager->persist($outing);
+        }
+
+        //Création d'activités 'Terminée'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('- 1 month', '- 1 day'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusEnded);
+
+            $manager->persist($outing);
+        }
+
+        //Création d'activités 'Annulée'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('- 1 month', '+ 1 month'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusCanceled);
+
+            $manager->persist($outing);
+        }
+
+        //Création d'activités 'Archivée'
+        for ($i = 0; $i < 10; $i++)
+        {
+            $daysToSubscribe = random_int(1,14)*60*60*24;
+            $outing = new Outing();
+            $outing->setName($faker->randomElement($activities))
+                ->setStartAt($faker->dateTimeBetween('- 1 year', '- 1 month'))
+                ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
+                ->setDuration(random_int(60,360))
+                ->setAbout($faker->realText)
+                ->setMaxUsers(random_int(5,20))
+                ->setCampus($faker->randomElement($campuses))
+                ->setPlace($faker->randomElement($places))
+                ->setOrganizer($faker->randomElement($users))
+                ->setStatus($statusCanceled);
+
+            $manager->persist($outing);
+        }
+
         $manager->flush();
 
         $outings = $this->outingRepository->findAll();
