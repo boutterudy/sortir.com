@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -23,6 +24,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un pseudo")
+     * @Assert\Unique(message="Ce pseudo est déjà pris")
      */
     private $nickName;
 
@@ -30,41 +33,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Regex(
+     *      pattern = "/^(?=.*\d)(?=.*[A-Z])(?=.*[@#$%])(?!.*(.)\1{2}).*[a-z]/m",
+     *      message="Votre mot de passe doit comporter au moins huit caractères, dont des lettres majuscules et minuscules, un chiffre et un symbole.")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un nom")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un prénom")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(
+     *     pattern="^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$"
+     *     message="Le numéro de téléphone saisi n'est pas valide")
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="L'email saisi est invalide")
      */
     private $email;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotNull(message="Merci de préciser si cet utilisateur est administrateur")
      */
     private $isAdmin;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotNull(message="Merci de préciser si cet utilisateur est actif")
      */
     private $isActive;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(mimeTypesMessage="Ce type de fichier n'est pas pris en compte")
      */
     private $imageFile;
 
@@ -81,6 +96,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull(message="Chaque utilisateur doit être rattaché à un campus")
+     * @Assert\Type("App\Entity\Campus", message="Ce campus n'est pas valide"
      */
     private $campus;
 

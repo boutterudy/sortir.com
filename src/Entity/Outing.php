@@ -6,6 +6,7 @@ use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
@@ -21,21 +22,28 @@ class Outing
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le nom de la sortie doit être renseigné")
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="La date de début doit être renseignée")
+     * @Assert\GreaterThan("today", message="Le date de début n'est pas valide")
      */
     private $startAt;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="La durée de l'activité doit être renseignée")
+     * @Assert\Positive(message="La durée n'est pas valide")
      */
     private $duration;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThan ("today", message="La date limite ne peut pas être antérieure à aujourd'hui")
+     * @Assert\LessThanOrEqual("startAt", message="La date limite ne peut pas être postérieure à la date de début")
      */
     private $limitSubscriptionDate;
 
@@ -47,6 +55,9 @@ class Outing
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutings")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Il faut un organisateur pour cette sortie")
+     * @Assert\NotNull(message="Il faut un organisateur pour cette sortie")
+     * @Assert\Type("App\Entity\User", message="L'entrée est invalide")
      */
     private $organizer;
 
@@ -58,6 +69,9 @@ class Outing
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Il faut attacher cette sortie à un campus")
+     * @Assert\NotNull(message="Il faut attacher cette sortie à un campus")
+     * @Assert\Type("App\Entity\Campus", message="L'entrée est invalide")
      */
     private $campus;
 
@@ -70,11 +84,18 @@ class Outing
     /**
      * @ORM\ManyToOne(targetEntity=Place::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Il faut attacher cette sortie à un lieu")
+     * @Assert\NotNull(message="Il faut attacher cette sortie à un lieu")
+     * @Assert\Type("App\Entity\Place", message="L'entrée est invalide")
+
      */
     private $place;
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Il faut indiquer un nombre maximal de participants")
+     * @Assert\Positive(message="Il faut un moins une place disponible")
      */
     private $maxUsers;
 
