@@ -53,7 +53,11 @@
     <div>
         <button id="register">Enregistrer</button>
         <button id="publish">Publier la sortie</button>
-        <button id="cancel">Annuler</button>
+        <button id="cancel" type="button" data-toggle="modal" data-target="#cancelConfirmation">Annuler</button>
+    </div>
+
+    <div id="cancelConfirmation" class="modal hide fade">
+        <!-- register form here -->
     </div>
     {{ form_end(outingCreationForm) }}
 </div>
