@@ -78,7 +78,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(mimeTypesMessage="Ce type de fichier n'est pas pris en compte")
      */
     private $imageFile;
 
