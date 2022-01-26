@@ -19,3 +19,8 @@ a {
 a:hover {
     font-weight: 600;
 }
+
+/* Global Style */
+h1 {
+    text-align: center;
+}
