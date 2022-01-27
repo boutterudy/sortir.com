@@ -1,7 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nouvelle sortie{% endblock %}
-
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function confirmCancel(){
+            if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
+                window.location.href = '{{ path('login') }}';
+            }
+        }
+    </script>
+{% endblock %}
 {% block body %}
 <div class="create-form">
     {{ form_start(outingCreationForm) }}
@@ -20,12 +29,12 @@
 
     <!-- Town filter -->
     <label for="outing_town" class="required">Ville</label>
-    <select id="outing_town" name="outing_town" required="required">
+    <!--<select id="outing_town" name="outing_town" required="required">
         <option value="" selected="selected">Choisissez une ville</option>
-        <!--{ for town in towns }}
+        { for town in towns }}
             <option value="{ town }}">{ town }}</option>
-        { endfor }}-->
-    </select>
+        { endfor }}
+    </select>-->
 
     <div>
         {{ form_row(outingCreationForm.place) }}
@@ -53,12 +62,14 @@
     <div>
         <button id="register">Enregistrer</button>
         <button id="publish">Publier la sortie</button>
-        <button id="cancel" type="button" data-toggle="modal" data-target="#cancelConfirmation">Annuler</button>
+        <button type="button" id="cancel"
+                onclick="confirmCancel()">
+            Annuler
+        </button>
     </div>
 
-    <div id="cancelConfirmation" class="modal hide fade">
-        <!-- register form here -->
-    </div>
+
+
     {{ form_end(outingCreationForm) }}
 </div>
 {% endblock %}
