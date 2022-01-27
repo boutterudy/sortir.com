@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -19,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @UniqueEntity("nickName", message="Ce pseudo est déjà pris")
  * @Vich\Uploadable()
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -393,5 +394,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+            $this->nickName,
+            $this->password,
+            $this->lastName,
+            $this->firstName,
+            $this->phoneNumber,
+            $this->email,
+            $this->isAdmin,
+            $this->isActive,
+            $this->imageFilename,
+            $this->organizedOutings,
+            $this->outings,
+            $this->campus,
+            $this->updatedAt,
+        ));
+
+    }
+
+    public function unserialize($serialized) {
+        list (
+            $this->id,
+            $this->nickName,
+            $this->password,
+            $this->lastName,
+            $this->firstName,
+            $this->phoneNumber,
+            $this->email,
+            $this->isAdmin,
+            $this->isActive,
+            $this->imageFilename,
+            $this->organizedOutings,
+            $this->outings,
+            $this->campus,
+            $this->updatedAt,
+            ) = unserialize($serialized);
     }
 }

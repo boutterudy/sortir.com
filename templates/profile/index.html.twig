@@ -11,7 +11,7 @@
         <h1>{{ user.nickName|capitalize }}</h1>
         <div id="profile-details">
             <div id="profile-picture-wrapper">
-                <img src="{{ user.imageFile ? asset('uploads/profile_pictures/' ~ user.imageFile) : asset('assets/images/default-profile.svg') }}">
+                <img src="{{ user.imageFilename ? asset('uploads/profile_pictures/' ~ user.imageFilename) : asset('assets/images/default-profile.svg') }}">
             </div>
             <div id="informations-wrapper">
                 <div class="group">
