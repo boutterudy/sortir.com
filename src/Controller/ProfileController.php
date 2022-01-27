@@ -50,61 +50,18 @@ class ProfileController extends AbstractController
                    $user->getPassword()
                 ));
 
-                $profilePicture = $form->get('imageFile')->getData();
+                $newUsername = $user->getNickName();
 
-                // Check if profile picture is uploaded
-                if($profilePicture) {
-                    $originalFilename = pathinfo($profilePicture->getClientOriginalName(), PATHINFO_FILENAME);
-                    // this is needed to safely include the file name as part of the URL
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePicture->guessExtension();
+                // Flush data
+                $entityManager->flush();
 
-                    $profilePicturesDirectory = $this->getParameter('profile_pictures_directory');
-
-                    // Move the file to the directory where brochures are stored
-                    try {
-                        $profilePicture->move(
-                            $profilePicturesDirectory,
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        $error = "Une erreur est survenue, merci de réessayer.";
-                    }
-
-                    $oldProfilePicture = $user->getImageFile();
-
-                    // Remove old image
-                    if(!isset($error)) {
-                        if($oldProfilePicture !== '') {
-                            $filesystem = new Filesystem();
-                            try {
-                                $filesystem->remove($profilePicturesDirectory."/".$oldProfilePicture);
-                            } catch (IOException $e) {
-                                $error = "Une erreur est survenue, merci de réessayer.";
-                            }
-                        }
-                    }
-
-                    // updates the 'imageFile' property to store the profile picture file name
-                    // instead of its contents
-                    $user->setImageFile($newFilename);
-                }
-
-                if(!isset($error)) {
-                    $newUsername = $user->getNickName();
-
-                    // Flush data
-                    $entityManager->flush();
-
-                    return $this->redirectToRoute('show_profile', [
-                        'username' => $newUsername
-                    ]);
-                }
+                return $this->redirectToRoute('show_profile', [
+                    'username' => $newUsername
+                ]);
             }
 
             return $this->render('profile/edit.html.twig', [
                 'form' => $form->createView(),
-                'uploadError' => $error ?? null,
             ]);
         }
 

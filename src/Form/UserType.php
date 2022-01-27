@@ -46,7 +46,6 @@ class UserType extends AbstractType
             ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Ma photo',
-                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
@@ -54,6 +53,7 @@ class UserType extends AbstractType
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
+                            'image/x-png',
                             'image/svg+xml',
                             'image/gif',
                         ],

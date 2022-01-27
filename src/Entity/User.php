@@ -7,13 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("nickName", message="Ce pseudo est déjà pris")
+ * @Vich\Uploadable()
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -77,7 +81,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isActive;
 
     /**
+     * @var string|null
      * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="profile_pictures", fileNameProperty="imageFilename")
      */
     private $imageFile;
 
@@ -98,6 +109,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Type("App\Entity\Campus", message="Ce campus n'est pas valide")
      */
     private $campus;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $updatedAt;
 
     public function __construct()
     {
@@ -255,14 +271,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImageFile(): ?string
+    /**
+     * @return string|null
+     */
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    /**
+     * @param string|null $imageFilename
+     * @return User
+     */
+    public function setImageFilename(?string $imageFilename): User
+    {
+        $this->imageFilename = $imageFilename;
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getImageFile(): ?File
     {
         return $this->imageFile;
     }
 
-    public function setImageFile(?string $imageFile): self
+    /**
+     * @param File|null $imageFile
+     * @return User
+     */
+    public function setImageFile(?File $imageFile): User
     {
         $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
 
         return $this;
     }
@@ -332,6 +379,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
