@@ -91,7 +91,6 @@ class AppFixtures extends Fixture
             for($j = 0; $j < 9 ; $j++){
                 $phoneNumber.= random_int(0,9);
             }
-            echo $phoneNumber . ' ' . $i;
 
             $user = new User();
             $user->setNickName($faker->userName())
@@ -223,7 +222,7 @@ class AppFixtures extends Fixture
             $daysToSubscribe = random_int(1,14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
-                ->setStartAt($faker->dateTimeBetween('+ 1 day', '+ ' . $daysToSubscribe . ' days'))
+                ->setStartAt($faker->dateTimeBetween('+ 1 day', '+ ' . $daysToSubscribe . ' seconds'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
                 ->setDuration(random_int(60,360))
                 ->setAbout($faker->realText)

@@ -51,7 +51,7 @@ class Place
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="place")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="place", cascade={"remove"}, orphanRemoval=true)
      */
     private $outings;
 
@@ -162,5 +162,10 @@ class Place
         $this->town = $town;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

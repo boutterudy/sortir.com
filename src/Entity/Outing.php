@@ -8,8 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
+ * @Assert\Expression(
+ *     "this.getStartAt() > this.getLimitSubscriptionDate()",
+ *     message="La date limite ne peut pas être postérieure à la date de début"
+ * )
  */
 class Outing
 {
@@ -40,10 +45,11 @@ class Outing
      */
     private $duration;
 
+// @Assert\LessThanOrEqual(value="$startAt", message="La date limite ne peut pas être postérieure à la date de début")
+
     /**
      * @ORM\Column(type="datetime")
      * @Assert\GreaterThan ("today", message="La date limite ne peut pas être antérieure à aujourd'hui")
-     * @Assert\LessThanOrEqual("startAt", message="La date limite ne peut pas être postérieure à la date de début")
      */
     private $limitSubscriptionDate;
 
@@ -252,5 +258,12 @@ class Outing
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->getName() . ' | '
+            . $this->getCampus() . ' | '
+            . $this->getStartAt()->format('d/m/Y') . ' | '
+            . $this->getOrganizer();
+    }
 
 }
