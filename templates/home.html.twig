@@ -2,23 +2,26 @@
 
 {% block title %} {{ parent() }} | Accueil{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/profile.css') }}">
+{% endblock %}
+
 {% block body %}
 
-    <div>
+    <section id="outings filter">
+
         <h2>Filtrer les sorties</h2>
 
-       {{ form_start(form) }}
-
-        {{ form_widget(form) }}
+        {{ form_start(outingForm) }}
+        {{ form_widget(outingForm) }}
 
         <button type="submit" title="search">Search</button>
+        {{ form_end(outingForm) }}
 
-        {{ form_end(form) }}
-
-    </div>
+    </section>
     <div>
-        <table class="outingsList">
-            <thead>
+        <table id="outingTable" table-striped table-bordered style="width:100%">
+            <thead class="thead-dark text-center">
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
@@ -31,12 +34,92 @@
             </tr>
             </thead>
             <tbody>
-            {% for outing in outings %}
 
-            {% endfor %}
+
+            {# check if outings #}
+            {% if outings is defined and outings is not empty %}
+
+                {# foreach outing #}
+                {% for outing in outings %}
+
+                    {# Take the finding outing's starting date #}
+                    {% set startAt = outing.startAt|date('Y-m-d') %}
+
+                        <tr class="text-center">
+                            <td>{{ outing.name }}</td>
+                            <td>{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
+                            <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
+                            <td class="text-success">
+                            {# Tout doux : filtrer si l'utilisateur est un participant ou non #}
+                                    <i class="fas fa-check-circle"></i>
+
+                            </td>
+                            <td>
+                                {% if outing.status == 'En création' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="En création">
+                                    </span>
+                                {% elseif outing.status == 'Ouverte' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="Ouverte">
+                                    </span>
+                                {% elseif outing.status == 'Clôturée' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="Clôturée">
+                                    </span>
+                                {% elseif outing.status == 'En cours' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="En cours">
+                                    </span>
+                                {% elseif outing.status == 'Terminée' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="Terminée">
+                                    </span>
+                                {% elseif outing.status == 'Annulée' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="Annulée">
+                                    </span>
+                                {% elseif outing.status == 'Archivée' %}
+                                    <span class="btn" data-toggle="tooltip" data-placement="top" title="Archivée">
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</td>
+
+                            <!-- tout doux -> associer les liens aux différentes actions -->
+
+                            <td id="Action">
+                                <div class="btn-group">
+                                    <a title="Afficher">Afficher</a>
+
+                                    {% if app.user == outing.organizer or app.user.isAdmin %}
+                                        <a title="Modifier">Modifier</a>
+                                        {% if outing.status != "Annulée" %}
+                                            <a title="Annuler">Annuler</a>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if app.user and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
+                                        <a title="Se désister">Se désister</a>
+                                    {% elseif outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
+                                        <a href="{{ path('subscription') }}" title="S'inscrire">S'inscrire</a>
+                                    {% else %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+
+                {# end of foreach outing #}
+                {% endfor %}
+
+            {# If there is no outing #}
+            {% else %}
+                <tr class="text-center">
+                    <th class="text-center text-muted" scope="row" colspan="8">Aucune événement trouvé...</th>
+                </tr>
+            {# end of checking outings #}
+            {% endif %}
+
+
             </tbody>
-
         </table>
     </div>
-
+    <a href="{{ path('outing_creation') }}">
+        <input type="button" value="Créer une sortie">
+    </a>
 {% endblock %}
