@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -51,6 +52,12 @@ class OutingType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Choisissez un lieu'
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer'
+            ])
+            ->add('publish', SubmitType::class, [
+                'label' => 'Publier la sortie'
             ])
         ;
     }
