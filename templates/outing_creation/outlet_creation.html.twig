@@ -29,12 +29,12 @@
 
     <!-- Town filter -->
     <label for="outing_town" class="required">Ville</label>
-    <select id="outing_town" name="outing_town" required="required">
+    <!--<select id="outing_town" name="outing_town" required="required">
         <option value="" selected="selected">Choisissez une ville</option>
-        {% for town in towns %}
-            <option value="{{ town }}">{{ town.name }}</option>
-        {% endfor %}
-    </select>
+        { for town in towns }}
+            <option value="{ town }}">{ town }}</option>
+        { endfor }}
+    </select>-->
 
     <div>
         {{ form_row(outingCreationForm.place) }}
@@ -60,8 +60,8 @@
     </div>
 
     <div>
-        {{ form_row(outingCreationForm.save) }}
-        {{ form_row(outingCreationForm.publish) }}
+        <button id="register">Enregistrer</button>
+        <button id="publish">Publier la sortie</button>
         <button type="button" id="cancel"
                 onclick="confirmCancel()">
             Annuler
