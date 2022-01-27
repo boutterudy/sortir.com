@@ -82,12 +82,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $imageFile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer", cascade={"remove"}, orphanRemoval=true)
      */
     private $organizedOutings;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users", cascade={"remove"}, orphanRemoval=true)
      */
     private $outings;
 

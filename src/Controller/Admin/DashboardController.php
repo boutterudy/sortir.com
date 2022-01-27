@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Outing;
+use App\Entity\Place;
+use App\Entity\Town;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,7 +30,11 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToRoute('Retour au site', 'fa fa-globe-europe', 'temporary');
+        yield MenuItem::linkToDashboard('Accueil admin', 'fa fa-home');
         yield MenuItem::linkToCrud('Participant', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Lieux', 'fas fa-map-marked-alt', Place::class);
+        yield MenuItem::linkToCrud('Villes', 'fas fa-place-of-worship', Town::class);
+        yield MenuItem::linkToCrud('Sorties', 'fas fa-route', Outing::class);
     }
 }
