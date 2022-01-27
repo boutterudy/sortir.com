@@ -34,17 +34,18 @@ class OutingsFilterType extends AbstractType
                     'placeholder' => 'search'
                 ]
             ])
+
             ->add('startAt', DateType::class,[
-                'label' => 'Entre',
-                'attr' => [
-                    'class' => 'form-control datetimepicker-input',
-                    'data-toggle'=>'datetimepicker',
-                    'data-target'=>'#filter_start'
-                ],
-                'required' => false,
-                'empty_data' => null,
-                'mapped' => false
-            ])
+            'label' => 'Entre',
+            'attr' => [
+                'class' => 'form-control datetimepicker-input',
+                'data-toggle'=>'datetimepicker',
+                'data-target'=>'#filter_start'
+            ],
+            'required' => false,
+            'empty_data' => null,
+            'mapped' => false
+        ])
             ->add('limitSubscriptionDate', DateType::class,[
                 'label' => 'et',
                 'attr' => [
@@ -56,25 +57,26 @@ class OutingsFilterType extends AbstractType
                 'empty_data' => null,
                 'mapped' => false
             ])
-            ->add('organise', CheckboxType::class, [
-                'label' => 'Sorties dont je suis l\'organisateur\/trice',
+
+            ->add('organizer', CheckboxType::class, [
+                'label' => 'Sorties dont je suis l\'organisateur/trice',
                 'required' => false,
                 'empty_data' => null,
                 'mapped' => false
             ] )
-            ->add('registered', CheckboxType::class, [
-                'label' => 'Sorties auxquelles je suis inscrit\/e',
+            ->add('subscribed', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je suis inscrit/e',
                 'required' => false,
                 'empty_data' => null,
                 'mapped' => false
             ])
-            ->add('notRegistered', CheckboxType::class, [
-                'label' => 'Sorties auxquelles je ne suis pas inscrit\/e',
+            ->add('unsubscribed', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
                 'required' => false,
                 'empty_data' => null,
                 'mapped' => false
             ])
-            ->add('closedOutings', CheckboxType::class, [
+            ->add('passed', CheckboxType::class, [
                 'label' => 'Sorties passées',
                 'required' => false,
                 'empty_data' => null,
