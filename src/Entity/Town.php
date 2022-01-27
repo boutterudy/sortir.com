@@ -28,14 +28,13 @@ class Town
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Type("integer", message="Le code postal doit être un nombre")
      * @Assert\LessThan(99000, message="Le code postal doit être compris entre 01000 et 98999")
      * @Assert\GreaterThanOrEqual(1000, message="Le code postal doit être compris entre 01000 et 98999")
      */
     private $postalCode;
 
     /**
-     * @ORM\OneToMany(targetEntity=Place::class, mappedBy="town")
+     * @ORM\OneToMany(targetEntity=Place::class, mappedBy="town", cascade={"remove"}, orphanRemoval=true)
      */
     private $places;
 

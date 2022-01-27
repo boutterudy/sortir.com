@@ -23,7 +23,7 @@ class TownCrudController extends AbstractCrudController
             IdField::new('id')->onlyOnIndex(),
             TextField::new('name')->setLabel('Nom'),
             TextField::new('postalCode')->setLabel('Code Postal'),
-            AssociationField::new('places')->setLabel('Lieux associés')
+            AssociationField::new('places')->setLabel('Lieux associés')->onlyOnIndex()
         ];
     }
 
