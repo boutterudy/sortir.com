@@ -5,7 +5,7 @@
     <div id="navbar-right">
         {% if app.user %}
             <ul>
-                <li><a href="{{ path('temporary') }}">Accueil</a></li>
+                <li><a href="{{ path('accueil') }}">Accueil</a></li>
                 <li><a href="{{ path('show_profile', { username: app.user.nickName }) }}">Mon profil</a></li>
                 <li><a href="">Villes</a></li>
                 <li><a href="">Campus</a></li>
