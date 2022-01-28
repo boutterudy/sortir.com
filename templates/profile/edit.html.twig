@@ -12,7 +12,7 @@
         <h1>Mon profil</h1>
         <div id="profile-details">
             <div id="profile-picture-wrapper">
-                <img src="{{ app.user.imageFile ? asset('uploads/profile_pictures/' ~ app.user.imageFile) : asset('assets/images/default-profile.svg') }}">
+                <img src="{{ app.user.imageFilename ? asset('uploads/profile_pictures/' ~ app.user.imageFilename) : asset('assets/images/default-profile.svg') }}">
             </div>
             <div id="informations-wrapper">
 
@@ -82,7 +82,6 @@
 
                 <div class="form-error">
                     {{ form_errors(form.imageFile) }}
-                    {{ uploadError ?? null }}
                 </div>
                 <div class="input-wrapper">
                     <label>{{ form_label(form.imageFile) }} :</label>
