@@ -1,0 +1,34 @@
+.wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-between;
+}
+
+.form-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    line-height: 2rem;
+}
+
+.form-right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.outingTable{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.titles{
+    background-color: gray;
+    width: auto;
+    font-size: large;
+}
+
+.outingList{
+    text-align: center;
+}
