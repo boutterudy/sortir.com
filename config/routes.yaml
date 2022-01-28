@@ -4,3 +4,7 @@
 app_logout:
     path: /deconnexion
     methods: GET
+#outing_list_places:
+ #   path:     sortir.com/public/api/town/{idTown}/places
+  #  defaults: { _controller: "App:OutingCreationController:listPlacesOfTownAction" }
+   # methods:  GET
