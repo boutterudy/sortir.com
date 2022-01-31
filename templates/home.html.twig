@@ -101,7 +101,7 @@
 
                         <td id="Action">
                             <div class="btn-group">
-                                <a href="{{ path('afficher_sortie') }}" title="Afficher">Afficher</a>
+                                <a href="{{ path('afficher_sortie', {id: outing.id}) }}" title="Afficher">Afficher</a>
 
                                 {% if  app.user == outing.organizer %}
                                     <a title="Modifier">Modifier</a>

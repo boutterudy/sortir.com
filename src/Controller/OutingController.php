@@ -61,16 +61,17 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/afficher", name="afficher_sortie")
+     * @Route("/sortie/detail/{id}", name="afficher_sortie", requirements={"id"="\d+"})
      */
 
-    public function display(OutingRepository $outingRepository, int $id) : Response
-    {
-        $outing = $outingRepository->find($id);
-        return $this->render('outing/display.html.twig',[
-            'outing'=>$outing
-        ]);
-    }
+   public function display(OutingRepository $outingRepository, UserRepository $userRepository, int $id){
+       $outing = $outingRepository->find($id);
+       $user = $userRepository->findAll();
+       return $this ->render('outing/display.html.twig',[
+          'outing'=>$outing,
+           'user'=>$user
+       ]);
+   }
 
 
 }

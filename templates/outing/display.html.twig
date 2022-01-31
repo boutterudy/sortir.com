@@ -2,37 +2,52 @@
 
 {% block title %} {{ parent() }} | {{ outing.name }} {% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/display.css') }}">
+{% endblock %}
+
 {% block body %}
 
     <div class="wrapper">
-        <div class="display left">
-            <a>Nom de la sortie : {{ outing.name }}</a>
-            <a>Date et heure de la sortie : {{ outing.startAt }}</a>
-            <a>Date limite d'inscription : {{ outing.limitSubscriptionDate }}</a>
-            <a>Durée : {{ outing.duration }}</a>
-            <a>Description et infos : {{ outing.about }}</a>
+        <div class="display-left">
+            <div>Nom de la sortie : {{ outing.name }}</div>
+            <div>Date et heure de la sortie : {{ outing.startAt |date('Y-m-d H:i:s')}}</div>
+            <div>Date limite d'inscription : {{ outing.limitSubscriptionDate |date('Y-m-d') }}</div>
+            <div>Nombre de places : {{ outing.maxUsers - outing.users|length}}</div>
+            <div>Durée : {{ outing.duration }}</div>
+            <div>Description et infos : {{ outing.about }}</div>
         </div>
-        <div class="display right">
-            <a>Campus : {{ outing.campus }}</a>
-            <a>Lieu : {{ outing.place }}</a>
-            <a>Rue : {{ outing.place.street }}</a>
-            <a>Code postal : </a>
-            <a>Latitude : {{ outing.place.latitude }}</a>
-            <a>Longitude : {{ outing.place.longitude }}</a>
+        <div class="display-right">
+            <div>Campus : {{ outing.campus }}</div>
+            <div>Lieu : {{ outing.place }}</div>
+            <div>Rue : {{ outing.place.street }}</div>
+            <div>Code postal : </div>
+            <div>Latitude : {{ outing.place.latitude }}</div>
+            <div>Longitude : {{ outing.place.longitude }}</div>
         </div>
     </div>
 
+    <div>
+        <a>Liste des participants inscrits :</a>
+
+        <table class="liste-participant">
+            <thead class="title">
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {# TODO -> create the list #}
+                    <td>TODO</td>
+                    <td>TODO</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
-
-
-
-
-
-
-
-
-        <a>Nombre maximum de participants : </a>
 
 
 {% endblock %}
