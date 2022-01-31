@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,7 @@ class ProfileController extends AbstractController
      */
     public function edit(SluggerInterface $slugger, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, Request $request, UserRepository $userRepository, string $username): Response
     {
+
         // Get User entity
         $user = $userRepository->findOneByNickName($username);
         $loggedUser = $this->getUser();
@@ -53,6 +55,7 @@ class ProfileController extends AbstractController
                 $newUsername = $user->getNickName();
 
                 // Flush data
+                $entityManager->persist($user);
                 $entityManager->flush();
 
                 return $this->redirectToRoute('show_profile', [
