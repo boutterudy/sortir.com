@@ -22,8 +22,6 @@ window.onload = function() {
         let townId = townSelector.value;
         let places_json = await getPlaces(townId);
 
-        console.log(places_json)
-
         let L = placeSelector.options.length - 1;
         for(let i = L; i >= 1; i--) {
             placeSelector.remove(i);
