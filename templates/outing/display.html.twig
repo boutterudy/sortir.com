@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | {{ outing.name }} {% endblock %}
+
+{% block body %}
+
+    <div class="wrapper">
+        <div class="display left">
+            <a>Nom de la sortie : {{ outing.name }}</a>
+            <a>Date et heure de la sortie : {{ outing.startAt }}</a>
+            <a>Date limite d'inscription : {{ outing.limitSubscriptionDate }}</a>
+            <a>Durée : {{ outing.duration }}</a>
+            <a>Description et infos : {{ outing.about }}</a>
+        </div>
+        <div class="display right">
+            <a>Campus : {{ outing.campus }}</a>
+            <a>Lieu : {{ outing.place }}</a>
+            <a>Rue : {{ outing.place.street }}</a>
+            <a>Code postal : </a>
+            <a>Latitude : {{ outing.place.latitude }}</a>
+            <a>Longitude : {{ outing.place.longitude }}</a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+        <a>Nombre maximum de participants : </a>
+
+
+{% endblock %}
