@@ -3,18 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
+use App\Entity\Place;
 use App\Entity\Town;
 use App\Form\OutingType;
-use App\Repository\CampusRepository;
-use App\Repository\OutingRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,10 +52,42 @@ class OutingCreationController extends AbstractController
             $manager->flush();
         }
 
-        return $this->render('outing_creation/outlet_creation.html.twig', [
+        return $this->render('outing_creation/outing_creation.html.twig', [
             'controller_name' => 'OutingCreationController',
             'outingCreationForm' => $outingCreationForm->createView(),
             'towns' => $towns
         ]);
+    }
+
+    /**
+     * @Route("/api/town/{idTown}/places", name="outing_list_places")
+     * @param Request $request
+     * @return void
+     */
+    public function listPlacesOfTownAction(Request $request): Response
+    {
+        // Get Entity manager and repository
+        $em = $this->getDoctrine()->getManager();
+        $placeRepository = $em->getRepository(Place::class);
+        $townRepository = $em->getRepository(Town::class);
+
+        $townId = $request->query->get("townId");
+
+        // Search the places that belongs to the town
+        if ($townId) {
+            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $townId]));
+        } else {
+            $places = $placeRepository->findByTown();
+        }
+
+        // Serialize into an array the data that we need
+        $responseArray = array();
+        foreach ($places as $place) {
+            $responseArray[] = array(
+                "id" => $place->getId(),
+                "name" => $place->getName()
+            );
+        }
+        return new JsonResponse($responseArray);
     }
 }

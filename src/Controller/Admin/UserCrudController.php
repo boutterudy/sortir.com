@@ -7,8 +7,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -33,7 +35,8 @@ class UserCrudController extends AbstractCrudController
             AssociationField::new('organizedOutings')->setLabel('Sorties organisées par l\'utilisateur' ),
             AssociationField::new('outings')->setLabel('Participations aux sorties'),
             AssociationField::new('campus')->setLabel('Campus'),
-            // TODO : champ imagefile dans le dashboard
+            TextField::new('imageFile')->setFormType(VichImageType::class),
+            ImageField::new('imageName')->setBasePath('uploads/profile_pictures/')->onlyOnIndex(),
         ];
     }
     public function configureCrud(Crud $crud): Crud

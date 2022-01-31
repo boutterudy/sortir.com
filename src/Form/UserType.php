@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class UserType extends AbstractType
 {
@@ -44,9 +45,11 @@ class UserType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'name'
             ])
-            ->add('imageFile', FileType::class, [
+            ->add('imageFile', VichImageType::class, [
                 'label' => 'Ma photo',
                 'required' => false,
+                'allow_delete' => false,
+                'download_link' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '10000k',

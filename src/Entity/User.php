@@ -6,19 +6,19 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
+ * @Vich\Uploadable()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("nickName", message="Ce pseudo est déjà pris")
- * @Vich\Uploadable()
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
@@ -94,12 +94,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private $imageFile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer", cascade={"remove"}, orphanRemoval=true)
      */
     private $organizedOutings;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users", cascade={"remove"}, orphanRemoval=true)
      */
     private $outings;
 
@@ -382,6 +382,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         $this->campus = $campus;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getNickName();
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable

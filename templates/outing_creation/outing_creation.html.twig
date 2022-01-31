@@ -6,7 +6,7 @@
     <script>
         function confirmCancel(){
             if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
-                window.location.href = '{{ path('login') }}';
+                window.location.href = '{{ path('temporary') }}';
             }
         }
     </script>
@@ -27,36 +27,13 @@
     {{ form_row(outingCreationForm.about) }}
     {{ form_row(outingCreationForm.campus) }}
 
-    <!-- Town filter -->
-    <label for="outing_town" class="required">Ville</label>
-    <select id="outing_town" name="outing_town" required="required">
-        <option value="" selected="selected">Choisissez une ville</option>
-        {% for town in towns %}
-            <option value="{{ town }}">{{ town.name }}</option>
-        {% endfor %}
-    </select>
-
     <div>
-        {{ form_row(outingCreationForm.place) }}
+        {{ form_row(outingCreationForm.place.town) }}
+        {{ form_row(outingCreationForm.place.name) }}
+        {{ form_row(outingCreationForm.place.street) }}
+        {{ form_row(outingCreationForm.place.latitude) }}
+        {{ form_row(outingCreationForm.place.longitude) }}
         <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
-    </div>
-
-    <!-- Place display -->
-    <div>
-        <label for="outing_road">Rue</label>
-        <input type="text" id="outing_road" name="outing_road" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_postal">Code Postal</label>
-        <input type="text" id="outing_postal" name="outing_postal" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_latitude">Latitude</label>
-        <input type="text" id="outing_latitude" name="outing_latitude" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_longitude">Longitude</label>
-        <input type="text" id="outing_longitude" name="outing_longitude" disabled="disabled" hidden>
     </div>
 
     <div>
@@ -71,3 +48,4 @@
     {{ form_end(outingCreationForm) }}
 </div>
 {% endblock %}
+
