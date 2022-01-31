@@ -83,35 +83,35 @@
                         <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
                         <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
                         <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
-                        <td class="text-success">
-
-                            {# Todo : show if user is a participant #}
-                            <i class="fas fa-check-circle"></i>
-
-                        </td>
                         <td>
-                            {% if outing.status == 'En création' %}
+                            {% if outing.status.libelle == 'En création' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="En création">
                                     </span>
-                            {% elseif outing.status == 'Ouverte' %}
+                            {% elseif outing.status.libelle == 'Ouverte' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="Ouverte">
                                     </span>
-                            {% elseif outing.status == 'Clôturée' %}
+                            {% elseif outing.status.libelle == 'Clôturée' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="Clôturée">
                                     </span>
-                            {% elseif outing.status == 'En cours' %}
+                            {% elseif outing.status.libelle == 'En cours' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="En cours">
                                     </span>
-                            {% elseif outing.status == 'Terminée' %}
+                            {% elseif outing.status.libelle == 'Terminée' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="Terminée">
                                     </span>
-                            {% elseif outing.status == 'Annulée' %}
+                            {% elseif outing.status.libelle == 'Annulée' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="Annulée">
                                     </span>
-                            {% elseif outing.status == 'Archivée' %}
+                            {% elseif outing.status.libelle == 'Archivée' %}
                                 <span class="btn" data-toggle="tooltip" data-placement="top" title="Archivée">
                                     </span>
                             {% endif %}
+                        </td>
+                        <td class="text-success">
+                            {# Todo : show if user is a participant #}
+
+                            <i class="fas fa-check-circle"></i>
+
                         </td>
                         <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</td>
 
