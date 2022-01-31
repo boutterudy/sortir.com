@@ -12,6 +12,7 @@ use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -79,7 +80,7 @@ class OutingCreationController extends AbstractController
             $places = $placeRepository->findByTown();
         }
 
-        // Serialize into an array the data that we need, in this case only name and id
+        // Serialize into an array the data that we need
         $responseArray = array();
         foreach ($places as $place) {
             $responseArray[] = array(
@@ -87,10 +88,6 @@ class OutingCreationController extends AbstractController
                 "name" => $place->getName()
             );
         }
-
-        $response = new Response();
-        $response->setContent(json_encode($responseArray));
-
-        return $response;
+        return new JsonResponse($responseArray);
     }
 }
