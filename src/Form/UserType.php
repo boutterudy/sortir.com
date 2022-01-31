@@ -46,14 +46,14 @@ class UserType extends AbstractType
             ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Ma photo',
-                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '5000k',
+                        'maxSize' => '10000k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
+                            'image/x-png',
                             'image/svg+xml',
                             'image/gif',
                         ],
