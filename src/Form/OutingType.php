@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\Outing;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -24,13 +25,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OutingType extends AbstractType
 {
-    private EntityManagerInterface $em; //EntityManagerInterface
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -61,6 +55,9 @@ class OutingType extends AbstractType
                 'label' => 'Campus',
                 'disabled' => true
             ])
+            ->add('place', PlaceType::class, [
+                'label' => false
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer'
             ])
@@ -68,35 +65,6 @@ class OutingType extends AbstractType
                 'label' => 'Publier la sortie'
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onFormEvent'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onFormEvent'));
-    }
-
-    private function addElements(FormInterface $outingForm, Town $town = null) {
-
-        $placeRepository = $this->em->getRepository(Place::class);
-
-        // If there is a town selected, load the places affiliated
-        $places = $placeRepository->findByTown($town);
-
-        // Add the Places field
-        $outingForm->add('place', EntityType::class, [
-            'label' => 'Lieu',
-            'class' => Place::class,
-            'choice_label' => 'name',
-            'placeholder' => 'Choisissez un lieu',
-            'choices' => $places
-        ]);
-    }
-
-    function onFormEvent(FormEvent $event) {
-        $outing = $event->getData();
-        $form = $event->getForm();
-
-        // When you create a new Outing, the Town is always empty !!!!!!!
-        $town = $form->getExtraData('outing_town') ? $outing->getExtraData('outing_town') : null;
-
-        $this->addElements($form, $town);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
