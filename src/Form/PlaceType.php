@@ -30,8 +30,6 @@ class PlaceType extends AbstractType
         $townRepository = $this->em->getRepository(Town::class);
         $towns = $townRepository->findAll();
 
-
-
         $builder
             ->add('town', EntityType::class, [
                 'label' => 'Ville',
@@ -42,6 +40,10 @@ class PlaceType extends AbstractType
             ])
             ->add('street', TextType::class, [
                 'label' => 'Rue',
+                'disabled' => true
+            ])
+            ->add('town_postal_code', TextType::class, [
+                'label' => 'Code Postal',
                 'disabled' => true
             ])
             ->add('latitude', TextType::class, [

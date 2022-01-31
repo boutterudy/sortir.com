@@ -7,8 +7,13 @@ window.onload = function() {
             .then(response => response.json());
 
         return json;
-        /*return await fetch('/api/town/' + townId + '/places').then((response)=>response.json())
-            .then((responseJson)=>{return responseJson});*/
+    }
+
+    async function getPlaceInfo(placeId){
+        const json = await fetch('/sortir.com/public/api/place/' + placeId)
+            .then(response => response.json());
+
+        return json;
     }
 
 
@@ -30,6 +35,21 @@ window.onload = function() {
             // then append it to the select element
             placeSelector.appendChild(opt);
         }
+    });
+
+    placeSelector.addEventListener('change', async (event) => {
+        let streetField = document.getElementById('outing_place_street');
+        let postalCodeField = document.getElementById('outing_place_town_postal_code');
+        let latitudeField = document.getElementById('outing_place_latitude');
+        let longitudeField = document.getElementById('outing_place_longitude');
+
+        let place_json = await getPlaceInfo(placeSelector.value);
+
+        streetField.value = place_json[0].street;
+        postalCodeField.value = place_json[0].postal_code;
+        latitudeField.value = place_json[0].latitude;
+        longitudeField.value = place_json[0].longitude;
+
     });
 };
 
