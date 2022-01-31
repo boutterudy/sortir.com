@@ -11,6 +11,7 @@ use App\Repository\StatusRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,6 @@ class OutingCreationController extends AbstractController
      * @Route("/sortie/creation", name="outing_creation")
      */
     public function create(Request $request,
-                           PlaceRepository $placeRepository,
                            UserRepository $userRepository,
                            TownRepository $townRepository,
                            StatusRepository $statusRepository,
@@ -60,22 +60,18 @@ class OutingCreationController extends AbstractController
     }
 
     /**
-     * @Route("/api/town/{idTown}/places", name="outing_list_places")
+     * @Route("/api/town/{idTown}/places", name="outing_list_places", requirements={"id"="\d+"})
      * @param Request $request
      * @return void
      */
-    public function listPlacesOfTownAction(Request $request): Response
+    public function listPlacesOfTownAction(Request $request,
+                                           PlaceRepository $placeRepository,
+                                           TownRepository $townRepository,
+                                           $idTown = null): Response
     {
-        // Get Entity manager and repository
-        $em = $this->getDoctrine()->getManager();
-        $placeRepository = $em->getRepository(Place::class);
-        $townRepository = $em->getRepository(Town::class);
-
-        $townId = $request->query->get("townId");
-
         // Search the places that belongs to the town
-        if ($townId) {
-            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $townId]));
+        if ($idTown) {
+            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $idTown]));
         } else {
             $places = $placeRepository->findByTown();
         }
