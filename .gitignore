@@ -15,4 +15,6 @@
 ###< symfony/phpunit-bridge ###
 
 /.idea
+
+### Uploaded files ###
 /public/uploads/
