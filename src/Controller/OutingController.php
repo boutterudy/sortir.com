@@ -60,7 +60,17 @@ class OutingController extends AbstractController
 
     }
 
+    /**
+     * @Route("/sortie/afficher", name="afficher_sortie")
+     */
 
+    public function display(OutingRepository $outingRepository, int $id) : Response
+    {
+        $outing = $outingRepository->find($id);
+        return $this->render('outing/display.html.twig',[
+            'outing'=>$outing
+        ]);
+    }
 
 
 }

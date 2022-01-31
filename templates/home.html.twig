@@ -16,31 +16,20 @@
         {{ form_start(outingForm) }}
         <div class="wrapper">
             <div class="form-left">
-                <div class="form-group col-lg-auto">
+                <div>
                     {{ form_row(outingForm.campus) }}
-                </div>
-                <div class="form-group col-lg-auto">
                     {{ form_row(outingForm.name) }}
-                </div>
-                <div class="form-group col-lg-auto">
                     {{ form_row(outingForm.startAt) }}
-                </div>
-                <div class="form-group col-lg-auto">
                     {{ form_row(outingForm.limitSubscriptionDate) }}
                 </div>
+
             </div>
 
             <div class="form-right">
-                <div class="form-group col-md-auto">
+                <div>
                     {{ form_row(outingForm.organizer) }}
-                </div>
-                <div class="form-group col-md-auto">
                     {{ form_row(outingForm.subscribed) }}
-                </div>
-                <div class="form-group col-md-auto">
                     {{ form_row(outingForm.unsubscribed) }}
-                </div>
-                <div class="form-group col-md-auto">
                     {{ form_row(outingForm.passed) }}
                 </div>
             </div>
@@ -112,7 +101,7 @@
 
                         <td id="Action">
                             <div class="btn-group">
-                                <a title="Afficher">Afficher</a>
+                                <a href="{{ path('afficher_sortie') }}" title="Afficher">Afficher</a>
 
                                 {% if  app.user == outing.organizer %}
                                     <a title="Modifier">Modifier</a>
