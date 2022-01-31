@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Place;
+use App\Entity\Town;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @method Place|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +21,26 @@ class PlaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Place::class);
     }
 
+    /**
+     * Return the Places linked to a Town or all Places if no Town was sent.
+     * @param Town|null $town
+     * @return Place[]|float|int|mixed|string
+     */
+    public function findByTown(Town $town = null)
+    {
+        if ($town) {
+            // Fetch Places of the Town if there's a selected city
+            $places = $this->createQueryBuilder("q")
+                ->where("q.town = :townId")
+                ->setParameter("townId", $town->getId())
+                ->getQuery()
+                ->getResult();
+        } else { // No filter, unless there is a selected Town
+            $places = $this->findAll();
+        }
+
+        return $places;
+    }
     // /**
     //  * @return Place[] Returns an array of Place objects
     //  */
