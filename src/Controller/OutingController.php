@@ -4,12 +4,10 @@ namespace App\Controller;
 
 
 use App\Entity\Outing;
-use App\Entity\User;
 use App\Form\OutingsFilterType;
 use App\Repository\OutingRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,6 +59,7 @@ class OutingController extends AbstractController
         ]);
 
     }
+
 
 
 
