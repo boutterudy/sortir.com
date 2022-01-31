@@ -60,7 +60,7 @@ class OutingCreationController extends AbstractController
     }
 
     /**
-     * @Route("/api/town/{idTown}/places", name="outing_list_places", requirements={"id"="\d+"})
+     * @Route("/api/town/{idTown}/places", name="outing_list_places", requirements={"idTown"="\d+"})
      * @param Request $request
      * @return void
      */
