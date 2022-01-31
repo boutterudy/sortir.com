@@ -105,6 +105,15 @@ class Outing
      */
     private $maxUsers;
 
+    /**
+     * @var Town
+     * @ORM\ManyToOne (targetEntity="App\Entity\Town")
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn (name="town_id", referencedColumnName="id")
+     * })
+     */
+    private $town;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -257,6 +266,26 @@ class Outing
         $this->duration = $duration;
         return $this;
     }
+
+    /**
+     * @return Town|null
+     */
+    public function getTown(): ?Town
+    {
+        return $this->town;
+    }
+
+    /**
+     * @param Town $town
+     * @return Outing
+     */
+    public function setTown(Town $town): Outing
+    {
+        $this->town = $town;
+        return $this;
+    }
+
+
 
     public function __toString()
     {

@@ -3,6 +3,7 @@
 {% block title %}Nouvelle sortie{% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         function confirmCancel(){
             if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
@@ -10,8 +11,6 @@
             }
         }
     </script>
-
-    <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
 {% endblock %}
 {% block body %}
 <div class="create-form">
@@ -21,56 +20,87 @@
         {{ form_errors(outingCreationForm) }}
     </div>
 
-    {{ form_row(outingCreationForm.name) }}
-    {{ form_row(outingCreationForm.startAt) }}
-    {{ form_row(outingCreationForm.limitSubscriptionDate) }}
-    {{ form_row(outingCreationForm.maxUsers) }}
-    {{ form_row(outingCreationForm.duration) }}
-    {{ form_row(outingCreationForm.about) }}
-    {{ form_row(outingCreationForm.campus) }}
+{#    {{ form_row(outingCreationForm.name) }}#}
+{#    {{ form_row(outingCreationForm.startAt) }}#}
+{#    {{ form_row(outingCreationForm.limitSubscriptionDate) }}#}
+{#    {{ form_row(outingCreationForm.maxUsers) }}#}
+{#    {{ form_row(outingCreationForm.duration) }}#}
+{#    {{ form_row(outingCreationForm.about) }}#}
+{#    {{ form_row(outingCreationForm.campus) }}#}
 
     <!-- Town filter -->
-    <label for="outing_town" class="required">Ville</label>
-    <select id="outing_town" name="outing_town" required="required">
-        <option value="" selected="selected">Choisissez une ville</option>
-        {% for town in towns %}
-            <option value="{{ town.id }}">{{ town.name }}</option>
-        {% endfor %}
-    </select>
+{#    <label for="outing_town" class="required">Ville</label>#}
+{#    <select id="outing_town" name="outing_town" required="required">#}
+{#        <option value="" selected="selected">Choisissez une ville</option>#}
+{#        {% for town in towns %}#}
+{#            <option value="{{ town.id }}">{{ town.name }}</option>#}
+{#        {% endfor %}#}
+{#    </select>#}
 
-    <div>
-        {{ form_row(outingCreationForm.place) }}
+{#    <div>#}
+{#        {{ form_row(outingCreationForm.place) }}#}
         <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
-    </div>
+{#    </div>#}
 
     <!-- Place display -->
-    <div>
-        <label for="outing_road">Rue</label>
-        <input type="text" id="outing_road" name="outing_road" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_postal">Code Postal</label>
-        <input type="text" id="outing_postal" name="outing_postal" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_latitude">Latitude</label>
-        <input type="text" id="outing_latitude" name="outing_latitude" disabled="disabled" hidden>
-    </div>
-    <div>
-        <label for="outing_longitude">Longitude</label>
-        <input type="text" id="outing_longitude" name="outing_longitude" disabled="disabled" hidden>
-    </div>
+{#    <div>#}
+{#        <label for="outing_road">Rue</label>#}
+{#        <input type="text" id="outing_road" name="outing_road" disabled="disabled" hidden>#}
+{#    </div>#}
+{#    <div>#}
+{#        <label for="outing_postal">Code Postal</label>#}
+{#        <input type="text" id="outing_postal" name="outing_postal" disabled="disabled" hidden>#}
+{#    </div>#}
+{#    <div>#}
+{#        <label for="outing_latitude">Latitude</label>#}
+{#        <input type="text" id="outing_latitude" name="outing_latitude" disabled="disabled" hidden>#}
+{#    </div>#}
+{#    <div>#}
+{#        <label for="outing_longitude">Longitude</label>#}
+{#        <input type="text" id="outing_longitude" name="outing_longitude" disabled="disabled" hidden>#}
+{#    </div>#}
 
-    <div>
-        {{ form_row(outingCreationForm.save) }}
-        {{ form_row(outingCreationForm.publish) }}
-        <button type="button" id="cancel"
-                onclick="confirmCancel()">
-            Annuler
-        </button>
-    </div>
+{#    <div>#}
+{#        {{ form_row(outingCreationForm.save) }}#}
+{#        {{ form_row(outingCreationForm.publish) }}#}
+{#        <button type="button" id="cancel"#}
+{#                onclick="confirmCancel()">#}
+{#            Annuler#}
+{#        </button>#}
+{#    </div>#}
+
+    {{ form_widget(outingCreationForm) }}
+    <input type="submit" value="Créer sortie">
 
     {{ form_end(outingCreationForm) }}
 </div>
+<script>
+    $('#app_outing_town').change(function (){
+        console.log('ici');
+        let townSelector = $(this);
+        $.ajax({
+            url: "{{ path('get_places_from_town') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                townid: townSelector.val()
+            },
+            success: function (places) {
+                let placeSelect = $("#app_outing_place");
+
+                placeSelect.html('');
+
+                placeSelect.append('<option value> Seléctionnez un lieu à ' + townSelector.find("option:selected").text() + '...</option>');
+
+                $.each(places, function (key, place) {
+                    placeSelect.append('<option value="' + place.id + '">' + place.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("Une erreur s'est produite en chargeant les données")
+            }
+        });
+    });
+</script>
 {% endblock %}
 

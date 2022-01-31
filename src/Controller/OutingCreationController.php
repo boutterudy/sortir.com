@@ -3,8 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Outing;
-use App\Entity\Place;
-use App\Entity\Town;
 use App\Form\OutingType;
 use App\Repository\PlaceRepository;
 use App\Repository\StatusRepository;
@@ -12,6 +10,7 @@ use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,38 +58,25 @@ class OutingCreationController extends AbstractController
     }
 
     /**
-     * @Route("/api/town/{idTown}/places", name="outing_list_places")
      * @param Request $request
-     * @return void
+     * @return JsonResponse
+     * @Route("/liste-lieux-par-ville", name="get_places_from_town", methods={"GET"})
      */
-    public function listPlacesOfTownAction(Request $request): Response
+    public function listPlacesOfTownAction(Request $request, EntityManagerInterface $em, PlaceRepository $placeRepository): Response
     {
-        // Get Entity manager and repository
-        $em = $this->getDoctrine()->getManager();
-        $placeRepository = $em->getRepository(Place::class);
-        $townRepository = $em->getRepository(Town::class);
+        $places = $placeRepository->createQueryBuilder('query')
+            ->where('query.town = :townid')
+            ->setParameter('townid', $request->query->getInt('townid'))
+            ->getQuery()
+            ->getResult();
 
-        $townId = $request->query->get("townId");
-
-        // Search the places that belongs to the town
-        if ($townId) {
-            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $townId]));
-        } else {
-            $places = $placeRepository->findByTown();
-        }
-
-        // Serialize into an array the data that we need, in this case only name and id
         $responseArray = array();
-        foreach ($places as $place) {
+        foreach ($places as $place){
             $responseArray[] = array(
-                "id" => $place->getId(),
-                "name" => $place->getName()
+                'id'=>$place->getId(),
+                'name'=>$place->getName()
             );
         }
-
-        $response = new Response();
-        $response->setContent(json_encode($responseArray));
-
-        return $response;
+        return new JsonResponse($responseArray);
     }
 }

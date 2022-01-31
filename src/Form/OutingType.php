@@ -2,10 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Place;
 use App\Entity\Town;
 use App\Repository\PlaceRepository;
-use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -15,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use App\Entity\Outing;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -25,12 +22,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class OutingType extends AbstractType
 {
     private EntityManagerInterface $em; //EntityManagerInterface
+    private PlaceRepository  $placeRepository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, PlaceRepository $placeRepository)
     {
         $this->em = $em;
+        $this->placeRepository = $placeRepository;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     * {@inheritdoc }
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -68,41 +73,73 @@ class OutingType extends AbstractType
                 'label' => 'Publier la sortie'
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onFormEvent'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onFormEvent'));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,  array($this, 'onPreSetData'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
     }
 
     private function addElements(FormInterface $outingForm, Town $town = null) {
 
-        $placeRepository = $this->em->getRepository(Place::class);
+        $outingForm->add('town', EntityType::class, array(
+            'required'=>true,
+            'data'=>$town,
+            'placeholder'=>'Sélectionnez une ville',
+            'class'=>'App\Entity\Town'
+        ));
 
-        // If there is a town selected, load the places affiliated
-        $places = $placeRepository->findByTown($town);
+        $places = array();
 
-        // Add the Places field
-        $outingForm->add('place', EntityType::class, [
-            'label' => 'Lieu',
-            'class' => Place::class,
-            'choice_label' => 'name',
-            'placeholder' => 'Choisissez un lieu',
-            'choices' => $places
-        ]);
+        if($town){
+            $places = $this->placeRepository->createQueryBuilder('query')
+                ->where('query.town = :townid')
+                ->setParameter('townid', $town->getId())
+                ->getQuery()
+                ->getResult();
+        }
+
+        $outingForm->add('place', EntityType::class, array(
+            'required'=>true,
+            'placeholder'=>'Sélectionner d\'abord une ville',
+            'class'=>'App\Entity\Place',
+            'choices'=>$places
+        ));
     }
 
-    function onFormEvent(FormEvent $event) {
+    function onPreSubmit(FormEvent $event)
+    {
+        $outingForm = $event->getForm();
+        $data = $event->getData();
+        $town = $this->em->getRepository('App:Town')->find($data['town']);
+
+        $this->addElements($outingForm, $town);
+    }
+
+    function onPreSetData(FormEvent $event)
+    {
         $outing = $event->getData();
-        $form = $event->getForm();
+        $outingForm = $event->getForm();
+        $town = $outing->getTown() ? $outing->getTown():null;
 
-        // When you create a new Outing, the Town is always empty !!!!!!!
-        $town = $form->getExtraData('outing_town') ? $outing->getExtraData('outing_town') : null;
-
-        $this->addElements($form, $town);
+        $this->addElements($outingForm, $town);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     * {@inheritdoc }
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Outing::class,
+            'data_class' => 'App\Entity\Outing',
         ]);
+    }
+
+    /**
+     * @return string
+     * {@inheritdoc }
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'app_outing';
     }
 }

@@ -80,6 +80,7 @@ class AppFixtures extends Fixture
             ->setEmail($faker->email())
             ->setIsAdmin(true)
             ->setIsActive(true)
+            ->setUpdatedAt(new \DateTimeImmutable())
             ->setPassword($this->hasher->hashPassword($userAdmin, 'Admin'))
             ->setCampus($faker->randomElement($campuses));
 
@@ -100,6 +101,7 @@ class AppFixtures extends Fixture
                 ->setEmail($faker->email())
                 ->setIsAdmin(false)
                 ->setIsActive($faker->randomElement([true,false]))
+                ->setUpdatedAt(new \DateTimeImmutable())
                 ->setPassword($this->hasher->hashPassword($user, $user->getNickName()))
                 ->setCampus($faker->randomElement($campuses));
             $manager->persist($user);
@@ -231,6 +233,7 @@ class AppFixtures extends Fixture
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
                 ->setStatus($statusClosed);
+
 
             $manager->persist($outing);
         }

@@ -8,10 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -34,7 +32,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @Assert\NotBlank(message="L'utilisateur doit avoir un pseudo")
      */
     private $nickName;
-
 
     /**
      * @var string The hashed password
@@ -120,6 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
         $this->organizedOutings = new ArrayCollection();
         $this->outings = new ArrayCollection();
+        $this->setUpdatedAt(new \DateTimeImmutable());
     }
 
     public function getId(): ?int
@@ -433,5 +431,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
             $this->campus,
             $this->updatedAt,
             ) = unserialize($serialized);
+    }
+
+    public function __toString()
+    {
+        return $this->getNickName();
     }
 }
