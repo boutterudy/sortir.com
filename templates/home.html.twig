@@ -85,33 +85,26 @@
                         <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
                         <td>
                             {% if outing.status.libelle == 'En création' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="En création">
-                                    </span>
+                                <span title="En création">En création</span>
                             {% elseif outing.status.libelle == 'Ouverte' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="Ouverte">
-                                    </span>
+                                <span title="Ouverte">Ouverte</span>
                             {% elseif outing.status.libelle == 'Clôturée' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="Clôturée">
-                                    </span>
+                                <span title="Clôturée">Clôturée</span>
                             {% elseif outing.status.libelle == 'En cours' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="En cours">
-                                    </span>
+                                <span title="En cours">En cours</span>
                             {% elseif outing.status.libelle == 'Terminée' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="Terminée">
-                                    </span>
+                                <span title="Terminée">Terminée</span>
                             {% elseif outing.status.libelle == 'Annulée' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="Annulée">
-                                    </span>
+                                <span title="Annulée">Annulée</span>
                             {% elseif outing.status.libelle == 'Archivée' %}
-                                <span class="btn" data-toggle="tooltip" data-placement="top" title="Archivée">
-                                    </span>
+                                <span title="Archivée">Archivée</span>
                             {% endif %}
                         </td>
                         <td class="text-success">
-                            {# Todo : show if user is a participant #}
 
-                            <i class="fas fa-check-circle"></i>
-
+                            {% if outing.users %}
+                            <a title="inscrit">X</a>
+                            {% endif %}
                         </td>
                         <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</td>
 
@@ -131,7 +124,7 @@
                                 {% if app.user and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
                                     <a title="Se désister">Se désister</a>
                                 {% elseif outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
-                                    <a title="S'inscrire">S'inscrire</a>
+                                    <a href="{{ path('subscription') }}" title="S'inscrire">S'inscrire</a>
                                 {% else %}
                                 {% endif %}
                             </div>
@@ -144,7 +137,7 @@
                 {# If there is no outing #}
             {% else %}
                 <tr class="text-center">
-                    <th class="text-center text-muted" scope="row" colspan="8">Aucune événement trouvé...</th>
+                    <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
                 </tr>
                 {# end of checking outings #}
             {% endif %}
