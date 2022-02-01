@@ -25,7 +25,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Sortir (c\'est juste le nom du site, ça ne fait pas sortir XD ) ');
+            ->setTitle('Sortir.com');
     }
 
     public function configureMenuItems(): iterable

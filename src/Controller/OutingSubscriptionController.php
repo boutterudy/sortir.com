@@ -6,6 +6,8 @@ use App\Entity\Outing;
 use App\Entity\User;
 use App\Form\OutingSubscriptionType;
 use App\Repository\OutingRepository;
+use App\Repository\StatusRepository;
+use App\Services\OutingStatusManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
