@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | Accueil{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/home.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+    <h3>Filtrer les sorties</h3>
+
+    <form id="outing-form" method="get">
+
+        {{ form_start(outingForm) }}
+        <div class="wrapper">
+            <div class="form-left">
+                <div>
+                    {{ form_row(outingForm.campus) }}
+                    {{ form_row(outingForm.name) }}
+                    {{ form_row(outingForm.startAt) }}
+                    {{ form_row(outingForm.limitSubscriptionDate) }}
+                </div>
+
+            </div>
+
+            <div class="form-right">
+                <div>
+                    {{ form_row(outingForm.organizer) }}
+                    {{ form_row(outingForm.subscribed) }}
+                    {{ form_row(outingForm.unsubscribed) }}
+                    {{ form_row(outingForm.passed) }}
+                </div>
+            </div>
+            <div class="search">
+                <button type="submit" title="search">Rechercher</button>
+            </div>
+        </div>
+
+        {{ form_end(outingForm) }}
+
+    </form>
+
+    <div>
+        <table class="outingTable" table-striped table-bordered style="width:100%">
+            <thead class="titles">
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits / Places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="outingList">
+
+            {# check if outings #}
+            {% if outings is defined and outings is not empty %}
+
+                {# foreach outing #}
+                {% for outing in outings %}
+
+                    {# Take the finding outing's starting date #}
+                    {% set startAt = outing.startAt|date('Y-m-d') %}
+
+                    <tr class="text-center">
+                        <td>{{ outing.name }}</td>
+                        <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
+                        <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
+                        <td>
+                            {% if outing.status.libelle == 'En création' %}
+                                <span title="En création">En création</span>
+                            {% elseif outing.status.libelle == 'Ouverte' %}
+                                <span title="Ouverte">Ouverte</span>
+                            {% elseif outing.status.libelle == 'Clôturée' %}
+                                <span title="Clôturée">Clôturée</span>
+                            {% elseif outing.status.libelle == 'En cours' %}
+                                <span title="En cours">En cours</span>
+                            {% elseif outing.status.libelle == 'Terminée' %}
+                                <span title="Terminée">Terminée</span>
+                            {% elseif outing.status.libelle == 'Annulée' %}
+                                <span title="Annulée">Annulée</span>
+                            {% elseif outing.status.libelle == 'Archivée' %}
+                                <span title="Archivée">Archivée</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-success">
+
+                            {% if outing.users %}
+                            <a title="inscrit">X</a>
+                            {% endif %}
+                        </td>
+                        <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</td>
+
+                        {# todo -> put correct links related to actions #}
+
+                        <td id="Action">
+                            <div class="btn-group">
+                                <a href="{{ path('afficher_sortie', {id: outing.id}) }}" title="Afficher">Afficher</a>
+
+                                {% if  app.user == outing.organizer %}
+                                    <a title="Modifier">Modifier</a>
+                                    {% if outing.status != "Annulée" %}
+                                        <a title="Annuler">Annuler</a>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if app.user and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
+                                    <a title="Se désister">Se désister</a>
+                                {% elseif outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
+                                    <a href="{{ path('subscription') }}" title="S'inscrire">S'inscrire</a>
+                                {% else %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+
+                    {# end of foreach outing #}
+                {% endfor %}
+
+                {# If there is no outing #}
+            {% else %}
+                <tr class="text-center">
+                    <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
+                </tr>
+                {# end of checking outings #}
+            {% endif %}
+
+
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('outing_creation') }}">
+        <input type="button" value="Créer une sortie">
+    </a>
+{% endblock %}
