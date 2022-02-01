@@ -11,7 +11,6 @@ use App\Repository\StatusRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +24,6 @@ class OutingCreationController extends AbstractController
      */
     public function create(Request $request,
                            UserRepository $userRepository,
-                           TownRepository $townRepository,
                            StatusRepository $statusRepository,
                            EntityManagerInterface $manager): Response
     {
@@ -35,8 +33,6 @@ class OutingCreationController extends AbstractController
         $outing->setOrganizer($user);
 
         $outing->setCampus($user->getCampus());
-
-        $towns = $townRepository->findAll();
 
         $outingCreationForm = $this->createForm(OutingType::class, $outing);
 
@@ -54,18 +50,18 @@ class OutingCreationController extends AbstractController
 
         return $this->render('outing_creation/outing_creation.html.twig', [
             'controller_name' => 'OutingCreationController',
-            'outingCreationForm' => $outingCreationForm->createView(),
-            'towns' => $towns
+            'outingCreationForm' => $outingCreationForm->createView()
         ]);
     }
 
     /**
      * @Route("/api/town/{idTown}/places", name="outing_list_places", requirements={"idTown"="\d+"})
-     * @param Request $request
+     * @param PlaceRepository $placeRepository
+     * @param TownRepository $townRepository
+     * @param null $idTown
      * @return void
      */
-    public function listPlacesOfTownAction(Request $request,
-                                           PlaceRepository $placeRepository,
+    public function listPlacesOfTownAction(PlaceRepository $placeRepository,
                                            TownRepository $townRepository,
                                            $idTown = null): Response
     {
