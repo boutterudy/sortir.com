@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
+use App\Entity\Town;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,18 @@ class OutingRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Outing::class);
+    }
+
+    public function findFullOuting($id)
+    {
+        // Fetch Places of the Town if there's a selected city
+        $outing = $this->createQueryBuilder("q")
+            ->where("q.id = :id")
+            ->setParameter("id", $id)
+            ->getQuery()
+            ->getResult();
+
+        return $outing;
     }
 
     // /**
