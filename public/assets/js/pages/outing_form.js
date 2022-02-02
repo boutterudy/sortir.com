@@ -1,8 +1,13 @@
 window.onload = function() {
+<<<<<<< HEAD
     let townSelector = document.getElementById('outing_town');
     let placeSelector = document.getElementById('outing_place');
 
     placeSelectorLoad().then(r => true);
+=======
+    let townSelector = document.getElementById('outing_place_town');
+    let placeSelector = document.getElementById('outing_place_name');
+>>>>>>> origin/feature/outing_modification
 
     async function getPlaces(townId){
         const json = await fetch('/sortir.com/public/api/town/' + townId + '/places')
@@ -21,8 +26,6 @@ window.onload = function() {
     townSelector.addEventListener('change', async (event) => {
         let townId = townSelector.value;
         let places_json = await getPlaces(townId);
-
-        console.log(places_json)
 
         let L = placeSelector.options.length - 1;
         for(let i = L; i >= 1; i--) {
