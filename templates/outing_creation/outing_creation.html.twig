@@ -48,6 +48,9 @@
         </button>
     </div>
 
+    {# skip the rendering of suppress button, not needed here #}
+    {% do outingCreationForm.suppress.setRendered() %}
+
     {{ form_end(outingCreationForm) }}
 </div>
 {% endblock %}

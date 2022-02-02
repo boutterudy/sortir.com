@@ -50,6 +50,8 @@ class OutingCreationController extends AbstractController
             }
             $manager->persist($outing);
             $manager->flush();
+
+
         }
 
         return $this->render('outing_creation/outing_creation.html.twig', [

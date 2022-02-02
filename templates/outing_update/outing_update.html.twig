@@ -5,19 +5,24 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        window.onload = function() {
+            let suppressButton = document.getElementById('outing_suppress');
+
+            suppressButton.addEventListener('change', async (event) => {
+                if (confirm('Souhaitez-vous vraiment supprimer la sortie ?')) {
+                    console.log('ok')
+                    window.location.href = '{{ path('outing_update', {idOuting:outing.id}) }}';
+                }
+            });
+        }
+
         function confirmCancel(){
             if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
                 window.location.href = '{{ path('temporary') }}';
             }
         }
-    </script>
 
-    <script>
-        function confirmSuppress(){
-            if(confirm('Souhaitez-vous vraiment supprimer la sortie ?')){
-                //window.location.href = '{ path('temporary') }}';
-            }
-        }
+
     </script>
 
     <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
@@ -52,10 +57,7 @@
         <div>
             {{ form_row(outingUpdateForm.save) }}
             {{ form_row(outingUpdateForm.publish) }}
-            <button type="submit" id="suppress"
-                    onclick="confirmSuppress()">
-                Supprimer
-            </button>
+            {{ form_row(outingUpdateForm.suppress) }}
             <button type="button" id="cancel"
                     onclick="confirmCancel()">
                 Annuler

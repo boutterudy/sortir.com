@@ -23,6 +23,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Sodium\add;
 
 class OutingType extends AbstractType
 {
@@ -63,15 +64,6 @@ class OutingType extends AbstractType
                 'label' => 'Campus',
                 'disabled' => true
             ])
-            /*->add('place', PlaceType::class, [
-                'label' => false
-            ])*/
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer'
-            ])
-            ->add('publish', SubmitType::class, [
-                'label' => 'Publier la sortie'
-            ])
             ->add('street', TextType::class, [
                 'label' => 'Rue',
                 'disabled' => true,
@@ -86,6 +78,15 @@ class OutingType extends AbstractType
                 'label' => 'Longitude',
                 'disabled' => true,
                 'mapped' => false
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer'
+            ])
+            ->add('publish', SubmitType::class, [
+                'label' => 'Publier la sortie'
+            ])
+            ->add('suppress', SubmitType::class, [
+                'label' => 'Supprimer'
             ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
