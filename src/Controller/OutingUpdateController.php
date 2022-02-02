@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OutingUpdateController extends AbstractController
 {
     /**
-     * @Route("/sortie/modification/{idOuting}", name="outing_update", requirements={"idOuting"="\d+"})
+     * @Route("/sortie/{idOuting}/modification", name="outing_update", requirements={"idOuting"="\d+"})
      */
     public function update(Request                $request,
                            UserRepository         $userRepository,
