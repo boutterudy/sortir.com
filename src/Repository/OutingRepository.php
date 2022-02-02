@@ -4,7 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Outing;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
 
 /**
  * @method Outing|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +19,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OutingRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function __construct(ManagerRegistry $registry, LoggerInterface $logger, EntityManagerInterface $entityManager)
     {
+        $this->logger = $logger;
+        $this->logger->info('Update all status');
+        $connection = $entityManager->getConnection();
+        $stmt = $connection->prepare('CALL updateOutingsStatus();');
+        $stmt->executeQuery();
         parent::__construct($registry, Outing::class);
     }
+
 
     // /**
     //  * @return Outlet[] Returns an array of Outlet objects
