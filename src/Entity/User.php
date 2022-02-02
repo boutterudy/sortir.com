@@ -112,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private $campus;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
 
