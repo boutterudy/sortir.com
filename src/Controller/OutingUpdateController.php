@@ -26,7 +26,7 @@ class OutingUpdateController extends AbstractController
                            EntityManagerInterface $manager,
                                                   $idOuting): Response
     {
-        $outing = $outingRepository->find($idOuting);
+        $outing = $outingRepository->findFullOuting($idOuting);
         $user = $outing->getOrganizer();
 
         //TODO
@@ -34,30 +34,32 @@ class OutingUpdateController extends AbstractController
             //$this->redirect("");
         }
 
+        //last parameter allow pre-selecting the Place ChoiceType
         $outingUpdateForm = $this->createForm(OutingType::class, $outing);
 
         $outingUpdateForm->handleRequest($request);
 
         if ($outingUpdateForm->isSubmitted()) {
-            if($outingUpdateForm->get('save')->isClicked()){
-                $outing->setStatus($statusRepository->findOneBy(['libelle'=>'En création']));
-            }elseif($outingUpdateForm->get('publish')->isClicked()) {
-                $outing->setStatus($statusRepository->findOneBy(['libelle'=>'Ouverte']));
-            }elseif($outingUpdateForm->get('suppress')->isClicked()) {
-                $outing->setStatus($statusRepository->findOneBy(['libelle'=>'Annulée']));
+            if ($outingUpdateForm->get('save')->isClicked()) {
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'En création']));
+            } elseif ($outingUpdateForm->get('publish')->isClicked()) {
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Ouverte']));
+            } elseif ($outingUpdateForm->get('suppress')->isClicked()) {
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Annulée']));
             }
             $manager->persist($outing);
             $manager->flush();
 
             //TODO
-            if($outingUpdateForm->get('suppress')->isClicked()){
-                //$this->redirect();
+            if ($outingUpdateForm->has('suppress')) {
+                if ($outingUpdateForm->get('suppress')->isClicked()) {
+                    //$this->redirect("");
+                }
             }
         }
 
         return $this->render('outing_update/outing_update.html.twig', [
-            'controller_name' => 'OutingUpdateController',
-            'outingCreationForm' => $outingUpdateForm->createView(),
+            'outingUpdateForm' => $outingUpdateForm->createView(),
             'outing' => $outing
         ]);
     }
