@@ -59,6 +59,6 @@ class OutingRepository extends ServiceEntityRepository
 
         $qb = $qb->getQuery();
         return $qb->execute();
-    }
 
+    }
 }

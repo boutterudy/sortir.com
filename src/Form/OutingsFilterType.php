@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Campus;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -28,34 +29,26 @@ class OutingsFilterType extends AbstractType
                 'mapped' => false
             ])
             ->add('name', TextType::class, [
-                'label' => 'Search outing',
+                'label' => 'Rechercher',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'search'
                 ]
             ])
 
-            ->add('startAt', DateType::class,[
+            ->add('startAt', DateTimeType::class,[
             'label' => 'Entre',
-            'attr' => [
-                'class' => 'form-control datetimepicker-input',
-                'data-toggle'=>'datetimepicker',
-                'data-target'=>'#filter_start'
-            ],
-            'required' => false,
-            'empty_data' => null,
-            'mapped' => false
-        ])
+                'required' => false,
+                'html5' => true,
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text'
+            ])
+
             ->add('limitSubscriptionDate', DateType::class,[
                 'label' => 'et',
-                'attr' => [
-                    'class' => 'form-control datetimepicker-input',
-                    'data-toggle'=>'datetimepicker',
-                    'data-target'=>'#filter_close'
-                ],
                 'required' => false,
-                'empty_data' => null,
-                'mapped' => false
+                'html5' => true,
+                'widget' => 'single_text'
             ])
 
             ->add('organizer', CheckboxType::class, [
