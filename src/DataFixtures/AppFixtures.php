@@ -318,12 +318,17 @@ class AppFixtures extends Fixture
         foreach ($outings as $outing){
             foreach ($users as $user){
                 $subscribe = random_int(0,10);
-                if ($subscribe > 6){
+                if ($subscribe > 6 && $outing->getUsers()->count() < $outing->getMaxUsers()){
                     $outing->addUser($user);
                 }
                 $manager->persist($user);
                 $manager->persist($outing);
             }
+            if ($outing->getStatus()->getLibelle() == 'Ouverte' && $outing->getUsers()->count() == $outing->getMaxUsers())
+            {
+                $outing->setStatus($statusClosed);
+            }
+            $manager->persist($outing);
         }
         $manager->flush();
     }

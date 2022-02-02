@@ -39,9 +39,15 @@ class UserCrudController extends AbstractCrudController
             ImageField::new('imageName')->setBasePath('uploads/profile_pictures/')->onlyOnIndex(),
         ];
     }
+
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->setDefaultSort(['nickName' => 'ASC']);
+        return $crud->setPageTitle('detail', 'Détails d\'un participant')
+            ->setPageTitle('edit', 'Modifier un participant')
+            ->setPageTitle('index', 'Liste des participants')
+            ->setPageTitle('new', 'Créer un participant')
+            ->setEntityLabelInSingular('Participant')
+            ->setEntityLabelInPlural('Participants')
+            ->setDefaultSort(['nickName' => 'ASC']);
     }
-
 }

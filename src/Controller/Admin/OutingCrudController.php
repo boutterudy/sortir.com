@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Outing;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -36,5 +37,13 @@ class OutingCrudController extends AbstractCrudController
             TextareaField::new('about')->setLabel('A propos')
         ];
     }
-
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->setPageTitle('detail', 'Détails d\'une sortie')
+            ->setPageTitle('edit', 'Modifier une sortie')
+            ->setPageTitle('index', 'Liste des sorties')
+            ->setPageTitle('new', 'Créer une sortie')
+            ->setEntityLabelInSingular('Sortie')
+            ->setEntityLabelInPlural('Sorties');
+    }
 }

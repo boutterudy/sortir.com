@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Town;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -26,5 +27,13 @@ class TownCrudController extends AbstractCrudController
             AssociationField::new('places')->setLabel('Lieux associés')->onlyOnIndex()
         ];
     }
-
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->setPageTitle('detail', 'Détails d\'une ville')
+            ->setPageTitle('edit', 'Modifier une ville')
+            ->setPageTitle('index', 'Liste des villes')
+            ->setPageTitle('new', 'Créer une ville')
+            ->setEntityLabelInSingular('Ville')
+            ->setEntityLabelInPlural('Villes');
+    }
 }
