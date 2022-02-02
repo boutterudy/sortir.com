@@ -10,6 +10,11 @@
     php bin/console doctrine:database:create
     php bin/console doctrine:migrations:migrate
 
+## Load fixtures
+
+    php bin/console doctrine:fixtures:load
+
+
 ## Git usage
 To create a cleaner history of modifications, as explained [here](https://medium.com/@peterjussi/a-basic-git-workflow-for-smaller-projects-d8694d50297d#8d1a), you should run that command to configure git auto setup rebase:
 ``git config --global branch.autosetuprebase always``

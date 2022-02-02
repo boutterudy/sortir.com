@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,37 +16,49 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OutingRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $connection = $entityManager->getConnection();
+        $stmt = $connection->prepare('CALL updateOutingsStatus();');
+        $stmt->executeQuery();
         parent::__construct($registry, Outing::class);
     }
 
-    // /**
-    //  * @return Outlet[] Returns an array of Outlet objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function outingFilter (
+        User $user,
+        bool $organizer = false,
+        string $start = null,
+        string $stop =null,
+        bool $passed = false)
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Outlet
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb = $this->createQueryBuilder('s');
+
+
+        if ($start != null){
+            $starttime = strtotime($start);
+            $starnewformat = date('Y-m-d', $starttime);
+            $qb->andWhere('s.startAt >= :startAt')
+                ->setParameter('startAt', $starnewformat);
+        }
+        if ($stop != null){
+            $stoptime = strtotime($stop);
+            $stopnewformat = date('Y-m-d', $stoptime);
+            $qb->andWhere('s.limitSubscriptionDate <= :limitSubscriptionDate')
+                ->setParameter('limitSubscriptionDate', $stopnewformat);
+
+        }
+        if ($passed){
+            $qb ->andWhere('s.startAt <= :passed')
+                ->setParameter('passed', date('Y-m-d HH:MM') );
+        }
+        if ($organizer){
+            $qb ->andWhere('s.organizer = :organizer')
+                ->setParameter('organizer', $user->getId());
+        }
+
+        $qb = $qb->getQuery();
+        return $qb->execute();
+
     }
-    */
 }

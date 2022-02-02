@@ -1,0 +1,28 @@
+.wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+}
+
+.display-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.display-right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.titles{
+    background-color: gray;
+    width: auto;
+    font-size: large;
+}
+
+.liste-participant{
+    overflow : auto;
+}
