@@ -8,6 +8,7 @@ use App\Repository\PlaceRepository;
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -25,6 +26,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OutingType extends AbstractType
 {
+    private EntityManagerInterface $em; //EntityManagerInterface
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -55,28 +63,86 @@ class OutingType extends AbstractType
                 'label' => 'Campus',
                 'disabled' => true
             ])
-            ->add('place', PlaceType::class, [
+            /*->add('place', PlaceType::class, [
                 'label' => false
-            ])
+            ])*/
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer'
             ])
             ->add('publish', SubmitType::class, [
                 'label' => 'Publier la sortie'
             ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer'
+            ->add('street', TextType::class, [
+                'label' => 'Rue',
+                'disabled' => true,
+                'mapped' => false
             ])
-            ->add('publish', SubmitType::class, [
-                'label' => 'Publier la sortie'
+            ->add('latitude', TextType::class, [
+                'label' => 'Latitude',
+                'disabled' => true,
+                'mapped' => false
+            ])
+            ->add('longitude', TextType::class, [
+                'label' => 'Longitude',
+                'disabled' => true,
+                'mapped' => false
             ])
         ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+    }
+
+    private function addElements(FormInterface $form, Town $town = null) {
+        // Add the Places field
+        $form->add('town', EntityType::class, [
+                'label' => 'Ville',
+                'class' => Town::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Choisissez une ville',
+                'mapped' => false,
+                'data' => $town
+            ])
+            ->add('postal_code', TextType::class, [
+                'label' => 'Code Postal',
+                'disabled' => true,
+                'mapped' => false,
+                'data' => $town ? $town->getPostalCode() : null
+            ])
+        ;
+
+        $places = $town ? $town->getPlaces() : [];
+
+        $form->add('place', EntityType::class, [
+            'label' => 'Lieu',
+            'class' => Place::class,
+            'choice_label' => 'name',
+            'placeholder' => 'Choisissez un lieu',
+            'choices' => $places
+        ]);
+    }
+
+    function onPreSubmit(FormEvent $event) {
+        $form = $event->getForm();
+
+        $town = $this->em->getRepository(Town::class)->find($event->getData()['town']);
+
+        $this->addElements($form, $town);
+    }
+
+    function onPreSetData(FormEvent $event) {
+        //dd($event->getData());
+        $place = $event->getData()->getPlace();
+        $form = $event->getForm();
+
+        $town = $place ? $place->getTown() : null;
+
+        $this->addElements($form, $town);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Outing::class,
+            'data_class' => Outing::class
         ]);
     }
 }

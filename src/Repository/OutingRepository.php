@@ -26,11 +26,17 @@ class OutingRepository extends ServiceEntityRepository
     public function findFullOuting($id)
     {
         // Fetch Places of the Town if there's a selected city
-        $outing = $this->createQueryBuilder("q")
+        $outingArrays = $this->createQueryBuilder("q")
+            ->addSelect('place')
+            ->addSelect('town')
             ->where("q.id = :id")
             ->setParameter("id", $id)
+            ->join('q.place', 'place')
+            ->join('place.town', 'town')
             ->getQuery()
             ->getResult();
+
+        $outing = $outingArrays[0];
 
         return $outing;
     }
