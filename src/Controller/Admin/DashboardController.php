@@ -6,6 +6,7 @@ use App\Entity\Outing;
 use App\Entity\Place;
 use App\Entity\Town;
 use App\Entity\User;
+use App\UnmapEntity\CsvFile;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -33,6 +34,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-globe-europe', 'temporary');
         yield MenuItem::linkToDashboard('Accueil admin', 'fa fa-home');
         yield MenuItem::linkToCrud('Participant', 'fas fa-user', User::class);
+        yield MenuItem::linkToRoute('Import par CSV', 'fas fa-users', 'upload_csv');
         yield MenuItem::linkToCrud('Lieux', 'fas fa-map-marked-alt', Place::class);
         yield MenuItem::linkToCrud('Villes', 'fas fa-place-of-worship', Town::class);
         yield MenuItem::linkToCrud('Sorties', 'fas fa-route', Outing::class);

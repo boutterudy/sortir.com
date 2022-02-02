@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Place;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -28,6 +29,16 @@ class PlaceCrudController extends AbstractCrudController
             AssociationField::new('outings')->setLabel('Sorties Associées')->onlyOnIndex(),
             AssociationField::new('town')->setLabel('Ville')
         ];
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->setPageTitle('detail', 'Détails d\'un lieu')
+            ->setPageTitle('edit', 'Modifier un lieu')
+            ->setPageTitle('index', 'Liste des lieux')
+            ->setPageTitle('new', 'Créer un lieu')
+            ->setEntityLabelInSingular('Lieu')
+            ->setEntityLabelInPlural('Lieux');
     }
 
 }
