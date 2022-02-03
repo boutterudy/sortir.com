@@ -36,15 +36,16 @@ class ProfileController extends AbstractController
      */
     public function edit(SluggerInterface $slugger, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, Request $request, UserRepository $userRepository, string $username): Response
     {
-
         // Get User entity
         $user = $userRepository->findOneByNickName($username);
         $loggedUser = $this->getUser();
 
+        // Check if logged user correspond to user to edit
         if($user === $loggedUser) {
             $form = $this->createForm(UserType::class, $user);
             $form->handleRequest($request);
 
+            // If form is submitted and valid, save data then redirect
             if($form->isSubmitted() && $form->isValid()) {
                 // Hash password before flush
                 $user->setPassword($passwordHasher->hashPassword(
@@ -58,16 +59,19 @@ class ProfileController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
 
+                $this->addFlash('success', 'Profil mis à jour !');
                 return $this->redirectToRoute('show_profile', [
                     'username' => $newUsername
                 ]);
             }
 
+            // Show edit form
             return $this->render('profile/edit.html.twig', [
                 'form' => $form->createView(),
             ]);
         }
 
+        $this->addFlash('error', 'Impossible de modifier un profil autre que le vôtre.');
         return $this->redirectToRoute('show_profile', ['username' => $username]);
     }
 }

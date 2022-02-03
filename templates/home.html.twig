@@ -87,18 +87,18 @@
 
                         <td id="Action">
                             <div class="btn-group">
-                                <a href="{{ path('afficher_sortie', {id: outing.id}) }}" title="Afficher">Afficher</a>
+                                <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
 
                                 {% if  app.user == outing.organizer %}
                                     <a title="Modifier">Modifier</a>
                                     {% if outing.status != "Annulée" %}
-                                        <a title="Annuler">Annuler</a>
+                                        <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
                                     {% endif %}
                                 {% endif %}
 
                                 {% if app.user in outing.users and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
                                     <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
-                                {% elseif outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
+                                {% elseif app.user is not same as app.user and app.user not in outing.users and outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
                                     <a href="{{ path('subscription', { id: outing.id }) }}" title="S'inscrire">S'inscrire</a>
                                 {% else %}
                                 {% endif %}

@@ -61,7 +61,7 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/detail/{id}", name="afficher_sortie", requirements={"id"="\d+"})
+     * @Route("/sortie/detail/{id}", name="outing_details", requirements={"id"="\d+"})
      */
 
    public function display(OutingRepository $outingRepository, UserRepository $userRepository, int $id){

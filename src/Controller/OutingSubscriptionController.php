@@ -24,9 +24,17 @@ class OutingSubscriptionController extends AbstractController
         $outing = $outingRepository->find($id);
         /** @var $user User */
         $user = $this->getUser();
+
+        // Define URL to redirect
+        $lastPage = $request->headers->get('referer');
+        $urlToRedirect = $lastPage && $lastPage != $request->getUri()? $lastPage : $this->generateUrl('accueil');
+
+        // If outing not found, show error message then redirect
         if(!$outing){
-            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+            $this->addFlash('error', 'Inscription impossible. Cette sortie n\'existe pas');
+            return $this->redirect($urlToRedirect);
         }
+
         $subcriptionForm = $this->createForm(OutingSubscriptionType::class, $outing);
         $subcriptionForm->handleRequest($request);
 
@@ -35,7 +43,7 @@ class OutingSubscriptionController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash('success', 'Vous êtes inscrit sur la sortie ' . $outing->getName());
-            return $this->redirectToRoute('temporary');
+            return $this->redirect($urlToRedirect);
         }
 
 

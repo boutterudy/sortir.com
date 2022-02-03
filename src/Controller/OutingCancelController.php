@@ -20,6 +20,17 @@ class OutingCancelController extends AbstractController
     {
         // Get Outing entity
         $outing = $outingRepository->findOneById($id);
+
+        // Define URL to redirect
+        $lastPage = $request->headers->get('referer');
+        $urlToRedirect = $lastPage && $lastPage != $request->getUri()? $lastPage : $this->generateUrl('accueil');
+
+        // If outing not found, show error message then redirect
+        if(!$outing){
+            $this->addFlash('error', 'Annulation impossible. Cette sortie n\'existe pas');
+            return $this->redirect($urlToRedirect);
+        }
+
         $loggedUser = $this->getUser();
 
         // Check if logged user is the organizer of that outing
@@ -34,29 +45,31 @@ class OutingCancelController extends AbstractController
                 $form = $this->createForm(OutingCancelType::class, $outing);
                 $form->handleRequest($request);
 
+                // Check if form is submitted and valid
                 if($form->isSubmitted() && $form->isValid()) {
+                    // Update outing status
                     $cancelledStatus = $statusRepository->findOneByLibelle('Annulée');
                     $outing->setStatus($cancelledStatus);
                     $entityManager->flush();
 
-                    // TODO: Redirect to show Outing page
-                    return $this->redirectToRoute('show_profile', [
-                        'username' => $loggedUser->getNickName()
-                    ]);
+                    // Send success message and redirect
+                    $this->addFlash('success', 'Sortie '.$outing->getName().' annulée.');
+                    return $this->redirect($urlToRedirect);
                 }
 
+                // Show cancel form
                 return $this->render('outing/cancel.html.twig', [
                     'outing' => $outing,
                     'form' => $form->createView(),
+                    'urlToRedirect' => $urlToRedirect,
                 ]);
             }
 
             return $this->render('outing/cancel.html.twig', [
                 'outing' => $outing,
+                'urlToRedirect' => $urlToRedirect,
             ]);
         }
-
-        // TODO: Redirect to show Outing page
-        return $this->redirectToRoute('show_profile', ['username' => $loggedUser->getNickName()]);
+        return $this->redirectToRoute('outing_details', ['id' => $outing->getId()]);
     }
 }

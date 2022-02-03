@@ -22,8 +22,15 @@ class OutingUnregisterController extends AbstractController
         $outing = $outingRepository->find($id);
         /** @var $loggedUser User */
         $loggedUser = $this->getUser();
+
+        // Define URL to redirect
+        $lastPage = $request->headers->get('referer');
+        $urlToRedirect = $lastPage && $lastPage != $request->getUri()? $lastPage : $this->generateUrl('accueil');
+
+        // If outing not found, show error message then redirect
         if(!$outing){
-            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+            $this->addFlash('error', 'Désistement impossible. Cette sortie n\'existe pas');
+            return $this->redirect($urlToRedirect);
         }
 
         // Check if logged user is registered to that outing
@@ -38,6 +45,6 @@ class OutingUnregisterController extends AbstractController
         }
 
         // Redirect to last page visited
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirect($urlToRedirect);
     }
 }
