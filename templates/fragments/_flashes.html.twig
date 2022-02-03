@@ -1,0 +1,21 @@
+<ul id="flashes">
+    {% for  label, messages in app.flashes %}
+        {% for message in messages %}
+            {% if label is same as "error" %}
+                <li class="flash-error">
+                    <ion-icon name="close-circle"></ion-icon>
+                    {{ message }}
+                </li>
+            {% elseif label is same as "success" %}
+                <li class="flash-success">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                    {{ message }}
+                </li>
+            {% else %}
+                <li class="flash-{{ label }}">
+                    {{ message }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</ul>
