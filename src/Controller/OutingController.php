@@ -23,31 +23,42 @@ class OutingController extends AbstractController
 
     /**
      * @Route("/", name="accueil")
+     * @param OutingRepository $outingRepository
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function home(OutingRepository $outingRepository, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-
 
         $form = $this->createForm(OutingsFilterType::class);
         $form->handleRequest($request);
         $subscribed = null;
         $unsubscribed = null;
+        $start = null;
+        $stop = null;
+
 
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $start = $form['startAt']->getData();
-            $stop = $form['limitSubscriptionDate']->getData();
+            $name = $form['name']->getData();
+            $campus = $form['campus']->getData();
+
+            //TODO -> filter by date
+         //   $start = $form['startAt']->getData();
+         //  $stop = $form['limitSubscriptionDate']->getData();
 
             $organizer = $form['organizer']->getData();
 
-            $subscribed = $form['subscribed']->getData();
-            $unsubscribed = $form['unsubscribed']->getData();
+            //TODO
+         //   $subscribed = $form['subscribed']->getData();
+         //   $unsubscribed = $form['unsubscribed']->getData();
 
             $passed = $form['passed']->getData();
             $user = $userRepository->findOneById($this->getUser()->getId());
-            $outingsList = $outingRepository->outingFilter($user, $organizer, $start, $stop, $passed);
-
+            $outingsList = $outingRepository->outingFilter($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed);
 
         } else{
             $outingsList = $entityManager->getRepository(Outing::class)->findAll();

@@ -19,8 +19,8 @@
                 <div>
                     {{ form_row(outingForm.campus) }}
                     {{ form_row(outingForm.name) }}
-                    {{ form_row(outingForm.startAt) }}
-                    {{ form_row(outingForm.limitSubscriptionDate) }}
+                    {# {{ form_row(outingForm.startAt) }} #}
+                    {# {{ form_row(outingForm.limitSubscriptionDate) }} #}
                 </div>
 
             </div>
@@ -28,8 +28,8 @@
             <div class="form-right">
                 <div>
                     {{ form_row(outingForm.organizer) }}
-                    {{ form_row(outingForm.subscribed) }}
-                    {{ form_row(outingForm.unsubscribed) }}
+                    {# {{ form_row(outingForm.subscribed) }} #}
+                    {# {{ form_row(outingForm.unsubscribed) }} #}
                     {{ form_row(outingForm.passed) }}
                 </div>
             </div>
@@ -108,11 +108,6 @@
                         <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
                     </tr>
                 {% endfor %}
-
-
-
-
-
             </tbody>
         </table>
     </div>
