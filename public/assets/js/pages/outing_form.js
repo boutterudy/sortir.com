@@ -2,8 +2,6 @@ window.onload = function() {
     let townSelector = document.getElementById('outing_town');
     let placeSelector = document.getElementById('outing_place');
 
-    placeSelectorLoad().then(r => true);
-
     async function getPlaces(townId){
         const json = await fetch('/sortir.com/public/api/town/' + townId + '/places')
             .then(response => response.json());
@@ -17,6 +15,22 @@ window.onload = function() {
 
         return json;
     }
+
+    async function placeSelectorLoad(){
+        let streetField = document.getElementById('outing_street');
+        let postalCodeField = document.getElementById('outing_postal_code');
+        let latitudeField = document.getElementById('outing_latitude');
+        let longitudeField = document.getElementById('outing_longitude');
+
+        let place_json = await getPlaceInfo(placeSelector.value);
+
+        streetField.value = place_json[0].street;
+        postalCodeField.value = place_json[0].postal_code;
+        latitudeField.value = place_json[0].latitude;
+        longitudeField.value = place_json[0].longitude;
+    }
+
+    placeSelectorLoad().then(r => true);
 
     townSelector.addEventListener('change', async (event) => {
         let townId = townSelector.value;
@@ -43,19 +57,5 @@ window.onload = function() {
     placeSelector.addEventListener('change', async (event) => {
         await placeSelectorLoad();
     });
-
-    async function placeSelectorLoad(){
-        let streetField = document.getElementById('outing_street');
-        let postalCodeField = document.getElementById('outing_postal_code');
-        let latitudeField = document.getElementById('outing_latitude');
-        let longitudeField = document.getElementById('outing_longitude');
-
-        let place_json = await getPlaceInfo(placeSelector.value);
-
-        streetField.value = place_json[0].street;
-        postalCodeField.value = place_json[0].postal_code;
-        latitudeField.value = place_json[0].latitude;
-        longitudeField.value = place_json[0].longitude;
-    }
 };
 

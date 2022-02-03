@@ -23,13 +23,20 @@ class OutingUpdateController extends AbstractController
                            UserRepository         $userRepository,
                            StatusRepository       $statusRepository,
                            OutingRepository       $outingRepository,
-                           EntityManagerInterface $manager,
+                           EntityManagerInterface $em,
                                                   $idOuting): Response
     {
         $outing = $outingRepository->findFullOuting($idOuting);
-        $user = $outing->getOrganizer();
+        $organizer = $outing->getOrganizer();
+        $loggedUser = $this->getUser();
 
-        if($user !== $userRepository->find($this->getUser()->getId()) && !$this->getUser()->getIsAdmin()){
+        if($organizer !== $loggedUser && !$loggedUser->getIsAdmin()){
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour modifier cette sortie!');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        if($outing->getStatus()->getLibelle() !== 'En création'){
+            $this->addFlash('error', 'Cette sortie n\'est plus modifiable');
             return $this->redirect($this->generateUrl('accueil'));
         }
 
@@ -40,14 +47,19 @@ class OutingUpdateController extends AbstractController
 
         if ($outingUpdateForm->isSubmitted()) {
             if ($outingUpdateForm->get('save')->isClicked()) {
+                $this->addFlash('success', 'Sortie enregistrée. Pensez à la publier!');
                 $outing->setStatus($statusRepository->findOneBy(['libelle' => 'En création']));
+                $em->persist($outing);
             } elseif ($outingUpdateForm->get('publish')->isClicked()) {
+                $this->addFlash('success', 'Sortie publiée');
                 $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Ouverte']));
-            } elseif ($outingUpdateForm->get('suppress')->isClicked()) {
-                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Annulée']));
+                $em->persist($outing);
+            } elseif ($outingUpdateForm->get('confirm_suppress')){
+                $this->addFlash('success', 'Sortie supprimée');
+                $em->remove($outing);
             }
-            $manager->persist($outing);
-            $manager->flush();
+
+            $em->flush();
 
             if ($outingUpdateForm->get('save')->isClicked() || $outingUpdateForm->get('publish')->isClicked()) {
                 $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
@@ -55,7 +67,7 @@ class OutingUpdateController extends AbstractController
             }
 
             //if form is submit but not redirected at this point, it was a suppression.
-            //return $this->redirect($this->generateUrl('accueil'));
+            return $this->redirect($this->generateUrl('accueil'));
         }
 
         return $this->render('outing_update/outing_update.html.twig', [

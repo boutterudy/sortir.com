@@ -7,10 +7,12 @@ use App\Entity\Town;
 use App\Repository\PlaceRepository;
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -85,8 +87,9 @@ class OutingType extends AbstractType
             ->add('publish', SubmitType::class, [
                 'label' => 'Publier la sortie'
             ])
-            ->add('suppress', SubmitType::class, [
-                'label' => 'Supprimer'
+            ->add('confirm_suppress', HiddenType::class, [
+                'data' => false,
+                'mapped' => false
             ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));

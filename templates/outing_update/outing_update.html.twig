@@ -5,18 +5,14 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        window.onload = function() {
-            let suppressButton = document.getElementById('outing_suppress');
 
-            console.log(suppressButton);
-
-            suppressButton.addEventListener('click', async (event) => {
-                console.log('suppress button event')
-
-                if (confirm('Souhaitez-vous vraiment supprimer la sortie ?')) {
-                    console.log('ok')
-                }
-            });
+        function confirmSuppress(){
+            if (confirm('Souhaitez-vous vraiment supprimer la sortie ?')) {
+                let confirm = document.getElementById('outing_confirm_suppress');
+                let form = document.getElementsByName("outing")[0];
+                confirm.value = true;
+                form.submit();
+            }
         }
 
         function confirmCancel(){
@@ -24,7 +20,6 @@
                 window.location.href = '{{ path('accueil') }}';
             }
         }
-
     </script>
 
     <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
@@ -59,12 +54,16 @@
         <div>
             {{ form_row(outingUpdateForm.save) }}
             {{ form_row(outingUpdateForm.publish) }}
-            {{ form_row(outingUpdateForm.suppress) }}
+            <button type="button" id="suppress"
+                    onclick="confirmSuppress()">
+                Supprimer
+            </button>
             <button type="button" id="cancel"
                     onclick="confirmCancel()">
                 Annuler
             </button>
         </div>
+        {{ form_row(outingUpdateForm.confirm_suppress) }}
 
         {{ form_end(outingUpdateForm) }}
     </div>
