@@ -120,7 +120,7 @@ class OutingType extends AbstractType
             'label' => 'Lieu',
             'class' => Place::class,
             'choice_label' => 'name',
-            'placeholder' => 'Choisissez un lieu',
+            'placeholder' => 'Choisissez d\'abord une ville',
             'choices' => $places
         ]);
     }
