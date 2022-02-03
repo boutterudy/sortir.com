@@ -20,6 +20,18 @@
                 window.location.href = '{{ path('accueil') }}';
             }
         }
+
+        async function getPlaces(townId) {
+            let url = "{{ path('outing_list_places', {id: 0 }) }}";
+            url = url.replace("/0/", "/" + townId + "/");
+            return await fetch(url).then(response => response.json());
+        }
+
+        async function getPlaceInfo(placeId) {
+            let url ="{{ path('get_place', {id: 0}) }}";
+            url = url.replace("/0", "/" + placeId);
+            return await fetch(url).then(response => response.json());
+        }
     </script>
 
     <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
