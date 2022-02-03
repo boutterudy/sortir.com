@@ -40,8 +40,10 @@ class OutingCreationController extends AbstractController
 
         if ($outingCreationForm->isSubmitted()) {
             if($outingCreationForm->get('save')->isClicked()){
+                $this->addFlash('success', 'Sortie enregistrée. Pensez à la publier!');
                 $outing->setStatus($statusRepository->findOneBy(['libelle'=>'En création']));
             }elseif($outingCreationForm->get('publish')->isClicked()) {
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Ouverte']));
                 $outing->setStatus($statusRepository->findOneBy(['libelle'=>'Ouverte']));
             }
             $manager->persist($outing);
