@@ -73,21 +73,7 @@
                         <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
                         <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
                         <td>
-                            {% if outing.status.libelle == 'En création' %}
-                                <span title="En création">En création</span>
-                            {% elseif outing.status.libelle == 'Ouverte' %}
-                                <span title="Ouverte">Ouverte</span>
-                            {% elseif outing.status.libelle == 'Clôturée' %}
-                                <span title="Clôturée">Clôturée</span>
-                            {% elseif outing.status.libelle == 'En cours' %}
-                                <span title="En cours">En cours</span>
-                            {% elseif outing.status.libelle == 'Terminée' %}
-                                <span title="Terminée">Terminée</span>
-                            {% elseif outing.status.libelle == 'Annulée' %}
-                                <span title="Annulée">Annulée</span>
-                            {% elseif outing.status.libelle == 'Archivée' %}
-                                <span title="Archivée">Archivée</span>
-                            {% endif %}
+                            <span title="{{ outing.status.libelle }}">{{ outing.status.libelle }}</span>
                         </td>
                         <td class="text-success">
 
@@ -110,10 +96,10 @@
                                     {% endif %}
                                 {% endif %}
 
-                                {% if app.user and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
-                                    <a title="Se désister">Se désister</a>
+                                {% if app.user in outing.users and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
+                                    <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
                                 {% elseif outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
-                                    <a href="{{ path('subscription') }}" title="S'inscrire">S'inscrire</a>
+                                    <a href="{{ path('subscription', { id: outing.id }) }}" title="S'inscrire">S'inscrire</a>
                                 {% else %}
                                 {% endif %}
                             </div>
