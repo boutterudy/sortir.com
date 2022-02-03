@@ -3,7 +3,6 @@ window.onload = function() {
     let placeSelector = document.getElementById('outing_place');
 
 
-
     async function placeSelectorLoad(){
         let streetField = document.getElementById('outing_street');
         let postalCodeField = document.getElementById('outing_postal_code');
@@ -22,6 +21,7 @@ window.onload = function() {
 
     townSelector.addEventListener('change', async (event) => {
         let townId = townSelector.value;
+        console.log('coucou');
         let places_json = await getPlaces(townId);
 
         console.log(places_json)
