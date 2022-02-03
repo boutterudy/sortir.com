@@ -23,9 +23,7 @@ class OutingCreationController extends AbstractController
      * @Route("/sortie/creation", name="outing_creation")
      */
     public function create(Request $request,
-                           PlaceRepository $placeRepository,
                            UserRepository $userRepository,
-                           TownRepository $townRepository,
                            StatusRepository $statusRepository,
                            EntityManagerInterface $manager): Response
     {
@@ -35,8 +33,6 @@ class OutingCreationController extends AbstractController
         $outing->setOrganizer($user);
 
         $outing->setCampus($user->getCampus());
-
-        $towns = $townRepository->findAll();
 
         $outingCreationForm = $this->createForm(OutingType::class, $outing);
 
@@ -57,8 +53,7 @@ class OutingCreationController extends AbstractController
 
         return $this->render('outing_creation/outing_creation.html.twig', [
             'controller_name' => 'OutingCreationController',
-            'outingCreationForm' => $outingCreationForm->createView(),
-            'towns' => $towns
+            'outingCreationForm' => $outingCreationForm->createView()
         ]);
     }
 }
