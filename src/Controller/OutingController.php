@@ -329,4 +329,33 @@ class OutingController extends AbstractController
             'outing' => $outing
         ]);
     }
+
+    /**
+     * @Route("/sortie/{id}/publier", name="outing_publish", requirements={"id"="\d+"})
+     */
+    public function publish(int $id,
+                               OutingRepository $outingRepository,
+                               StatusRepository $statusRepository,
+                               EntityManagerInterface $entityManager): Response
+    {
+        $outing = $outingRepository->findFullOuting($id);
+        $organizer = $outing->getOrganizer();
+        $loggedUser = $this->getUser();
+
+        if($organizer !== $loggedUser && !$loggedUser->getIsAdmin()){
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour publier cette sortie!');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        if($outing->getStatus()->getLibelle() == 'En création'){
+            $statusPublished = $statusRepository->findOneBy(['libelle'=>'Ouverte']);
+            $outing->setStatus($statusPublished);
+            $entityManager->persist($outing);
+            $entityManager->flush();
+            $this->addFlash('success', 'La sortie a bien été publiée !');
+        }
+        return $this->redirectToRoute('outing_details', [
+            'id'=>$id
+        ]);
+    }
 }

@@ -170,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     public function getRoles(): array
     {
-        return $this->isAdmin?['ROLE_ADMIN']:['ROLE_USER'];
+        return $this->isAdmin?['ROLE_ADMIN', 'ROLE_USER']:['ROLE_USER'];
     }
 
     /**
