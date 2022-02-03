@@ -24,12 +24,15 @@ window.onload = function() {
         console.log('coucou');
         let places_json = await getPlaces(townId);
 
-        console.log(places_json)
-
         let L = placeSelector.options.length - 1;
-        for(let i = L; i >= 1; i--) {
+
+        for(let i = L; i >= 0; i--) {
             placeSelector.remove(i);
         }
+
+        let opt = document.createElement("option");
+        opt.innerHTML = 'Choisissez un lieu';
+        placeSelector.appendChild(opt);
 
         for(let i in places_json)
         {
