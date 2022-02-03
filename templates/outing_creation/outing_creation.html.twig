@@ -3,33 +3,23 @@
 {% block title %}Nouvelle sortie{% endblock %}
 {% block javascripts %}
     {{ parent() }}
-
     <script>
-        function confirmCancel(){
-            if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
+        function confirmCancel() {
+            if (confirm('Souhaitez-vous vraiment annuler l\'opération ?')) {
                 window.location.href = '{{ path('accueil') }}';
             }
         }
 
-            async function getPlaces(townId) {
-            let url = {{ path('outing_list_places', {idTown: 15}) }};
-            console.log(url);
-            url = url.replace("15", townId);
-            console.log(url);
-
-            const json = await fetch(url)
-                .then(response => response.json());
-
-            return json;
+        async function getPlaces(townId) {
+            let url = "{{ path('outing_list_places', {id: 0 }) }}";
+            url = url.replace("/0/", "/" + townId + "/");
+            return await fetch(url).then(response => response.json());
         }
 
-
         async function getPlaceInfo(placeId) {
-
-            const json = await fetch('/sortir.com/public/api/place/' + placeId)
-                .then(response => response.json());
-
-            return json;
+            let url ="{{ path('get_place', {id: 0}) }}";
+            url = url.replace("/0", "/" + placeId);
+            return await fetch(url).then(response => response.json());
         }
 
     </script>
@@ -38,42 +28,42 @@
 
 {% endblock %}
 {% block body %}
-<div class="create-form">
-    {{ form_start(outingCreationForm) }}
+    <div class="create-form">
+        {{ form_start(outingCreationForm) }}
 
-    <div>
-        {{ form_errors(outingCreationForm) }}
+        <div>
+            {{ form_errors(outingCreationForm) }}
+        </div>
+
+        {{ form_row(outingCreationForm.name) }}
+        {{ form_row(outingCreationForm.startAt) }}
+        {{ form_row(outingCreationForm.limitSubscriptionDate) }}
+        {{ form_row(outingCreationForm.maxUsers) }}
+        {{ form_row(outingCreationForm.duration) }}
+        {{ form_row(outingCreationForm.about) }}
+        {{ form_row(outingCreationForm.campus) }}
+
+        <div>
+            {{ form_row(outingCreationForm.town) }}
+            {{ form_row(outingCreationForm.place) }}
+            {{ form_row(outingCreationForm.street) }}
+            {{ form_row(outingCreationForm.postal_code) }}
+            {{ form_row(outingCreationForm.latitude) }}
+            {{ form_row(outingCreationForm.longitude) }}
+            <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
+        </div>
+
+        <div>
+            {{ form_row(outingCreationForm.save) }}
+            {{ form_row(outingCreationForm.publish) }}
+            <button type="button" id="cancel"
+                    onclick="confirmCancel()">
+                Annuler
+            </button>
+        </div>
+
+        {{ form_end(outingCreationForm) }}
     </div>
-
-    {{ form_row(outingCreationForm.name) }}
-    {{ form_row(outingCreationForm.startAt) }}
-    {{ form_row(outingCreationForm.limitSubscriptionDate) }}
-    {{ form_row(outingCreationForm.maxUsers) }}
-    {{ form_row(outingCreationForm.duration) }}
-    {{ form_row(outingCreationForm.about) }}
-    {{ form_row(outingCreationForm.campus) }}
-
-    <div>
-        {{ form_row(outingCreationForm.town) }}
-        {{ form_row(outingCreationForm.place) }}
-        {{ form_row(outingCreationForm.street) }}
-        {{ form_row(outingCreationForm.postal_code) }}
-        {{ form_row(outingCreationForm.latitude) }}
-        {{ form_row(outingCreationForm.longitude) }}
-        <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
-    </div>
-
-    <div>
-        {{ form_row(outingCreationForm.save) }}
-        {{ form_row(outingCreationForm.publish) }}
-        <button type="button" id="cancel"
-                onclick="confirmCancel()">
-            Annuler
-        </button>
-    </div>
-
-    {{ form_end(outingCreationForm) }}
-</div>
 
 {% endblock %}
 
