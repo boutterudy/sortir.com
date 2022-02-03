@@ -43,7 +43,7 @@
     </form>
 
     <div>
-        <table class="outingTable" table-striped table-bordered style="width:100%">
+        <table class="outingTable table-striped table-bordered" style="width:100%">
             <thead class="titles">
             <tr>
                 <th>Nom de la sortie</th>
@@ -58,62 +58,59 @@
             </thead>
             <tbody class="outingList">
 
-            {# check if outings #}
-            {% if outings is defined and outings is not empty %}
-
                 {# foreach outing #}
                 {% for outing in outings %}
+                    {% if outing.status.libelle != 'En création' or outing.organizer == app.user %}
+                        {# Take the finding outing's starting date #}
+                        {% set startAt = outing.startAt|date('Y-m-d') %}
 
-                    {# Take the finding outing's starting date #}
-                    {% set startAt = outing.startAt|date('Y-m-d') %}
+                        <tr class="text-center">
+                            <td>{{ outing.name }}</td>
+                            <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
+                            <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
+                            <td>
+                                <span title="{{ outing.status.libelle }}">{{ outing.status.libelle }}</span>
+                            </td>
+                            <td class="text-success">
 
-                    <tr class="text-center">
-                        <td>{{ outing.name }}</td>
-                        <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
-                        <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
-                        <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
-                        <td>
-                            <span title="{{ outing.status.libelle }}">{{ outing.status.libelle }}</span>
-                        </td>
-                        <td class="text-success">
+                                {% if app.user in outing.users %}
+                                <a title="inscrit">X</a>
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
 
-                            {% if outing.users %}
-                            <a title="inscrit">X</a>
-                            {% endif %}
-                        </td>
-                        <td><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
+                            <td id="Action">
+                                <div class="btn-group">
+                                    <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
 
-                        <td id="Action">
-                            <div class="btn-group">
-                                <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
-
-                                {% if  app.user == outing.organizer %}
-                                    <a title="Modifier">Modifier</a>
-                                    {% if outing.status != "Annulée" %}
-                                        <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
+                                    {% if  app.user == outing.organizer %}
+                                        <a title="Modifier">Modifier</a>
+                                        {% if outing.status != "Annulée" %}
+                                            <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
 
-                                {% if app.user in outing.users and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
-                                    <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
-                                {% elseif app.user is not same as app.user and app.user not in outing.users and outing.users|length != outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
-                                    <a href="{{ path('subscription', { id: outing.id }) }}" title="S'inscrire">S'inscrire</a>
-                                {% else %}
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
-
+                                    {% if app.user in outing.users and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
+                                        <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
+                                    {% elseif app.user not in outing.users and outing.users|length < outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
+                                        <a href="{{ path('subscription', { id: outing.id }) }}" title="S'inscrire">S'inscrire</a>
+                                    {% else %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
                     {# end of foreach outing #}
+                {% else %}
+                    {# If there is no outing #}
+                    <tr class="text-center">
+                        <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
+                    </tr>
                 {% endfor %}
 
-                {# If there is no outing #}
-            {% else %}
-                <tr class="text-center">
-                    <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
-                </tr>
-                {# end of checking outings #}
-            {% endif %}
+
+
 
 
             </tbody>
