@@ -66,8 +66,18 @@ class OutingController extends AbstractController
     /**
      * @Route("/sortie/{id}/details", name="outing_details", requirements={"id"="\d+"})
      */
-   public function display(OutingRepository $outingRepository, UserRepository $userRepository, int $id){
+   public function display(OutingRepository $outingRepository, UserRepository $userRepository, int $id, Request $request){
        $outing = $outingRepository->find($id);
+
+       // Define URL to redirect
+       $lastPage = $request->headers->get('referer');
+       $urlToRedirect = $lastPage && $lastPage != $request->getUri()? $lastPage : $this->generateUrl('accueil');
+
+       // If outing not found, show error message then redirect
+       if(!$outing){
+           $this->addFlash('error', 'Affichage impossible. Cette sortie n\'existe pas');
+           return $this->redirect($urlToRedirect);
+       }
        $user = $userRepository->findAll();
        return $this ->render('outing/display.html.twig',[
           'outing'=>$outing,
@@ -140,6 +150,7 @@ class OutingController extends AbstractController
      */
     public function subscribe(int $id, OutingRepository $outingRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var Outing $outing */
         $outing = $outingRepository->find($id);
         /** @var $user User */
         $user = $this->getUser();
@@ -152,24 +163,22 @@ class OutingController extends AbstractController
         if(!$outing){
             $this->addFlash('error', 'Inscription impossible. Cette sortie n\'existe pas');
             return $this->redirect($urlToRedirect);
-        }
-
-        $subcriptionForm = $this->createForm(OutingSubscriptionType::class, $outing);
-        $subcriptionForm->handleRequest($request);
-
-        if($subcriptionForm->isSubmitted()){
+        }elseif(!$outing->getUsers()->contains($user) && $outing->getStatus()->getLibelle() == 'Ouverte'){
             $outing->addUser($user);
             $entityManager->persist($outing);
             $entityManager->flush();
             $this->addFlash('success', 'Vous êtes inscrit sur la sortie ' . $outing->getName());
             return $this->redirect($urlToRedirect);
+        }elseif ($outing->getUsers()->contains($user)){
+            $this->addFlash('success', 'Vous êtes déjà inscrit sur cette sortie ' . $outing->getName());
+            return $this->redirect($urlToRedirect);
+        }elseif ($outing->getStatus()->getLibelle() != 'Ouverte'){
+            $this->addFlash('success', 'Cette sortie n\'est pas ouverte à l\'inscription ! ' . $outing->getName());
+            return $this->redirect($urlToRedirect);
+        }else{
+            $this->addFlash('success', 'Une erreur empêche votre inscription' . $outing->getName());
+            return $this->redirect($urlToRedirect);
         }
-
-
-        return $this->render('outing_subscription/index.html.twig', [
-            'outing'=>$outing,
-            'subscriptionForm'=>$subcriptionForm->createView()
-        ]);
     }
 
     /**
@@ -205,5 +214,4 @@ class OutingController extends AbstractController
         // Redirect to last page visited
         return $this->redirect($urlToRedirect);
     }
-
 }
