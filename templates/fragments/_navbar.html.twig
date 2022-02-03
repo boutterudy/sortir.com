@@ -1,21 +1,21 @@
 <nav id="navbar">
     <div id="navbar-left">
-        <p><a href="{{ app.user ? path('accueil') : path('login') }}">Sortir.com</a></p>
+        <a href="{{ path('accueil') }}"><img src="{{ asset('assets/images/favicon.svg') }}"> Sortir.com</a>
     </div>
+    {% if app.user %}
     <div id="navbar-right">
-        {% if app.user %}
-            <ul>
-                <li><a href="{{ path('accueil') }}">Accueil</a></li>
-                <li><a href="{{ path('show_profile', { username: app.user.nickName }) }}">Mon profil</a></li>
-                {% if app.user.isAdmin %}
-                    {% set townUrl = ea_url().setController('App\\Controller\\Admin\\TownCrudController') %}
-                    {% set campusUrl = ea_url().setController('App\\Controller\\Admin\\CampusCrudController') %}
-                    <li><a href="{{ path('admin') }}">Panneau d'administration</a></li>
-                    <li><a href="{{ townUrl }}">Villes</a></li>
-                    <li><a href="{{ campusUrl }}">Campus</a></li>
-                {% endif %}
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-            </ul>
-        {% endif %}
+        <ul>
+            <li><a href="{{ path('accueil') }}">Accueil</a></li>
+            <li><a href="{{ path('show_profile', { username: app.user.nickName }) }}">Mon profil</a></li>
+            {% if app.user.isAdmin %}
+                {% set townUrl = ea_url().setController('App\\Controller\\Admin\\TownCrudController') %}
+                {% set campusUrl = ea_url().setController('App\\Controller\\Admin\\CampusCrudController') %}
+                <li><a href="{{ path('admin') }}">Panneau d'administration</a></li>
+                <li><a href="{{ townUrl }}">Villes</a></li>
+                <li><a href="{{ campusUrl }}">Campus</a></li>
+            {% endif %}
+            <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+        </ul>
     </div>
+    {% endif %}
 </nav>

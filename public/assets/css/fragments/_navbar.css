@@ -5,13 +5,22 @@
     align-items: center;
 }
 
-#navbar-left p {
+#navbar-left a {
     font-size: 36px;
+    font-weight: 900;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--primary-color);
+}
+
+#navbar-left a:hover {
     font-weight: 900;
 }
 
-#navbar-left p a:hover {
-    font-weight: inherit;
+#navbar-left img {
+    width: auto;
+    height: 72px;
 }
 
 #navbar-right ul {
