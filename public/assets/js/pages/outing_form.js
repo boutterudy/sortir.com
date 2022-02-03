@@ -2,19 +2,7 @@ window.onload = function() {
     let townSelector = document.getElementById('outing_town');
     let placeSelector = document.getElementById('outing_place');
 
-    async function getPlaces(townId){
-        const json = await fetch('/sortir.com/public/api/town/' + townId + '/places')
-            .then(response => response.json());
 
-        return json;
-    }
-
-    async function getPlaceInfo(placeId){
-        const json = await fetch('/sortir.com/public/api/place/' + placeId)
-            .then(response => response.json());
-
-        return json;
-    }
 
     async function placeSelectorLoad(){
         let streetField = document.getElementById('outing_street');

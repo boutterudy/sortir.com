@@ -9,6 +9,26 @@
                 window.location.href = '{{ path('accueil') }}';
             }
         }
+            async function getPlaces(townId) {
+                let url = {{ path('outing_list_places', {idTown: 0}) }};
+                console.log(url);
+                url = url.replace("0", townId);
+                console.log(url);
+
+                const json = await fetch(url)
+                    .then(response => response.json());
+
+                return json;
+            }
+
+            async function getPlaceInfo(placeId) {
+
+                const json = await fetch('/sortir.com/public/api/place/' + placeId)
+                    .then(response => response.json());
+
+                return json;
+
+        }
     </script>
 
     <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
