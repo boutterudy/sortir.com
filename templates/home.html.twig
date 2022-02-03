@@ -81,9 +81,7 @@
                             <a title="inscrit">X</a>
                             {% endif %}
                         </td>
-                        <td>{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</td>
-
-                        {# todo -> put correct links related to actions #}
+                        <td><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
 
                         <td id="Action">
                             <div class="btn-group">

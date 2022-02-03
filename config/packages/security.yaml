@@ -57,7 +57,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: '^/profil', roles: ROLE_USER }
         - { path: '^/sortie', roles: ROLE_USER }
-        - { path: '^/accueil', roles: ROLE_USER }
+        - { path: '^/$', roles: ROLE_USER }
 
 when@test:
     security:

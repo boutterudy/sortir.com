@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OutingSubscriptionController extends AbstractController
 {
     /**
-     * @Route("/sortie/inscription/{id}", name="subscription", requirements={"id"="\d+"})
+     * @Route("/sortie/{id}/inscription", name="subscription", requirements={"id"="\d+"})
      */
     public function subscribe(int $id, OutingRepository $outingRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
