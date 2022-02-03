@@ -29,9 +29,8 @@ class OutingUpdateController extends AbstractController
         $outing = $outingRepository->findFullOuting($idOuting);
         $user = $outing->getOrganizer();
 
-        //TODO change for loby
-        if($user !== $userRepository->find($this->getUser()->getId()) && !$user->getIsAdmin()){
-            $this->redirect("temporary");
+        if($user !== $userRepository->find($this->getUser()->getId()) && !$this->getUser()->getIsAdmin()){
+            return $this->redirect($this->generateUrl('accueil'));
         }
 
         //last parameter allow pre-selecting the Place ChoiceType
@@ -50,13 +49,13 @@ class OutingUpdateController extends AbstractController
             $manager->persist($outing);
             $manager->flush();
 
-            //TODO change for outing details
             if ($outingUpdateForm->get('save')->isClicked() || $outingUpdateForm->get('publish')->isClicked()) {
-                $this->redirect("temporary");
+                $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
+                return $this->redirect($url);
             }
 
-            //TODO change for loby
-            $this->redirect("temporary");
+            //if form is submit but not redirected at this point, it was a suppression.
+            //return $this->redirect($this->generateUrl('accueil'));
         }
 
         return $this->render('outing_update/outing_update.html.twig', [

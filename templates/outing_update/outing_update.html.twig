@@ -8,20 +8,22 @@
         window.onload = function() {
             let suppressButton = document.getElementById('outing_suppress');
 
-            suppressButton.addEventListener('change', async (event) => {
+            console.log(suppressButton);
+
+            suppressButton.addEventListener('click', async (event) => {
+                console.log('suppress button event')
+
                 if (confirm('Souhaitez-vous vraiment supprimer la sortie ?')) {
                     console.log('ok')
-                    window.location.href = '{{ path('outing_update', {idOuting:outing.id}) }}';
                 }
             });
         }
 
         function confirmCancel(){
             if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
-                window.location.href = '{{ path('temporary') }}';
+                window.location.href = '{{ path('accueil') }}';
             }
         }
-
 
     </script>
 

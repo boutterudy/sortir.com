@@ -51,7 +51,8 @@ class OutingCreationController extends AbstractController
             $manager->persist($outing);
             $manager->flush();
 
-
+            $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
+            return $this->redirect($url);
         }
 
         return $this->render('outing_creation/outing_creation.html.twig', [
