@@ -21,7 +21,6 @@ window.onload = function() {
 
     townSelector.addEventListener('change', async (event) => {
         let townId = townSelector.value;
-        console.log('coucou');
         let places_json = await getPlaces(townId);
 
         let L = placeSelector.options.length - 1;
