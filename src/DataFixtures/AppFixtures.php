@@ -316,19 +316,21 @@ class AppFixtures extends Fixture
         $outings = $this->outingRepository->findAll();
 
         foreach ($outings as $outing){
-            foreach ($users as $user){
-                $subscribe = random_int(0,10);
-                if ($subscribe > 6 && $outing->getUsers()->count() < $outing->getMaxUsers()){
-                    $outing->addUser($user);
+            if ($outing->getStatus()->getLibelle() != 'En création'){
+                foreach ($users as $user){
+                    $subscribe = random_int(0,10);
+                    if ($subscribe > 8 && $outing->getUsers()->count() < $outing->getMaxUsers()){
+                        $outing->addUser($user);
+                    }
+                    $manager->persist($user);
+                    $manager->persist($outing);
                 }
-                $manager->persist($user);
+                if ($outing->getStatus()->getLibelle() == 'Ouverte' && $outing->getUsers()->count() == $outing->getMaxUsers())
+                {
+                    $outing->setStatus($statusClosed);
+                }
                 $manager->persist($outing);
             }
-            if ($outing->getStatus()->getLibelle() == 'Ouverte' && $outing->getUsers()->count() == $outing->getMaxUsers())
-            {
-                $outing->setStatus($statusClosed);
-            }
-            $manager->persist($outing);
         }
         $manager->flush();
     }
