@@ -36,7 +36,7 @@ class OutingsFilterType extends AbstractType
                 ]
             ])
 
-            ->add('startAt', DateTimeType::class,[
+    /*        ->add('startAt', DateTimeType::class,[
             'label' => 'Entre',
                 'required' => false,
                 'html5' => true,
@@ -50,14 +50,14 @@ class OutingsFilterType extends AbstractType
                 'html5' => true,
                 'widget' => 'single_text'
             ])
-
+    */
             ->add('organizer', CheckboxType::class, [
                 'label' => 'Sorties dont je suis l\'organisateur/trice',
                 'required' => false,
                 'empty_data' => null,
                 'mapped' => false
             ] )
-            ->add('subscribed', CheckboxType::class, [
+    /*        ->add('subscribed', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je suis inscrit/e',
                 'required' => false,
                 'empty_data' => null,
@@ -69,7 +69,7 @@ class OutingsFilterType extends AbstractType
                 'empty_data' => null,
                 'mapped' => false
             ])
-            ->add('passed', CheckboxType::class, [
+    */        ->add('passed', CheckboxType::class, [
                 'label' => 'Sorties passées',
                 'required' => false,
                 'empty_data' => null,
