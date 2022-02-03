@@ -23,9 +23,7 @@ class OutingCreationController extends AbstractController
      * @Route("/sortie/creation", name="outing_creation")
      */
     public function create(Request $request,
-                           PlaceRepository $placeRepository,
                            UserRepository $userRepository,
-                           TownRepository $townRepository,
                            StatusRepository $statusRepository,
                            EntityManagerInterface $manager): Response
     {
@@ -35,8 +33,6 @@ class OutingCreationController extends AbstractController
         $outing->setOrganizer($user);
 
         $outing->setCampus($user->getCampus());
-
-        $towns = $townRepository->findAll();
 
         $outingCreationForm = $this->createForm(OutingType::class, $outing);
 
@@ -50,44 +46,14 @@ class OutingCreationController extends AbstractController
             }
             $manager->persist($outing);
             $manager->flush();
+
+            $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
+            return $this->redirect($url);
         }
 
         return $this->render('outing_creation/outing_creation.html.twig', [
             'controller_name' => 'OutingCreationController',
-            'outingCreationForm' => $outingCreationForm->createView(),
-            'towns' => $towns
+            'outingCreationForm' => $outingCreationForm->createView()
         ]);
-    }
-
-    /**
-     * @Route("/api/town/{idTown}/places", name="outing_list_places")
-     * @param Request $request
-     * @return void
-     */
-    public function listPlacesOfTownAction(Request $request): Response
-    {
-        // Get Entity manager and repository
-        $em = $this->getDoctrine()->getManager();
-        $placeRepository = $em->getRepository(Place::class);
-        $townRepository = $em->getRepository(Town::class);
-
-        $townId = $request->query->get("townId");
-
-        // Search the places that belongs to the town
-        if ($townId) {
-            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $townId]));
-        } else {
-            $places = $placeRepository->findByTown();
-        }
-
-        // Serialize into an array the data that we need
-        $responseArray = array();
-        foreach ($places as $place) {
-            $responseArray[] = array(
-                "id" => $place->getId(),
-                "name" => $place->getName()
-            );
-        }
-        return new JsonResponse($responseArray);
     }
 }

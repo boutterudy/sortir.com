@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{outing.name}}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        function confirmSuppress(){
+            if (confirm('Souhaitez-vous vraiment supprimer la sortie ?')) {
+                let confirm = document.getElementById('outing_confirm_suppress');
+                let form = document.getElementsByName("outing")[0];
+                confirm.value = true;
+                form.submit();
+            }
+        }
+
+        function confirmCancel(){
+            if(confirm('Souhaitez-vous vraiment annuler l\'opération ?')){
+                window.location.href = '{{ path('accueil') }}';
+            }
+        }
+    </script>
+
+    <script src="{{ asset('assets/js/pages/outing_form.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="update-form">
+        {{ form_start(outingUpdateForm) }}
+
+        <div>
+            {{ form_errors(outingUpdateForm) }}
+        </div>
+
+        {{ form_row(outingUpdateForm.name) }}
+        {{ form_row(outingUpdateForm.startAt) }}
+        {{ form_row(outingUpdateForm.limitSubscriptionDate) }}
+        {{ form_row(outingUpdateForm.maxUsers) }}
+        {{ form_row(outingUpdateForm.duration) }}
+        {{ form_row(outingUpdateForm.about) }}
+        {{ form_row(outingUpdateForm.campus) }}
+
+        <div>
+            {{ form_row(outingUpdateForm.town) }}
+            {{ form_row(outingUpdateForm.place) }}
+            {{ form_row(outingUpdateForm.street) }}
+            {{ form_row(outingUpdateForm.postal_code) }}
+            {{ form_row(outingUpdateForm.latitude) }}
+            {{ form_row(outingUpdateForm.longitude) }}
+            <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
+        </div>
+
+        <div>
+            {{ form_row(outingUpdateForm.save) }}
+            {{ form_row(outingUpdateForm.publish) }}
+            <button type="button" id="suppress"
+                    onclick="confirmSuppress()">
+                Supprimer
+            </button>
+            <button type="button" id="cancel"
+                    onclick="confirmCancel()">
+                Annuler
+            </button>
+        </div>
+        {{ form_row(outingUpdateForm.confirm_suppress) }}
+
+        {{ form_end(outingUpdateForm) }}
+    </div>
+{% endblock %}

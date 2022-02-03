@@ -14,7 +14,7 @@
             <div>Date et heure de la sortie : {{ outing.startAt |date('Y-m-d H:i:s')}}</div>
             <div>Date limite d'inscription : {{ outing.limitSubscriptionDate |date('Y-m-d') }}</div>
             <div>Nombre de places : {{ outing.maxUsers - outing.users|length}}</div>
-            <div>Durée : {{ outing.duration }}</div>
+            <div>Durée : {{ outing.duration }} minutes</div>
             <div>Description et infos : {{ outing.about }}</div>
         </div>
         <div class="display-right">
@@ -38,16 +38,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    {# TODO -> create the list #}
-                    <td>TODO</td>
-                    <td>TODO</td>
-                </tr>
+                {% for user in outing.users %}
+                    <tr>
+                        {# TODO -> create the list #}
+                        <td>{{ user.nickName }}</td>
+                        <td>{{ user.lastName }}</td>
+                    </tr>
+                {% else %}
+                    <p>Personne ne s'est encore inscrit à cette sortie</p>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 
-
-
-
+    {% if app.user and app.user not in outing.users and outing.status.libelle == "Ouverte" %}
+        <a style="font-weight: bold" href="{{ path('subscription', {id: outing.id}) }}">S'inscrire</a>
+    {% elseif app.user and app.user in outing.users %}
+        Faire un lien vers désinscription
+    {% elseif app.user and outing.status.libelle == "Clôturée" %}
+        Nous sommes désolés, cette sortie est clôturée
+    {% else %}
+        Veuillez vous connecter pour vous inscrire
+    {% endif %}
 {% endblock %}

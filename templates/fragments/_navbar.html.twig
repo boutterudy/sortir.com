@@ -1,6 +1,6 @@
 <nav id="navbar">
     <div id="navbar-left">
-        <p><a href="{{ app.user ? path('temporary') : path('login') }}">Sortir.com</a></p>
+        <p><a href="{{ app.user ? path('accueil') : path('login') }}">Sortir.com</a></p>
     </div>
     <div id="navbar-right">
         {% if app.user %}

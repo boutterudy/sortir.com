@@ -112,9 +112,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private $campus;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
 
     public function __construct()
     {
@@ -438,5 +443,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
             $this->campus,
             $this->updatedAt,
             ) = unserialize($serialized);
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $reset_token): self
+    {
+        $this->reset_token = $reset_token;
+
+        return $this;
     }
 }

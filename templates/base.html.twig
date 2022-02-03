@@ -13,6 +13,11 @@
         {# Global style #}
         <link rel="stylesheet" href="{{ asset('assets/css/global.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/fragments/_navbar.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/fragments/_flashes.css') }}">
+
+        {# Global scripts #}
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -25,6 +30,7 @@
     </head>
     <body>
         {% include 'fragments/_navbar.html.twig' %}
+        {% include 'fragments/_flashes.html.twig' %}
         {% block body %}{% endblock %}
     </body>
 </html>

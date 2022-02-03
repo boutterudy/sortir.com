@@ -46,7 +46,7 @@
             </div>
         </section>
         <div id="outing-actions">
-            <a href="{{ app.request.headers.get('referer') }}"><button class="outline">Retour</button></a>
+            <a href="{{ urlToRedirect }}"><button class="outline" type="button">Retour</button></a>
             <button type="submit" onclick="return confirm('Cette action est irréversible. Confirmer l\'annulation de cette sortie ?');">Confirmer</button>
         </div>
         {{ form_end(form) }}
@@ -69,6 +69,9 @@
             {% endif %}
 
             <p class="error">{{ error_message }}</p>
+            <div id="outing-actions">
+                <a href="{{ urlToRedirect }}"><button class="outline" type="button">Retour</button></a>
+            </div>
         </section>
     {% endif %}
 {% endblock %}

@@ -18,7 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlaceType extends AbstractType
 {
-    private EntityManagerInterface $em; //EntityManagerInterface
+    //TODO reformate Type for Place Adding purpose. Actually unused
+    /*private EntityManagerInterface $em; //EntityManagerInterface
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -27,19 +28,7 @@ class PlaceType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $townRepository = $this->em->getRepository(Town::class);
-        $towns = $townRepository->findAll();
-
-
-
         $builder
-            ->add('town', EntityType::class, [
-                'label' => 'Ville',
-                'class' => Town::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Choisissez une ville',
-                'choices' => $towns
-            ])
             ->add('street', TextType::class, [
                 'label' => 'Rue',
                 'disabled' => true
@@ -53,32 +42,52 @@ class PlaceType extends AbstractType
                 'disabled' => true
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onFormEvent'));
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onFormEvent'));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
     }
 
-    private function addElements(FormInterface $outingForm, Town $town = null) {
-
-        $placeRepository = $this->em->getRepository(Place::class);
-
-        // If there is a town selected, load the places affiliated
-        $places = $placeRepository->findByTown($town);
-
+    private function addElements(FormInterface $placeListForm, Town $town = null) {
         // Add the Places field
-        $outingForm->add('name', ChoiceType::class, [
+        $placeListForm->add('town', EntityType::class, [
+                'label' => 'Ville',
+                'class' => Town::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Choisissez une ville',
+                'mapped' => false,
+                'data' => $town
+            ])
+            ->add('town_postal_code', TextType::class, [
+                'label' => 'Code Postal',
+                'disabled' => true,
+                'mapped' => false,
+                'data' => $town->getPostalCode()
+            ])
+        ;
+
+        $places = $town ? $town->getPlaces() : [];
+
+        $placeListForm->add('name', EntityType::class, [
             'label' => 'Lieu',
+            'class' => Place::class,
             'choice_label' => 'name',
             'placeholder' => 'Choisissez un lieu',
             'choices' => $places
         ]);
     }
 
-    function onFormEvent(FormEvent $event) {
-        $outing = $event->getData();
+    function onPreSubmit(FormEvent $event) {
         $form = $event->getForm();
 
-        // When you create a new Outing, the Town is always empty !!!!!!!
-        $town = $form->getExtraData('outing_town') ? $outing->getExtraData('outing_town') : null;
+        $town = $this->em->getRepository(Town::class)->find($event->getData()['town']);
+
+        $this->addElements($form, $town);
+    }
+
+    function onPreSetData(FormEvent $event) {
+        $place = $event->getData();
+        $form = $event->getForm();
+
+        $town = $place ? $place->getTown() : null;
 
         $this->addElements($form, $town);
     }
@@ -86,7 +95,7 @@ class PlaceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Place::class,
+            'data_class' => Place::class
         ]);
-    }
+    }*/
 }
