@@ -54,7 +54,7 @@
     {% if app.user and app.user not in outing.users and outing.status.libelle == "Ouverte" %}
         <a style="font-weight: bold" href="{{ path('subscription', {id: outing.id}) }}">S'inscrire</a>
     {% elseif app.user and app.user in outing.users %}
-        Faire un lien vers désinscription
+        <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
     {% elseif app.user and outing.status.libelle == "Clôturée" %}
         Nous sommes désolés, cette sortie est clôturée
     {% else %}

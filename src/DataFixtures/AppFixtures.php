@@ -80,7 +80,7 @@ class AppFixtures extends Fixture
             ->setEmail($faker->email())
             ->setIsAdmin(true)
             ->setIsActive(true)
-            ->setPassword($this->hasher->hashPassword($userAdmin, 'Admin'))
+            ->setPassword($this->hasher->hashPassword($userAdmin, 'Pa$$w0rd'))
             ->setCampus($faker->randomElement($campuses));
 
         $manager->persist($userAdmin);
@@ -100,7 +100,7 @@ class AppFixtures extends Fixture
                 ->setEmail($faker->email())
                 ->setIsAdmin(false)
                 ->setIsActive($faker->randomElement([true,false]))
-                ->setPassword($this->hasher->hashPassword($user, $user->getNickName()))
+                ->setPassword($this->hasher->hashPassword($user, 'Pa$$w0rd'))
                 ->setCampus($faker->randomElement($campuses));
             $manager->persist($user);
         }

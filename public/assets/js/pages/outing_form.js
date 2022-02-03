@@ -2,19 +2,6 @@ window.onload = function() {
     let townSelector = document.getElementById('outing_town');
     let placeSelector = document.getElementById('outing_place');
 
-    async function getPlaces(townId){
-        const json = await fetch('/sortir.com/public/api/town/' + townId + '/places')
-            .then(response => response.json());
-
-        return json;
-    }
-
-    async function getPlaceInfo(placeId){
-        const json = await fetch('/sortir.com/public/api/place/' + placeId)
-            .then(response => response.json());
-
-        return json;
-    }
 
     async function placeSelectorLoad(){
         let streetField = document.getElementById('outing_street');
@@ -36,12 +23,15 @@ window.onload = function() {
         let townId = townSelector.value;
         let places_json = await getPlaces(townId);
 
-        console.log(places_json)
-
         let L = placeSelector.options.length - 1;
-        for(let i = L; i >= 1; i--) {
+
+        for(let i = L; i >= 0; i--) {
             placeSelector.remove(i);
         }
+
+        let opt = document.createElement("option");
+        opt.innerHTML = 'Choisissez un lieu';
+        placeSelector.appendChild(opt);
 
         for(let i in places_json)
         {

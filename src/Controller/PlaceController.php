@@ -12,14 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaceController extends AbstractController
 {
     /**
-     * @Route("/api/place/{idPlace}", name="get_place", requirements={"idPlace"="\d+"})
-     * @param $idPlace
+     * @Route("/api/place/{id}", name="get_place", requirements={"id"="\d+"})
+     * @param $id
      * @param PlaceRepository $placeRepository
      * @return Response
      */
-    public function getPlace($idPlace, PlaceRepository $placeRepository): Response
+    public function getPlace($id, PlaceRepository $placeRepository): Response
     {
-        $place = $placeRepository->find($idPlace);
+        $place = $placeRepository->find($id);
 
             $responseArray[] = array(
                 "id" => $place->getId(),
@@ -32,19 +32,19 @@ class PlaceController extends AbstractController
     }
 
     /**
-     * @Route("/api/town/{idTown}/places", name="outing_list_places", requirements={"idTown"="\d+"})
+     * @Route("/api/town/{id}/places", name="outing_list_places", requirements={"id"="\d+"})
      * @param PlaceRepository $placeRepository
      * @param TownRepository $townRepository
-     * @param null $idTown
+     * @param null $id
      * @return void
      */
     public function listPlacesOfTownAction(PlaceRepository $placeRepository,
                                            TownRepository $townRepository,
-                                                           $idTown = null): Response
+                                                           $id = null): Response
     {
         // Search the places that belongs to the town
-        if ($idTown) {
-            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $idTown]));
+        if ($id) {
+            $places = $placeRepository->findByTown($townRepository->findOneBy(['id' => $id]));
         } else {
             $places = $placeRepository->findByTown();
         }
