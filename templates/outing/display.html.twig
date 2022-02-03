@@ -54,10 +54,14 @@
     {% if app.user and app.user not in outing.users and outing.status.libelle == "Ouverte" %}
         <a style="font-weight: bold" href="{{ path('subscription', {id: outing.id}) }}">S'inscrire</a>
     {% elseif app.user and app.user in outing.users %}
-        <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
+        <a style="font-weight: bold" title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
     {% elseif app.user and outing.status.libelle == "Clôturée" %}
-        Nous sommes désolés, cette sortie est clôturée
+    Nous sommes désolés, cette sortie est clôturée
+    {% elseif app.user == outing.organizer and outing.status.libelle == 'En création' %}
+        <a style="font-weight: bold" title="Modifier" href="{{ path('outing_update', { idOuting: outing.id }) }}">Modifier</a>
+        <a style="font-weight: bold" title="Publier" href="{{ path('outing_publish', { id: outing.id }) }}">Publier</a>
+        <a style="font-weight: bold" title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler la sortie</a>
     {% else %}
-        Veuillez vous connecter pour vous inscrire
+    Veuillez vous connecter pour vous inscrire
     {% endif %}
 {% endblock %}

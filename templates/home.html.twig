@@ -85,9 +85,11 @@
                                     <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
 
                                     {% if  app.user == outing.organizer %}
-                                        <a title="Modifier">Modifier</a>
-                                        {% if outing.status != "Annulée" %}
-                                            <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
+                                        {% if outing.status.libelle == 'En création' %}
+                                        <a title="Modifier" href="{{ path('outing_update', {idOuting: outing.id}) }}">Modifier</a>
+                                        {% endif %}
+                                        {% if outing.status.libelle != "Annulée" and outing.status.libelle != "Terminée" %}
+                                        <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
                                         {% endif %}
                                     {% endif %}
 
