@@ -25,7 +25,7 @@ class UploadCsvController extends AbstractController
     /**
      * @Route ("/admin/importer", name="upload_csv")
      */
-    public function commonAction(Request $request, FileUploader $fileUploader)
+    public function uploadFile(Request $request, FileUploader $fileUploader)
     {
         $form = $this->createForm(FileUploadType::class);
         $form->handleRequest($request);

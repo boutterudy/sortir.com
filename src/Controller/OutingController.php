@@ -7,7 +7,7 @@ use App\Entity\Outing;
 use App\Entity\User;
 use App\Form\OutingCancelType;
 use App\Form\OutingsFilterType;
-use App\Form\OutingSubscriptionType;
+use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
@@ -24,15 +24,15 @@ class OutingController extends AbstractController
     /**
      * @Route("/", name="accueil")
      */
-    public function home(OutingRepository $outingRepository, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function home(OutingRepository $outingRepository,
+                         UserRepository $userRepository,
+                         Request $request,
+                         EntityManagerInterface $entityManager): Response
     {
-
-
         $form = $this->createForm(OutingsFilterType::class);
         $form->handleRequest($request);
         $subscribed = null;
         $unsubscribed = null;
-
 
         if ($form->isSubmitted() && $form->isValid())
         {
@@ -47,11 +47,8 @@ class OutingController extends AbstractController
             $passed = $form['passed']->getData();
             $user = $userRepository->findOneById($this->getUser()->getId());
             $outingsList = $outingRepository->outingFilter($user, $organizer, $start, $stop, $passed);
-
-
         } else{
             $outingsList = $entityManager->getRepository(Outing::class)->findAll();
-
         }
 
         return $this->render('home.html.twig', [
@@ -60,13 +57,15 @@ class OutingController extends AbstractController
             'outings'=> $outingsList,
             'outingForm'=>$form->createView()
         ]);
-
     }
 
     /**
      * @Route("/sortie/{id}/details", name="outing_details", requirements={"id"="\d+"})
      */
-   public function display(OutingRepository $outingRepository, UserRepository $userRepository, int $id, Request $request){
+   public function display(OutingRepository $outingRepository,
+                           UserRepository $userRepository,
+                           int $id,
+                           Request $request){
        $outing = $outingRepository->find($id);
 
        // Define URL to redirect
@@ -88,7 +87,11 @@ class OutingController extends AbstractController
     /**
      * @Route("/sortie/{id}/annuler", name="outing_cancel", requirements={"id"="\d+"})
      */
-    public function index(int $id, EntityManagerInterface $entityManager, Request $request, OutingRepository $outingRepository, StatusRepository $statusRepository): Response
+    public function index(int $id,
+                          EntityManagerInterface $entityManager,
+                          Request $request,
+                          OutingRepository $outingRepository,
+                          StatusRepository $statusRepository): Response
     {
         // Get Outing entity
         $outing = $outingRepository->findOneById($id);
@@ -148,7 +151,10 @@ class OutingController extends AbstractController
     /**
      * @Route("/sortie/{id}/inscription", name="subscription", requirements={"id"="\d+"})
      */
-    public function subscribe(int $id, OutingRepository $outingRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function subscribe(int $id,
+                              OutingRepository $outingRepository,
+                              Request $request,
+                              EntityManagerInterface $entityManager): Response
     {
         /** @var Outing $outing */
         $outing = $outingRepository->find($id);
@@ -184,7 +190,10 @@ class OutingController extends AbstractController
     /**
      * @Route("/sortie/{id}/desistement", name="outing_unregister", requirements={"id"="\d+"})
      */
-    public function unregister(int $id, OutingRepository $outingRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function unregister(int $id,
+                               OutingRepository $outingRepository,
+                               Request $request,
+                               EntityManagerInterface $entityManager): Response
     {
         $outing = $outingRepository->find($id);
         /** @var $loggedUser User */
@@ -213,5 +222,102 @@ class OutingController extends AbstractController
 
         // Redirect to last page visited
         return $this->redirect($urlToRedirect);
+    }
+
+    /**
+     * @Route("/sortie/creation", name="outing_creation")
+     */
+    public function create(Request $request,
+                           UserRepository $userRepository,
+                           StatusRepository $statusRepository,
+                           EntityManagerInterface $manager): Response
+    {
+        $outing = new Outing();
+        $user = $userRepository->find($this->getUser()->getId());
+
+        $outing->setOrganizer($user);
+
+        $outing->setCampus($user->getCampus());
+
+        $outingCreationForm = $this->createForm(OutingType::class, $outing);
+
+        $outingCreationForm->handleRequest($request);
+
+        if ($outingCreationForm->isSubmitted()) {
+            if($outingCreationForm->get('save')->isClicked()){
+                $outing->setStatus($statusRepository->findOneBy(['libelle'=>'En création']));
+            }elseif($outingCreationForm->get('publish')->isClicked()) {
+                $outing->setStatus($statusRepository->findOneBy(['libelle'=>'Ouverte']));
+            }
+            $manager->persist($outing);
+            $manager->flush();
+
+            $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
+            return $this->redirect($url);
+        }
+
+        return $this->render('outing_creation/outing_creation.html.twig', [
+            'outingCreationForm' => $outingCreationForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/sortie/{idOuting}/modification", name="outing_update", requirements={"idOuting"="\d+"})
+     */
+    public function update(Request                $request,
+                           UserRepository         $userRepository,
+                           StatusRepository       $statusRepository,
+                           OutingRepository       $outingRepository,
+                           EntityManagerInterface $em,
+                                                  $idOuting): Response
+    {
+        $outing = $outingRepository->findFullOuting($idOuting);
+        $organizer = $outing->getOrganizer();
+        $loggedUser = $this->getUser();
+
+        if($organizer !== $loggedUser && !$loggedUser->getIsAdmin()){
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour modifier cette sortie!');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        if($outing->getStatus()->getLibelle() !== 'En création'){
+            $this->addFlash('error', 'Cette sortie n\'est plus modifiable');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        //last parameter allow pre-selecting the Place ChoiceType
+        $outingUpdateForm = $this->createForm(OutingType::class, $outing);
+
+        $outingUpdateForm->handleRequest($request);
+
+        if ($outingUpdateForm->isSubmitted()) {
+            if ($outingUpdateForm->get('save')->isClicked()) {
+                $this->addFlash('success', 'Sortie enregistrée. Pensez à la publier!');
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'En création']));
+                $em->persist($outing);
+            } elseif ($outingUpdateForm->get('publish')->isClicked()) {
+                $this->addFlash('success', 'Sortie publiée');
+                $outing->setStatus($statusRepository->findOneBy(['libelle' => 'Ouverte']));
+                $em->persist($outing);
+            } elseif ($outingUpdateForm->get('confirm_suppress')){
+                $this->addFlash('success', 'Sortie supprimée');
+                $em->remove($outing);
+            }
+
+            $em->flush();
+
+            if ($outingUpdateForm->get('save')->isClicked() || $outingUpdateForm->get('publish')->isClicked()) {
+                $url = $this->generateUrl('outing_details', ['id' => $outing->getId()]);
+                return $this->redirect($url);
+            }
+
+            //if form is submit but not redirected at this point, it was a suppression.
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        return $this->render('outing_update/outing_update.html.twig', [
+            'outingUpdateForm' => $outingUpdateForm->createView(),
+            'outing' => $outing
+        ]);
     }
 }
