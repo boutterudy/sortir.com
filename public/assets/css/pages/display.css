@@ -1,7 +1,32 @@
 .wrapper{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
+}
+
+.wrapper .group {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: fit-content;
+    margin-bottom: 12px;
+}
+
+.wrapper .group:last-of-type {
+    margin-bottom: 0;
+}
+
+.display-left .group label {
+    min-width: 240px;
+}
+
+.display-right .group label {
+    min-width: 140px;
+}
+
+.wrapper .group p {
+    font-weight: 500;
+    margin: 0;
 }
 
 .display-left{
@@ -23,6 +48,85 @@
     font-size: large;
 }
 
-.liste-participant{
+.liste-participant {
     overflow : auto;
+}
+
+.liste-participant {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 16px;
+    min-width: 500px;
+}
+
+.liste-participant thead {
+    background-color: var(--primary-color);
+    color: white;
+    width: auto;
+    font-size: large;
+    text-align: left;
+}
+
+.liste-participant thead th {
+    padding: 12px;
+}
+
+.liste-participant thead th:first-of-type,
+.liste-participant tbody tr td:first-of-type {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.liste-participant th:last-of-type,
+.liste-participant tbody tr td:last-of-type {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.liste-participant tbody {
+    text-align: left;
+}
+
+.liste-participant tbody tr {
+    height: 60px;
+    border-radius: 20px;
+}
+
+.liste-participant tbody tr:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.liste-participant tbody tr td {
+    padding: 12px;
+}
+
+#registered-users {
+    margin-top: 32px;
+}
+
+@media screen and (max-width: 882px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .display-left .group label,
+    .display-right .group label{
+        min-width: 240px;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .liste-participant {
+        min-width: auto;
+    }
+}
+
+@media screen and (max-width: 475px) {
+    .display-left .group label,
+    .display-right .group label{
+        min-width: 100px;
+        max-width: 140px;
+        margin-right: 6px;
+    }
 }

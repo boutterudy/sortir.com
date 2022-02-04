@@ -1,4 +1,4 @@
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', (event) => {
     let hamburger = document.getElementById("navbar-hamburger"),
         links = document.getElementById('navbar-mobile-links');
 
@@ -13,4 +13,4 @@ window.onload = () => {
     }
 
     hamburger.addEventListener("click", showMobileLinks);
-}
+});
