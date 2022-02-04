@@ -106,11 +106,11 @@
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>Inscrits / Places</th>
+                <th class="limit-date">Clôture</th>
+                <th class="nb-registered">Inscrits / Places</th>
                 <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
+                <th class="registered">Inscrit</th>
+                <th class="organizer">Organisateur</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -125,18 +125,18 @@
                         <tr class="text-center">
                             <td>{{ outing.name }}</td>
                             <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
-                            <td>{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
-                            <td>{{ outing.users|length }}/{{ outing.maxUsers }}</td>
+                            <td class="limit-date">{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
+                            <td class="nb-registered">{{ outing.users|length }}/{{ outing.maxUsers }}</td>
                             <td>
                                 <span title="{{ outing.status.libelle }}">{{ outing.status.libelle }}</span>
                             </td>
-                            <td class="text-success">
+                            <td class="text-success registered">
 
                                 {% if app.user in outing.users %}
                                     <a title="inscrit">X</a>
                                 {% endif %}
                             </td>
-                            <td><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
+                            <td class="organizer"><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
 
                             <td id="Action">
                                 <div class="btn-group">

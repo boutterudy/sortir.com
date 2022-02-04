@@ -1,21 +1,27 @@
-<nav id="navbar">
-    <div id="navbar-left">
-        <a href="{{ path('accueil') }}"><img src="{{ asset('assets/images/favicon.svg') }}"> Sortir.com</a>
+<nav>
+    <div id="navbar">
+        <div id="navbar-left">
+            <a href="{{ path('accueil') }}"><img src="{{ asset('assets/images/favicon.svg') }}"> Sortir.com</a>
+        </div>
+        {% if app.user %}
+            <div id="navbar-right">
+                <ul id="navbar-links">
+                    {{ include('fragments/_navbar_links.html.twig') }}
+                </ul>
+            </div>
+        {% endif %}
     </div>
-    {% if app.user %}
-    <div id="navbar-right">
-        <ul>
-            <li{{ app.request.get('_route') == 'accueil' ? ' class="active"' }}><a href="{{ path('accueil') }}">Accueil</a></li>
-            <li{{ (app.request.get('_route') == 'show_profile' and app.user.nickName in app.request.attributes.get('_route_params')) or app.request.get('_route') == 'edit_profile' ? ' class="active"' }}><a href="{{ path('show_profile', { username: app.user.nickName }) }}">Mon profil</a></li>
-            {% if app.user.isAdmin %}
-                {% set townUrl = ea_url().setController('App\\Controller\\Admin\\TownCrudController') %}
-                {% set campusUrl = ea_url().setController('App\\Controller\\Admin\\CampusCrudController') %}
-                {#<li><a href="{{ path('admin') }}">Panneau d'administration</a></li>#}
-                <li><a href="{{ townUrl }}">Villes</a></li>
-                <li><a href="{{ campusUrl }}">Campus</a></li>
-            {% endif %}
-            <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+    <div id="navbar-mobile">
+        <div id="navbar-mobile-top">
+            <div id="navbar-mobile-left">
+                <a href="{{ path('accueil') }}"><img src="{{ asset('assets/images/favicon.svg') }}"> Sortir.com</a>
+            </div>
+            <div id="navbar-mobile-right">
+                <ion-icon id="navbar-hamburger" name="menu-outline"></ion-icon>
+            </div>
+        </div>
+        <ul id="navbar-mobile-links">
+            {{ include('fragments/_navbar_links.html.twig') }}
         </ul>
     </div>
-    {% endif %}
 </nav>
