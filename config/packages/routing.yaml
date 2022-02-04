@@ -13,7 +13,7 @@ when@prod:
 
 
 mainbundle_route_identifier:
-    path:     /login
+    path:     /connexion
     defaults: { _controller: App:Controller:LoginController}
     # Force HTTPS
     schemes: [https]
