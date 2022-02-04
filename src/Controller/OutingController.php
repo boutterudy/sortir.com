@@ -252,16 +252,13 @@ class OutingController extends AbstractController
     {
         $outing = new Outing();
         $user = $userRepository->find($this->getUser()->getId());
-
         $outing->setOrganizer($user);
 
         $outing->setCampus($user->getCampus());
-
         $outingCreationForm = $this->createForm(OutingType::class, $outing);
-
         $outingCreationForm->handleRequest($request);
 
-        if ($outingCreationForm->isSubmitted()) {
+        if ($outingCreationForm->isSubmitted() && $outingCreationForm->isValid()) {
             if ($outingCreationForm->get('save')->isClicked()) {
                 $outing->setStatus($statusRepository->findOneBy(['libelle'=>'En création']));
             } elseif ($outingCreationForm->get('publish')->isClicked()) {
