@@ -53,10 +53,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: '^/admin', roles: ROLE_ADMIN }
-        - { path: '^/connexion', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/admin', roles: ROLE_ADMIN, requires_channel: https }
+        - { path: '^/connexion', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         # catch all other URLs
-        - { path: '^/', roles: ROLE_USER }
+        - { path: '^/', roles: ROLE_USER, requires_channel: https }
 
 
 
