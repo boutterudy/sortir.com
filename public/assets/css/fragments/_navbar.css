@@ -5,6 +5,11 @@
     align-items: center;
 }
 
+#navbar .active a {
+    font-weight: 900!important;
+    color: var(--primary-color);
+}
+
 #navbar-left a {
     font-size: 36px;
     font-weight: 900;

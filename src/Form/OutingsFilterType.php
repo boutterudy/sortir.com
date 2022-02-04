@@ -32,7 +32,7 @@ class OutingsFilterType extends AbstractType
                 'label' => 'Rechercher',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'search'
+                    'placeholder' => 'Recherche'
                 ]
             ])
 

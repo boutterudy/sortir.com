@@ -2,6 +2,10 @@
 
 {% block title %}{{outing.name}}{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/outing_forms.css') }}">
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -26,39 +30,83 @@
 {% endblock %}
 
 {% block body %}
+    {% set addPlacesUrl = ea_url().setController('App\\Controller\\Admin\\PlaceCrudController').setAction('new') %}
     <div class="update-form">
         {{ form_start(outingUpdateForm) }}
 
         <div>
             {{ form_errors(outingUpdateForm) }}
         </div>
-
-        {{ form_row(outingUpdateForm.name) }}
-        {{ form_row(outingUpdateForm.startAt) }}
-        {{ form_row(outingUpdateForm.limitSubscriptionDate) }}
-        {{ form_row(outingUpdateForm.maxUsers) }}
-        {{ form_row(outingUpdateForm.duration) }}
-        {{ form_row(outingUpdateForm.about) }}
-        {{ form_row(outingUpdateForm.campus) }}
-
-        <div>
-            {{ form_row(outingUpdateForm.town) }}
-            {{ form_row(outingUpdateForm.place) }}
-            {{ form_row(outingUpdateForm.street) }}
-            {{ form_row(outingUpdateForm.postal_code) }}
-            {{ form_row(outingUpdateForm.latitude) }}
-            {{ form_row(outingUpdateForm.longitude) }}
-            <!--<button id="addPlace"><img href="" alt="Nouveau Lieu"/></button>-->
+        <div id="form-inputs">
+            <div id="left-part">
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.name) }} :</label>
+                    {{ form_widget(outingUpdateForm.name) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.startAt) }} :</label>
+                    {{ form_widget(outingUpdateForm.startAt) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.limitSubscriptionDate) }} :</label>
+                    {{ form_widget(outingUpdateForm.limitSubscriptionDate) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.maxUsers) }} :</label>
+                    {{ form_widget(outingUpdateForm.maxUsers) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.duration) }} :</label>
+                    {{ form_widget(outingUpdateForm.duration) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.about) }} :</label>
+                    {{ form_widget(outingUpdateForm.about) }}
+                </div>
+            </div>
+            <div id="right-part">
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.campus) }} :</label>
+                    {{ form_widget(outingUpdateForm.campus) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.town) }} :</label>
+                    {{ form_widget(outingUpdateForm.town) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.place) }} :</label>
+                    {{ form_widget(outingUpdateForm.place) }}
+                    {% if app.user.isAdmin %}
+                        <a href="{{ addPlacesUrl }}" target="_blank" title="Nouveau lieu"><ion-icon name="add-circle" class="add-button"></ion-icon></a>
+                    {% endif %}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.street) }} :</label>
+                    {{ form_widget(outingUpdateForm.street) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.postal_code) }} :</label>
+                    {{ form_widget(outingUpdateForm.postal_code) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.latitude) }} :</label>
+                    {{ form_widget(outingUpdateForm.latitude) }}
+                </div>
+                <div class="input-wrapper">
+                    <label>{{ form_label(outingUpdateForm.longitude) }} :</label>
+                    {{ form_widget(outingUpdateForm.longitude) }}
+                </div>
+            </div>
         </div>
 
-        <div>
+        <div id="form-actions">
             {{ form_row(outingUpdateForm.save) }}
             {{ form_row(outingUpdateForm.publish) }}
             <button type="button" id="suppress"
                     onclick="confirmSuppress()">
                 Supprimer
             </button>
-            <button type="button" id="cancel"
+            <button class="outline" type="button" id="cancel"
                     onclick="confirmCancel()">
                 Annuler
             </button>

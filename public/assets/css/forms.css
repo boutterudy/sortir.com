@@ -7,6 +7,24 @@
     margin-bottom: 10px;
 }
 
+.input-wrapper .add-button {
+    font-size: 32px;
+    color: var(--primary-color);
+}
+
+.checkbox-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: calc(100% + 10px);
+    margin-bottom: 10px;
+}
+
+.checkbox-wrapper input[type='checkbox'] {
+    margin-right: 8px;
+}
+
 input,
 textarea,
 select {
