@@ -34,7 +34,7 @@ DirectoryIndex index.php
     RewriteRule .* - [E=BASE:%1]
 
     # Sets the HTTP_AUTHORIZATION header removed by Apache
-    RewriteCond %{HTTPS:Authorization} .+
+    RewriteCond %{HTTP:Authorization} .+
     RewriteRule ^ - [E=HTTPS_AUTHORIZATION:%0]
 
 
