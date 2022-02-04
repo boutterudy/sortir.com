@@ -64,7 +64,3 @@ DirectoryIndex index.php
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
-
-RewriteEngine On
-RewriteCond %{HTTPS} !=on
-RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
