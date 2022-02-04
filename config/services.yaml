@@ -6,8 +6,7 @@
 parameters:
     profile_pictures: /uploads/profile_pictures
     csv_upload: '%kernel.project_dir%/public/uploads/csv'
-    router.request_context.scheme: 'https'
-    asset.request_context.secure: true
+
 
 services:
     # default configuration for services in *this* file
