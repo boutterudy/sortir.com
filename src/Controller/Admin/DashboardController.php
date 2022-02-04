@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Campus;
 use App\Entity\Outing;
 use App\Entity\Place;
 use App\Entity\Town;
@@ -38,5 +39,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Lieux', 'fas fa-map-marked-alt', Place::class);
         yield MenuItem::linkToCrud('Villes', 'fas fa-place-of-worship', Town::class);
         yield MenuItem::linkToCrud('Sorties', 'fas fa-route', Outing::class);
+        yield MenuItem::linkToCrud('Campus', 'fas fa-route', Campus::class);
     }
 }
