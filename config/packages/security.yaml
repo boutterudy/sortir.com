@@ -56,7 +56,7 @@ security:
         - { path: '^/admin', roles: ROLE_ADMIN, requires_channel: https }
         - { path: '^/connexion', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         # catch all other URLs
-        - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: '^/', roles: ROLE_USER, requires_channel: https }
 
 
 
