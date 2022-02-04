@@ -10,3 +10,10 @@ when@prod:
     framework:
         router:
             strict_requirements: null
+
+
+mainbundle_route_identifier:
+    path:     /login
+    defaults: { _controller: App:Controller:LoginController}
+    # Force HTTPS
+    schemes: [https]
