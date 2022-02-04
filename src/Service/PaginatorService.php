@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Services;
+namespace App\Service;
 
-use App\Entity\Outing;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 

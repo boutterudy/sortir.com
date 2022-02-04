@@ -10,7 +10,7 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
-use App\Services\PaginatorService;
+use App\Service\PaginatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
