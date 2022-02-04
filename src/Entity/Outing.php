@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
  * @Assert\Expression(
@@ -46,7 +44,7 @@ class Outing
      */
     private $duration;
 
-// @Assert\LessThanOrEqual(value="$startAt", message="La date limite ne peut pas être postérieure à la date de début")
+    // @Assert\LessThanOrEqual(value="$startAt", message="La date limite ne peut pas être postérieure à la date de début")
 
     /**
      * @ORM\Column(type="datetime")
@@ -266,5 +264,4 @@ class Outing
             . $this->getStartAt()->format('d/m/Y') . ' | '
             . $this->getOrganizer();
     }
-
 }

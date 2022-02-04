@@ -41,16 +41,16 @@ class ProfileController extends AbstractController
         $loggedUser = $this->getUser();
 
         // Check if logged user correspond to user to edit
-        if($user === $loggedUser) {
+        if ($user === $loggedUser) {
             $form = $this->createForm(UserType::class, $user);
             $form->handleRequest($request);
 
             // If form is submitted and valid, save data then redirect
-            if($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 // Hash password before flush
                 $user->setPassword($passwordHasher->hashPassword(
-                   $user,
-                   $user->getPassword()
+                    $user,
+                    $user->getPassword()
                 ));
 
                 $newUsername = $user->getNickName();

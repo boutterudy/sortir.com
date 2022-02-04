@@ -20,7 +20,7 @@ class FileUploader
         $fileName = 'datas.csv';
         try {
             $file->move($this->getTargetDirectory(), $fileName);
-        }catch (FileException $exception){
+        } catch (FileException $exception) {
             return null;
         }
         return $fileName;
@@ -43,5 +43,4 @@ class FileUploader
         $this->targetDirectory = $targetDirectory;
         return $this;
     }
-
 }

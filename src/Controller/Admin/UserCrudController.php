@@ -32,7 +32,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email')->setLabel('Email'),
             BooleanField::new('isAdmin')->setLabel('Administrateur ?'),
             BooleanField::new('isActive')->setLabel('Actif ?'),
-            AssociationField::new('organizedOutings')->setLabel('Sorties organisées par l\'utilisateur' ),
+            AssociationField::new('organizedOutings')->setLabel('Sorties organisées par l\'utilisateur'),
             AssociationField::new('outings')->setLabel('Participations aux sorties'),
             AssociationField::new('campus')->setLabel('Campus'),
             TextField::new('imageFile')->setFormType(VichImageType::class),

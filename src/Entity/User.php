@@ -170,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     public function getRoles(): array
     {
-        return $this->isAdmin?['ROLE_ADMIN', 'ROLE_USER']:['ROLE_USER'];
+        return $this->isAdmin ? ['ROLE_ADMIN', 'ROLE_USER'] : ['ROLE_USER'];
     }
 
     /**
@@ -409,7 +409,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         return $this;
     }
 
-    public function serialize() {
+    public function serialize()
+    {
         return serialize(array(
             $this->id,
             $this->nickName,
@@ -426,11 +427,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
             $this->campus,
             $this->updatedAt,
         ));
-
     }
 
-    public function unserialize($serialized) {
-        list (
+    public function unserialize($serialized)
+    {
+        list(
             $this->id,
             $this->nickName,
             $this->password,

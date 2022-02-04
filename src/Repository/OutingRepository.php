@@ -41,45 +41,42 @@ class OutingRepository extends ServiceEntityRepository
         return $outing;
     }
 
-    public function outingFilter ($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed)
+    public function outingFilter($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed)
     {
-
         $qb = $this->createQueryBuilder('s');
 
 
-        if ($campus){
+        if ($campus) {
             $qb->andWhere('s.campus = :campus')
                 ->setParameter('campus', $campus);
-
         }
-        if ($name){
+        if ($name) {
             $qb->andWhere('s.name = :name')
                 ->setParameter('name', $name);
         }
-        if ($start){
-
+        if ($start) {
             $qb->andWhere('s.startAt >= :startAt')
                 ->setParameter('startAt', $start);
         }
-        if ($stop){
+        if ($stop) {
             $qb->andWhere('s.limitSubscriptionDate <= :limitSubscriptionDate')
                 ->setParameter('limitSubscriptionDate', $stop);
         }
-        if ($organizer){
+        if ($organizer) {
             $qb ->andWhere('s.organizer = :organizer')
                 ->setParameter('organizer', $user->getId());
         }
-        if ($subscribed){
+        if ($subscribed) {
             $qb->andWhere('s.users MEMBER OF :user')
                 ->setParameter('subscribed', $user->getId());
         }
-        if($unsubscribed){
+        if ($unsubscribed) {
             $qb->andWhere('s.users NOT MEMBER OF :user')
                 ->setParameter('unsubscribed', $user->getId());
         }
-        if ($passed){
+        if ($passed) {
             $qb ->andWhere('s.startAt <= :passed')
-                ->setParameter('passed', date('Y-m-d HH:MM') );
+                ->setParameter('passed', date('Y-m-d HH:MM'));
         }
 
 

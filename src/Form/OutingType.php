@@ -96,7 +96,8 @@ class OutingType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
     }
 
-    private function addElements(FormInterface $form, Town $town = null) {
+    private function addElements(FormInterface $form, Town $town = null)
+    {
         // Add the Places field
         $form->add('town', EntityType::class, [
                 'label' => 'Ville',
@@ -125,7 +126,8 @@ class OutingType extends AbstractType
         ]);
     }
 
-    function onPreSubmit(FormEvent $event) {
+    public function onPreSubmit(FormEvent $event)
+    {
         $form = $event->getForm();
 
         $town = $this->em->getRepository(Town::class)->find($event->getData()['town']);
@@ -133,7 +135,8 @@ class OutingType extends AbstractType
         $this->addElements($form, $town);
     }
 
-    function onPreSetData(FormEvent $event) {
+    public function onPreSetData(FormEvent $event)
+    {
         //dd($event->getData());
         $place = $event->getData()->getPlace();
         $form = $event->getForm();

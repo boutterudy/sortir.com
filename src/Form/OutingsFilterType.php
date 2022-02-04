@@ -21,7 +21,7 @@ class OutingsFilterType extends AbstractType
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'name',
-                'query_builder' => function(EntityRepository $repository) {
+                'query_builder' => function (EntityRepository $repository) {
                     return $repository->createQueryBuilder('c')->orderBy('c.name', 'ASC');
                 },
                 'required' => false,
@@ -56,7 +56,7 @@ class OutingsFilterType extends AbstractType
                 'required' => false,
                 'empty_data' => null,
                 'mapped' => false
-            ] )
+            ])
     /*        ->add('subscribed', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je suis inscrit/e',
                 'required' => false,
@@ -75,7 +75,6 @@ class OutingsFilterType extends AbstractType
                 'empty_data' => null,
                 'mapped' => false
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void

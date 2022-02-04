@@ -40,5 +40,4 @@ class PlaceCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Lieu')
             ->setEntityLabelInPlural('Lieux');
     }
-
 }

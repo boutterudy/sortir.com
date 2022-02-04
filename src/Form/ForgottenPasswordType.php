@@ -14,7 +14,7 @@ class ForgottenPasswordType extends AbstractType
     {
         $builder
             ->add('email', TextType::class)
-            ->add('submit', SubmitType::class,[
+            ->add('submit', SubmitType::class, [
                 'label'=>'Réinitialiser mon mot de passe'
             ])
         ;

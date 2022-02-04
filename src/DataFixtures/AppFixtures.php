@@ -37,8 +37,7 @@ class AppFixtures extends Fixture
         PlaceRepository $placeRepository,
         TownRepository $townRepository,
         StatusRepository $statusRepository
-    )
-    {
+    ) {
         $this->hasher = $hasher;
         $this->userRepository = $userRepository;
         $this->campusRepository = $campusRepository;
@@ -86,10 +85,10 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
 
 
-        for ($i = 0; $i < 50 ; $i++){
+        for ($i = 0; $i < 50 ; $i++) {
             $phoneNumber = '0';
-            for($j = 0; $j < 9 ; $j++){
-                $phoneNumber.= random_int(0,9);
+            for ($j = 0; $j < 9 ; $j++) {
+                $phoneNumber.= random_int(0, 9);
             }
 
             $user = new User();
@@ -160,8 +159,7 @@ class AppFixtures extends Fixture
         $statuses = $this->statusRepository->findAll();
 
         foreach ($towns as $town) {
-            for ($i = 0; $i < 10; $i++)
-            {
+            for ($i = 0; $i < 10; $i++) {
                 $place = new Place();
                 $place->setName($faker->name)
                     ->setStreet($faker->address())
@@ -179,16 +177,15 @@ class AppFixtures extends Fixture
         $activities = ['Musée', 'Bowling', 'Lasergame', 'Karting', 'Parapente', 'Ski nautique', 'Surf', 'Pâte à modeler', 'Equitation', 'Danse classique'];
 
         //Création d'activités 'En création'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('+ 1 month', '+ 6 months'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -198,16 +195,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'Ouverte'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('+ 2 weeks', '+ 6 weeks'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -217,16 +213,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'Clôturée'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('+ 1 day', '+ ' . $daysToSubscribe . ' seconds'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -236,16 +231,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'En cours'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt(new \DateTime())
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -255,16 +249,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'Terminée'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('- 1 month', '- 1 day'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -274,16 +267,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'Annulée'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('- 1 month', '+ 1 month'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -293,16 +285,15 @@ class AppFixtures extends Fixture
         }
 
         //Création d'activités 'Archivée'
-        for ($i = 0; $i < 10; $i++)
-        {
-            $daysToSubscribe = random_int(1,14)*60*60*24;
+        for ($i = 0; $i < 10; $i++) {
+            $daysToSubscribe = random_int(1, 14)*60*60*24;
             $outing = new Outing();
             $outing->setName($faker->randomElement($activities))
                 ->setStartAt($faker->dateTimeBetween('- 1 year', '- 1 month'))
                 ->setLimitSubscriptionDate(\DateTime::createFromFormat('U', $outing->getStartAt()->getTimestamp()-$daysToSubscribe))
-                ->setDuration(random_int(60,360))
+                ->setDuration(random_int(60, 360))
                 ->setAbout($faker->realText)
-                ->setMaxUsers(random_int(5,20))
+                ->setMaxUsers(random_int(5, 20))
                 ->setCampus($faker->randomElement($campuses))
                 ->setPlace($faker->randomElement($places))
                 ->setOrganizer($faker->randomElement($users))
@@ -315,18 +306,17 @@ class AppFixtures extends Fixture
 
         $outings = $this->outingRepository->findAll();
 
-        foreach ($outings as $outing){
-            if ($outing->getStatus()->getLibelle() != 'En création'){
-                foreach ($users as $user){
-                    $subscribe = random_int(0,10);
-                    if ($subscribe > 8 && $outing->getUsers()->count() < $outing->getMaxUsers()){
+        foreach ($outings as $outing) {
+            if ($outing->getStatus()->getLibelle() != 'En création') {
+                foreach ($users as $user) {
+                    $subscribe = random_int(0, 10);
+                    if ($subscribe > 8 && $outing->getUsers()->count() < $outing->getMaxUsers()) {
                         $outing->addUser($user);
                     }
                     $manager->persist($user);
                     $manager->persist($outing);
                 }
-                if ($outing->getStatus()->getLibelle() == 'Ouverte' && $outing->getUsers()->count() == $outing->getMaxUsers())
-                {
+                if ($outing->getStatus()->getLibelle() == 'Ouverte' && $outing->getUsers()->count() == $outing->getMaxUsers()) {
                     $outing->setStatus($statusClosed);
                 }
                 $manager->persist($outing);
@@ -334,6 +324,4 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
     }
-
-
 }

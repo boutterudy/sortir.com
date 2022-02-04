@@ -17,7 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class CsvImport extends Command
 {
     /**
@@ -78,9 +77,9 @@ class CsvImport extends Command
         $reader->setDelimiter(';');
         $reader->setHeaderOffset(0);
         $records = $encoder->convert($reader->getRecords(['nickName', 'password', 'lastName', 'firstName', 'phone', 'email', 'isAdmin', 'isActive', 'Campus']));
-        foreach ($records as $offset => $record){
+        foreach ($records as $offset => $record) {
             $user = $this->userRepository->findOneBy(['nickName'=>$record['nickName']]);
-            if($user == null){
+            if ($user == null) {
                 $user = new User();
                 $user->setNickName($record['nickName'])
                     ->setPassword($this->hasher->hashPassword($user, $record['password']))

@@ -12,10 +12,10 @@ class ReinitPassType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('password', null,[
+            ->add('password', null, [
                 'label'=>'Votre nouveau mot de passe'
             ])
-            ->add('confirm', null,[
+            ->add('confirm', null, [
                 'label'=>'Confirmez votre mot de passe'
             ])
         ;

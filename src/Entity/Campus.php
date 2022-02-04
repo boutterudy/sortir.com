@@ -124,5 +124,4 @@ class Campus
     {
         return $this->getName();
     }
-
 }

@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PaginatorService
 {
-    public function paginate($outings, PaginatorInterface $paginator, Request $request){
+    public function paginate($outings, PaginatorInterface $paginator, Request $request)
+    {
         return $paginator->paginate($outings, $request->query->getInt('page', 1), 15);
     }
 }

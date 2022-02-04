@@ -29,15 +29,13 @@ class UploadCsvController extends AbstractController
     {
         $form = $this->createForm(FileUploadType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $file = $form['upload_file']->getData();
-            if($file){
+            if ($file) {
                 $fileName = $fileUploader->upload($file);
-                if($fileName !== null)
-                {
+                if ($fileName !== null) {
                     $this->runUpload();
-                }else{
+                } else {
                     $this->addFlash('error', 'Problème à la lecture du fichier');
                 }
             }
@@ -60,5 +58,4 @@ class UploadCsvController extends AbstractController
 
         return new Response('');
     }
-
 }

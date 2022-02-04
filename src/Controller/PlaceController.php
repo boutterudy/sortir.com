@@ -21,7 +21,7 @@ class PlaceController extends AbstractController
     {
         $place = $placeRepository->find($id);
 
-            $responseArray[] = array(
+        $responseArray[] = array(
                 "id" => $place->getId(),
                 "street" => $place->getStreet(),
                 "postal_code" => $place->getTown()->getPostalCode(),
@@ -38,9 +38,11 @@ class PlaceController extends AbstractController
      * @param null $id
      * @return void
      */
-    public function listPlacesOfTownAction(PlaceRepository $placeRepository,
-                                           TownRepository $townRepository,
-                                                           $id = null): Response
+    public function listPlacesOfTownAction(
+        PlaceRepository $placeRepository,
+        TownRepository $townRepository,
+        $id = null
+    ): Response
     {
         // Search the places that belongs to the town
         if ($id) {

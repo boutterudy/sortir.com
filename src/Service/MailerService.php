@@ -14,7 +14,8 @@ class MailerService
         $this->mailer = $mailer;
     }
 
-    function sendEmail($sender, $receiver, $subject, $message){
+    public function sendEmail($sender, $receiver, $subject, $message)
+    {
         $email = (new Email())
             ->from($sender)
             ->to($receiver)
