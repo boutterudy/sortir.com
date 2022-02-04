@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('assets/css/pages/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fragments/_paginator.css') }}">
 {% endblock %}
 
 
@@ -170,6 +171,10 @@
                 {% endfor %}
                 </tbody>
             </table>
+        <div class="d-flex justify-content-center">
+            {% do outings.setPageRange(5) %}
+            {{ knp_pagination_render(outings, 'fragments/_pagination.html.twig') }}
+        </div>
         </div>
         <div id="home-actions">
             <a href="{{ path('outing_creation') }}">

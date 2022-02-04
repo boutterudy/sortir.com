@@ -11,7 +11,9 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
+use App\Services\PaginatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,7 @@ class OutingController extends AbstractController
     public function home(OutingRepository $outingRepository,
                          UserRepository $userRepository,
                          Request $request,
+                         PaginatorInterface $paginator,
                          EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(OutingsFilterType::class);
@@ -35,7 +38,7 @@ class OutingController extends AbstractController
         $unsubscribed = null;
         $start = null;
         $stop = null;
-
+        $paginatorService = new PaginatorService();
 
         if ($form->isSubmitted() && $form->isValid())
         {
@@ -54,12 +57,11 @@ class OutingController extends AbstractController
 
             $passed = $form['passed']->getData();
             $user = $userRepository->findOneById($this->getUser()->getId());
-            $outingsList = $outingRepository->outingFilter($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed);
+            $outingsList = $paginatorService->paginate($outingRepository->outingFilter($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed), $paginator, $request);
 
         } else{
-            $outingsList = $entityManager->getRepository(Outing::class)->findAll();
+            $outingsList = $paginatorService->paginate($outingRepository->findAll(), $paginator, $request);
         }
-
         return $this->render('home.html.twig', [
             'unsubscribed'=>$unsubscribed,
             'subscribed'=>$subscribed,
