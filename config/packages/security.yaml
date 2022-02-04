@@ -60,7 +60,6 @@ security:
         - { path: '^/admin', roles: ROLE_ADMIN }
         - { path: '^/profil', roles: ROLE_USER }
         - { path: '^/sortie', roles: ROLE_USER }
-        - { path: '^/connexion', roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: '^/$', roles: ROLE_USER }
 
 
