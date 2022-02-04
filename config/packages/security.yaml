@@ -63,7 +63,6 @@ security:
         - { path: '^/$', roles: ROLE_USER }
 
 
-
 when@test:
     security:
         password_hashers:
