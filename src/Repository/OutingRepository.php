@@ -41,41 +41,48 @@ class OutingRepository extends ServiceEntityRepository
         return $outing;
     }
 
-    public function outingFilter (
-        User $user,
-        bool $organizer = false,
-        string $start = null,
-        string $stop =null,
-        bool $passed = false)
+    public function outingFilter ($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed)
     {
 
         $qb = $this->createQueryBuilder('s');
 
 
-        if ($start != null){
-            $starttime = strtotime($start);
-            $starnewformat = date('Y-m-d', $starttime);
-            $qb->andWhere('s.startAt >= :startAt')
-                ->setParameter('startAt', $starnewformat);
-        }
-        if ($stop != null){
-            $stoptime = strtotime($stop);
-            $stopnewformat = date('Y-m-d', $stoptime);
-            $qb->andWhere('s.limitSubscriptionDate <= :limitSubscriptionDate')
-                ->setParameter('limitSubscriptionDate', $stopnewformat);
+        if ($campus){
+            $qb->andWhere('s.campus = :campus')
+                ->setParameter('campus', $campus);
 
         }
-        if ($passed){
-            $qb ->andWhere('s.startAt <= :passed')
-                ->setParameter('passed', date('Y-m-d HH:MM') );
+        if ($name){
+            $qb->andWhere('s.name = :name')
+                ->setParameter('name', $name);
+        }
+        if ($start){
+
+            $qb->andWhere('s.startAt >= :startAt')
+                ->setParameter('startAt', $start);
+        }
+        if ($stop){
+            $qb->andWhere('s.limitSubscriptionDate <= :limitSubscriptionDate')
+                ->setParameter('limitSubscriptionDate', $stop);
         }
         if ($organizer){
             $qb ->andWhere('s.organizer = :organizer')
                 ->setParameter('organizer', $user->getId());
         }
+        if ($subscribed){
+            $qb->andWhere('s.users MEMBER OF :user')
+                ->setParameter('subscribed', $user->getId());
+        }
+        if($unsubscribed){
+            $qb->andWhere('s.users NOT MEMBER OF :user')
+                ->setParameter('unsubscribed', $user->getId());
+        }
+        if ($passed){
+            $qb ->andWhere('s.startAt <= :passed')
+                ->setParameter('passed', date('Y-m-d HH:MM') );
+        }
 
-        $qb = $qb->getQuery();
-        return $qb->execute();
 
+        return $qb->getQuery()->getResult();
     }
 }

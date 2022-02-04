@@ -41,7 +41,7 @@
                             {{ form_widget(outingForm.name) }}
                         </div>
 
-                        <div class="form-error">
+                        {#<div class="form-error">
                             {{ form_errors(outingForm.startAt) }}
                         </div>
                         <div class="input-wrapper">
@@ -55,7 +55,7 @@
                         <div class="input-wrapper">
                             <label>{{ form_label(outingForm.limitSubscriptionDate) }} :</label>
                             {{ form_widget(outingForm.limitSubscriptionDate) }}
-                        </div>
+                        </div>#}
                     </div>
                 </div>
                 <div class="form-right">
@@ -68,7 +68,7 @@
                             <label>{{ form_label(outingForm.organizer) }}</label>
                         </div>
 
-                        <div class="form-error">
+                        {#<div class="form-error">
                             {{ form_errors(outingForm.subscribed) }}
                         </div>
                         <div class="checkbox-wrapper">
@@ -82,7 +82,7 @@
                         <div class="checkbox-wrapper">
                             {{ form_widget(outingForm.unsubscribed) }}
                             <label>{{ form_label(outingForm.unsubscribed) }}</label>
-                        </div>
+                        </div>#}
 
                         <div class="form-error">
                             {{ form_errors(outingForm.passed) }}
@@ -100,21 +100,21 @@
             {{ form_end(outingForm) }}
         </form>
 
-        <div>
-            <table class="outingTable table-striped table-bordered" style="width:100%">
-                <thead class="titles">
-                <tr>
-                    <th>Nom de la sortie</th>
-                    <th>Date de la sortie</th>
-                    <th>Clôture</th>
-                    <th>Inscrits / Places</th>
-                    <th>Etat</th>
-                    <th>Inscrit</th>
-                    <th>Organisateur</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody class="outingList">
+    <div>
+        <table class="outingTable" table-striped table-bordered style="width:100%">
+            <thead class="titles">
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits / Places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="outingList">
 
                 {# foreach outing #}
                 {% for outing in outings %}
@@ -143,9 +143,11 @@
                                     <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
 
                                     {% if  app.user == outing.organizer %}
-                                        <a title="Modifier">Modifier</a>
-                                        {% if outing.status != "Annulée" %}
-                                            <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
+                                        {% if outing.status.libelle == 'En création' %}
+                                        <a title="Modifier" href="{{ path('outing_update', {idOuting: outing.id}) }}">Modifier</a>
+                                        {% endif %}
+                                        {% if outing.status.libelle != "Annulée" and outing.status.libelle != "Terminée" %}
+                                        <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
                                         {% endif %}
                                     {% endif %}
 

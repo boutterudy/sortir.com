@@ -33,20 +33,29 @@ class OutingController extends AbstractController
         $form->handleRequest($request);
         $subscribed = null;
         $unsubscribed = null;
+        $start = null;
+        $stop = null;
+
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $start = $form['startAt']->getData();
-            $stop = $form['limitSubscriptionDate']->getData();
+            $name = $form['name']->getData();
+            $campus = $form['campus']->getData();
+
+            //TODO -> filter by date
+         //   $start = $form['startAt']->getData();
+         //  $stop = $form['limitSubscriptionDate']->getData();
 
             $organizer = $form['organizer']->getData();
 
-            $subscribed = $form['subscribed']->getData();
-            $unsubscribed = $form['unsubscribed']->getData();
+            //TODO
+         //   $subscribed = $form['subscribed']->getData();
+         //   $unsubscribed = $form['unsubscribed']->getData();
 
             $passed = $form['passed']->getData();
             $user = $userRepository->findOneById($this->getUser()->getId());
-            $outingsList = $outingRepository->outingFilter($user, $organizer, $start, $stop, $passed);
+            $outingsList = $outingRepository->outingFilter($user, $name, $organizer, $campus, $start, $stop, $subscribed, $unsubscribed, $passed);
+
         } else{
             $outingsList = $entityManager->getRepository(Outing::class)->findAll();
         }
@@ -318,6 +327,35 @@ class OutingController extends AbstractController
         return $this->render('outing_update/outing_update.html.twig', [
             'outingUpdateForm' => $outingUpdateForm->createView(),
             'outing' => $outing
+        ]);
+    }
+
+    /**
+     * @Route("/sortie/{id}/publier", name="outing_publish", requirements={"id"="\d+"})
+     */
+    public function publish(int $id,
+                               OutingRepository $outingRepository,
+                               StatusRepository $statusRepository,
+                               EntityManagerInterface $entityManager): Response
+    {
+        $outing = $outingRepository->findFullOuting($id);
+        $organizer = $outing->getOrganizer();
+        $loggedUser = $this->getUser();
+
+        if($organizer !== $loggedUser && !$loggedUser->getIsAdmin()){
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour publier cette sortie!');
+            return $this->redirect($this->generateUrl('accueil'));
+        }
+
+        if($outing->getStatus()->getLibelle() == 'En création'){
+            $statusPublished = $statusRepository->findOneBy(['libelle'=>'Ouverte']);
+            $outing->setStatus($statusPublished);
+            $entityManager->persist($outing);
+            $entityManager->flush();
+            $this->addFlash('success', 'La sortie a bien été publiée !');
+        }
+        return $this->redirectToRoute('outing_details', [
+            'id'=>$id
         ]);
     }
 }

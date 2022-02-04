@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Regex (
+     *     "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+     *     )
      */
     private $password;
 
@@ -167,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     public function getRoles(): array
     {
-        return $this->isAdmin?['ROLE_ADMIN']:['ROLE_USER'];
+        return $this->isAdmin?['ROLE_ADMIN', 'ROLE_USER']:['ROLE_USER'];
     }
 
     /**
