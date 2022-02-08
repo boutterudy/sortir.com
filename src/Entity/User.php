@@ -40,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\Regex (
-     *     "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/"
+     *     "~^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&/*-+])[A-Za-z\d@$!%*?&/*-+]{8,}$~"
      *     )
      */
     private $password;
