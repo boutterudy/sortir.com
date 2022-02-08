@@ -56,6 +56,7 @@ security:
         - { path: '^/admin', roles: ROLE_ADMIN }
         - { path: ^/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/oubli, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reinit, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         # catch all other URLs
         - { path: '^/', roles: ROLE_USER }
