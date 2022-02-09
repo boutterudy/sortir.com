@@ -32,7 +32,8 @@
     height: 72px;
 }
 
-#navbar-links {
+#navbar-links,
+#unregistered-navbar-links{
     display: flex;
     flex-direction: row;
     justify-content: right;
@@ -40,7 +41,8 @@
     list-style: none;
 }
 
-#navbar-right ul li {
+#navbar-right ul li,
+#unregistered-navbar-right ul li{
     margin-right: 16px;
 }
 

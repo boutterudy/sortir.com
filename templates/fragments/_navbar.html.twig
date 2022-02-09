@@ -9,6 +9,13 @@
                     {{ include('fragments/_navbar_links.html.twig') }}
                 </ul>
             </div>
+        {% else %}
+            <div id="unregistered-navbar-right">
+                <ul id="unregistered-navbar-links">
+                    <li><a href="{{ path('login') }}">Se connecter</a></li>
+                    <li><a href="{{ path('app_register') }}">S'inscrire</a></li>
+                </ul>
+            </div>
         {% endif %}
     </div>
     <div id="navbar-mobile">

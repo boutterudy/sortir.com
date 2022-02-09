@@ -78,7 +78,7 @@ class LoginController extends AbstractController
             );
 
             $mailer = new MailerService($mailer);
-            $mailer->sendEmail('mdp.oublie.sortir.com@gmx.fr', $currentUser->getEmail(), 'Votre lien de réinitialisation de mot de passe', 'Vous avez demandé à réinitialiser votre mot de passe sur Sortir.com, voici le lien de réinitialisation : ' . $reinitUrl);
+            $mailer->sendEmail('app-eni-sortir.herokuapp@outlook.fr', $currentUser->getEmail(), 'Votre lien de réinitialisation de mot de passe', 'Vous avez demandé à réinitialiser votre mot de passe sur Sortir.com, voici le lien de réinitialisation : ' . $reinitUrl);
             $this->addFlash('success', 'Un lien de réinitialisation du mot de passe vous a été envoyé ! (Vérifiez votre dossier spam/courrier indésirable)');
             return $this->redirectToRoute('login');
         }

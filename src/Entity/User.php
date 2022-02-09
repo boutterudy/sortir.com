@@ -124,6 +124,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $reset_token;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
     public function __construct()
     {
         $this->organizedOutings = new ArrayCollection();
@@ -457,6 +462,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function setResetToken(?string $reset_token): self
     {
         $this->reset_token = $reset_token;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
