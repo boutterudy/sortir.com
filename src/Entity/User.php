@@ -18,7 +18,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @Vich\Uploadable()
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity("nickName", message="Ce pseudo est déjà pris")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
@@ -74,15 +73,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
 
     /**
      * @ORM\Column(type="boolean")
-     * @Assert\NotNull(message="Merci de préciser si cet utilisateur est administrateur")
      */
-    private $isAdmin;
+    private $isAdmin = false;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Assert\NotNull(message="Merci de préciser si cet utilisateur est actif")
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
      * @var string|null

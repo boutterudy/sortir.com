@@ -31,41 +31,45 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/inscription", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $user->setIsAdmin(false);
-        $user->setIsActive(true);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            $user = $form->getData();
+            $userCheckNickName = $userRepository->findOneBy(['nickName'=>$user->getNickName()]);
+            $userCheckEmail = $userRepository->findOneBy(['email'=>$user->getEmail()]);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $userCheckNickName == null?:$this->addFlash('error', 'Ce pseudo est déjà utilisé !');
+            $userCheckEmail == null?:$this->addFlash('error', 'Cette adresse mail est déjà rattachée à un compte existant !');
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('app-eni-sortir.herokuapp@outlook.fr', 'Support App Eni Sortir.com'))
-                    ->to($user->getEmail())
-                    ->subject('Merci de confirmer votre adresse mail')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-            $this->addFlash('success', 'Veuillez vérifiez vos email pour confirmer la création du compte');
-            return $this->redirectToRoute('login');
-        }elseif ($form->isSubmitted() && !$form->isValid()){
-            $this->addFlash('error', 'Il y a eu un problème lors de la soumission du formulaire');
+            if($userCheckEmail == null && $userCheckNickName == null)
+            {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                // generate a signed url and email it to the user
+                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                    (new TemplatedEmail())
+                        ->from(new Address('app-eni-sortir.herokuapp@outlook.fr', 'Support App Eni Sortir.com'))
+                        ->to($user->getEmail())
+                        ->subject('Merci de confirmer votre adresse mail')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
+                // do anything else you need here, like send an email
+                $this->addFlash('success', 'Veuillez vérifiez vos emails pour confirmer la création du compte');
+                return $this->redirectToRoute('login');
+            }
         }
-
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
