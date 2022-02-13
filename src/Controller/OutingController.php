@@ -12,6 +12,7 @@ use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
 use App\Service\PaginatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,17 +21,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OutingController extends AbstractController
 {
+    private OutingRepository $outingRepo;
     /**
      * @Route("/", name="accueil")
      */
     public function home(
         OutingRepository $outingRepository,
+        ManagerRegistry $managerRegistry,
         UserRepository $userRepository,
         Request $request,
         PaginatorInterface $paginator,
         EntityManagerInterface $entityManager
     ): Response
     {
+        $outingRepo = new OutingRepository($managerRegistry, $entityManager);
         $form = $this->createForm(OutingsFilterType::class);
         $form->handleRequest($request);
         $subscribed = null;
