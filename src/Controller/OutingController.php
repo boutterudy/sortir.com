@@ -21,12 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OutingController extends AbstractController
 {
-    private OutingRepository $outingRepo;
     /**
      * @Route("/", name="accueil")
      */
     public function home(
-        OutingRepository $outingRepository,
         ManagerRegistry $managerRegistry,
         UserRepository $userRepository,
         Request $request,
@@ -34,7 +32,7 @@ class OutingController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
-        $outingRepo = new OutingRepository($managerRegistry, $entityManager);
+        $outingRepository = new OutingRepository($managerRegistry, $entityManager);
         $form = $this->createForm(OutingsFilterType::class);
         $form->handleRequest($request);
         $subscribed = null;
