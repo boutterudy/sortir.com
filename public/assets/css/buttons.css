@@ -1,0 +1,29 @@
+/* Default button style */
+button {
+    padding: 12px 36px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 20px;
+    border: solid 3px var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: 400ms background-color ease, 400ms color ease;
+}
+
+button:hover {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+/* Outline style */
+button.outline {
+    color: var(--primary-color);
+    border: solid 3px var(--primary-color);
+    background-color: white;
+}
+
+button.outline:hover {
+    color: white;
+    background-color: var(--primary-color);
+}

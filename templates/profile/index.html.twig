@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ user.nickName }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/profile.css') }}">
+{% endblock %}
+
+{% block body %}
+    <section id="profile">
+        <h1>{{ user.nickName|capitalize }}</h1>
+        <div id="profile-details">
+            <div id="profile-picture-wrapper">
+                <img src="{{ user.imageFilename ? asset('uploads/profile_pictures/' ~ user.imageFilename) : asset('assets/images/default-profile.svg') }}">
+            </div>
+            <div id="informations-wrapper">
+                <div class="group">
+                    <label>Prénom :</label>
+                    <p>{{ user.firstName }}</p>
+                </div>
+                <div class="group">
+                    <label>Nom :</label>
+                    <p>{{ user.lastName }}</p>
+                </div>
+                <div class="group">
+                    <label>Téléphone :</label>
+                    <p>{{ user.phoneNumber }}</p>
+                </div>
+                <div class="group">
+                    <label>Email :</label>
+                    <p>{{ user.email }}</p>
+                </div>
+                <div class="group">
+                    <label>Campus :</label>
+                    <p>{{ user.campus.name }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="profile-actions">
+        <a href="{{ app.request.headers.get('referer') }}"><button class="outline">Retour</button></a>
+        {% if app.user is same as(user) %}
+        <a href="{{ path('edit_profile', {username: user.nickName}) }}"><button>Modifier</button></a>
+        {% endif %}
+    </div>
+{% endblock %}

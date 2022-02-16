@@ -1,7 +1,10 @@
 vich_uploader:
     db_driver: orm
 
-    #mappings:
-    #    products:
-    #        uri_prefix: /images/products
-    #        upload_destination: '%kernel.project_dir%/public/images/products'
+    mappings:
+        profile_pictures:
+            uri_prefix: '%profile_pictures%'
+            upload_destination: '%kernel.project_dir%/public%profile_pictures%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_update: true
+            delete_on_remove: true

@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | Accueil{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fragments/_paginator.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    <div id="precontent">
+        <div class="group">
+            <label>Date du jour :</label>
+            <p>{{ 'now'|date('d/m/Y') }}</p>
+        </div>
+        <div class="group">
+            <label>Participant :</label>
+            <p>{{ app.user.firstName }} {{ app.user.lastName|slice(0, 1) }}.</p>
+        </div>
+    </div>
+    <div id="main-content">
+        <h3>Filtrer les sorties</h3>
+        <form id="outing-form" method="get">
+            {{ form_start(outingForm) }}
+            <div class="wrapper">
+                <div class="form-left">
+                    <div>
+                        <div class="form-error">
+                            {{ form_errors(outingForm.campus) }}
+                        </div>
+                        <div class="input-wrapper">
+                            <label>{{ form_label(outingForm.campus) }} :</label>
+                            {{ form_widget(outingForm.campus) }}
+                        </div>
+
+                        <div class="form-error">
+                            {{ form_errors(outingForm.name) }}
+                        </div>
+                        <div class="input-wrapper">
+                            <label>{{ form_label(outingForm.name) }} :</label>
+                            {{ form_widget(outingForm.name) }}
+                        </div>
+
+                        {#<div class="form-error">
+                            {{ form_errors(outingForm.startAt) }}
+                        </div>
+                        <div class="input-wrapper">
+                            <label>{{ form_label(outingForm.startAt) }} :</label>
+                            {{ form_widget(outingForm.startAt) }}
+                        </div>
+
+                        <div class="form-error">
+                            {{ form_errors(outingForm.limitSubscriptionDate) }}
+                        </div>
+                        <div class="input-wrapper">
+                            <label>{{ form_label(outingForm.limitSubscriptionDate) }} :</label>
+                            {{ form_widget(outingForm.limitSubscriptionDate) }}
+                        </div>#}
+                    </div>
+                </div>
+                <div class="form-right">
+                    <div>
+                        <div class="form-error">
+                            {{ form_errors(outingForm.organizer) }}
+                        </div>
+                        <div class="checkbox-wrapper">
+                            {{ form_widget(outingForm.organizer) }}
+                            <label>{{ form_label(outingForm.organizer) }}</label>
+                        </div>
+
+                        {#<div class="form-error">
+                            {{ form_errors(outingForm.subscribed) }}
+                        </div>
+                        <div class="checkbox-wrapper">
+                            {{ form_widget(outingForm.subscribed) }}
+                            <label>{{ form_label(outingForm.subscribed) }}</label>
+                        </div>
+
+                        <div class="form-error">
+                            {{ form_errors(outingForm.unsubscribed) }}
+                        </div>
+                        <div class="checkbox-wrapper">
+                            {{ form_widget(outingForm.unsubscribed) }}
+                            <label>{{ form_label(outingForm.unsubscribed) }}</label>
+                        </div>#}
+
+                        <div class="form-error">
+                            {{ form_errors(outingForm.passed) }}
+                        </div>
+                        <div class="checkbox-wrapper">
+                            {{ form_widget(outingForm.passed) }}
+                            <label>{{ form_label(outingForm.passed) }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="search">
+                    <button type="submit" title="search">Rechercher</button>
+                </div>
+            </div>
+            {{ form_end(outingForm) }}
+        </form>
+
+    <div>
+        <table class="outingTable" table-striped table-bordered style="width:100%">
+            <thead class="titles">
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th class="limit-date">Clôture</th>
+                <th class="nb-registered">Inscrits / Places</th>
+                <th>Etat</th>
+                <th class="registered">Inscrit</th>
+                <th class="organizer">Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="outingList">
+
+                {# foreach outing #}
+                {% for outing in outings %}
+                    {% if outing.status.libelle != 'En création' or outing.organizer == app.user %}
+                        {# Take the finding outing's starting date #}
+                        {% set startAt = outing.startAt|date('Y-m-d') %}
+
+                        <tr class="text-center">
+                            <td>{{ outing.name }}</td>
+                            <td class="outingDate">{{ outing.startAt|date('Y-m-d H:i:s') }}</td>
+                            <td class="limit-date">{{ outing.limitSubscriptionDate|date('Y-m-d') }}</td>
+                            <td class="nb-registered">{{ outing.users|length }}/{{ outing.maxUsers }}</td>
+                            <td>
+                                <span title="{{ outing.status.libelle }}">{{ outing.status.libelle }}</span>
+                            </td>
+                            <td class="text-success registered">
+
+                                {% if app.user in outing.users %}
+                                    <a title="inscrit">X</a>
+                                {% endif %}
+                            </td>
+                            <td class="organizer"><a href="{{ path('show_profile', { username: outing.organizer.nickName }) }}">{{ outing.organizer.firstName }} {{ outing.organizer.lastName|slice(0, 1) }}.</a></td>
+
+                            <td id="Action">
+                                <div class="btn-group">
+                                    <a href="{{ path('outing_details', {id: outing.id}) }}" title="Afficher">Afficher</a>
+
+                                    {% if  app.user == outing.organizer %}
+                                        {% if outing.status.libelle == 'En création' %}
+                                        <a title="Modifier" href="{{ path('outing_update', {idOuting: outing.id}) }}">Modifier</a>
+                                        {% endif %}
+                                        {% if outing.status.libelle != "Annulée" and outing.status.libelle != "Terminée" %}
+                                        <a title="Annuler" href="{{ path('outing_cancel', { id: outing.id }) }}">Annuler</a>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if app.user in outing.users and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') %}
+                                        <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
+                                    {% elseif app.user not in outing.users and outing.users|length < outing.maxUsers and outing.limitSubscriptionDate|date('Y-m-d')>"now"|date('Y-m-d') and outing.status == "Ouverte" %}
+                                        <a href="{{ path('subscription', { id: outing.id }) }}" title="S'inscrire">S'inscrire</a>
+                                    {% else %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {# end of foreach outing #}
+                {% else %}
+                    {# If there is no outing #}
+                    <tr class="text-center">
+                        <th class="text-center text-muted" scope="row" colspan="8">Aucun événement trouvé...</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        <div class="d-flex justify-content-center">
+            {% do outings.setPageRange(5) %}
+            {{ knp_pagination_render(outings, 'fragments/_pagination.html.twig') }}
+        </div>
+        </div>
+        <div id="home-actions">
+            <a href="{{ path('outing_creation') }}">
+                <button type="button">Créer une sortie</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

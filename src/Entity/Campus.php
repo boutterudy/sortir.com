@@ -6,6 +6,7 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CampusRepository::class)
@@ -21,13 +22,15 @@ class Campus
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le nom du campus doit être renseigné")
+     *
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="campus")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="campus")
      */
-    private $outlets;
+    private $outings;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="campus")
@@ -36,7 +39,7 @@ class Campus
 
     public function __construct()
     {
-        $this->outlets = new ArrayCollection();
+        $this->outings = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
@@ -58,29 +61,29 @@ class Campus
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOutings(): Collection
     {
-        return $this->outlets;
+        return $this->outings;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->setCampus($this);
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
+        if ($this->outings->removeElement($outing)) {
             // set the owning side to null (unless already changed)
-            if ($outlet->getCampus() === $this) {
-                $outlet->setCampus(null);
+            if ($outing->getCampus() === $this) {
+                $outing->setCampus(null);
             }
         }
 
@@ -115,5 +118,10 @@ class Campus
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

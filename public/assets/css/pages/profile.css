@@ -1,0 +1,46 @@
+#profile-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-picture-wrapper {
+    margin-right: 64px;
+}
+
+#profile-picture-wrapper img {
+    width: 400px;
+    height: auto;
+    border-radius: 20px;
+}
+
+#informations-wrapper .group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+}
+
+#informations-wrapper .group label {
+    min-width: 130px;
+}
+
+#informations-wrapper .group p {
+    font-weight: 500;
+}
+
+#profile-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+}
+
+#profile-actions * {
+    margin-right: 32px;
+}
+
+#profile input {
+    width: 250px;
+}

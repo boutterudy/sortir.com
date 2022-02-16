@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/forms.css') }}">
+{% endblock %}
+{% block body %}
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+    <div class="login-form">
+    <div id="form-top">
+    <h4>La seule information qui ne doit pas être factice est l'adresse email.</h4>
+    <h4>Excepté pour vous envoyer un lien de confirmation ou de réinitialisation du mot de passe, aucune de vos données ne sera utilisée</h4>
+
+    {{ form_start(registrationForm) }}
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.nickName) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.firstName) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.lastName) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.email) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.phoneNumber) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.campus) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Mot de passe : '
+                }) }}
+            </div>
+            <div class="input-wrapper">
+                {{ form_row(registrationForm.agreeTerms, {
+                    label : ' '
+                }) }}
+                <p>J'accepte que mes données soient stockées et que la seule utilisation<br>
+                    qui en soit faite est de permettre mon inscription et la réinitialisation<br>
+                    de mon mot de passe sur ma demande</p>
+            </div>
+            <div class="input-wrapper">
+                <button type="submit" class="btn">Créer un compte</button>
+                {{ form_end(registrationForm) }}
+            </div>
+    </div></div>
+{% endblock %}

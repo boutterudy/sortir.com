@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la sortie {{ outing.name }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/outing_cancel.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% if form is defined %}
+        {{ form_start(form) }}
+        <section id="outing">
+            <h1>Annuler la sortie {{ outing.name|capitalize }}</h1>
+            <div id="outing-details">
+                <div id="informations-wrapper">
+
+                    <div class="group">
+                        <label>Nom de la sortie :</label>
+                        <p>{{ outing.name }}</p>
+                    </div>
+
+                    <div class="group">
+                        <label>Date de la sortie :</label>
+                        <p>{{ outing.startAt|date("m/d/Y") }}</p>
+                    </div>
+
+                    <div class="group">
+                        <label>Campus :</label>
+                        <p>{{ outing.campus.name }}</p>
+                    </div>
+
+                    <div class="group">
+                        <label>Lieu :</label>
+                        <p>{{ outing.place.name }}</p>
+                    </div>
+
+                    <div class="form-error">
+                        {{ form_errors(form.about) }}
+                    </div>
+                    <div id="reason" class="input-wrapper">
+                        <label>Motif :</label>
+                        {{ form_widget(form.about) }}
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <div id="outing-actions">
+            <a href="{{ urlToRedirect }}"><button class="outline" type="button">Retour</button></a>
+            <button type="submit" onclick="return confirm('Cette action est irréversible. Confirmer l\'annulation de cette sortie ?');">Confirmer</button>
+        </div>
+        {{ form_end(form) }}
+    {% else %}
+        <section id="outing">
+            <h1>Annuler la sortie {{ outing.name|capitalize }}</h1>
+
+            {% if outing.status.libelle is same as 'En création' %}
+                {% set error_message = 'Impossible d\'annuler une sortie en création.' %}
+            {% elseif outing.status.libelle is same as 'En cours' %}
+                {% set error_message = 'Impossible d\'annuler une sortie en cours.' %}
+            {% elseif outing.status.libelle is same as 'Terminée' %}
+                {% set error_message = 'Impossible d\'annuler une sortie terminée.' %}
+            {% elseif outing.status.libelle is same as 'Annulée' %}
+                {% set error_message = 'Cette sortie est déjà annulée.' %}
+            {% elseif outing.status.libelle is same as 'Archivée' %}
+                {% set error_message = 'Impossible d\'annuler une sortie archivée.' %}
+            {% else %}
+                {% set error_message = 'Impossible d\'annuler cette sortie.' %}
+            {% endif %}
+
+            <p class="error">{{ error_message }}</p>
+            <div id="outing-actions">
+                <a href="{{ urlToRedirect }}"><button class="outline" type="button">Retour</button></a>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

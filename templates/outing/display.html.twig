@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | {{ outing.name }} {% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/display.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1>Afficher une sortie</h1>
+    <section class="wrapper">
+        <div class="display-left">
+            <div class="group">
+                <label>Nom de la sortie :</label>
+                <p>{{ outing.name }}</p>
+            </div>
+            <div class="group">
+                <label>Date et heure de la sortie :</label>
+                <p>{{ outing.startAt |date('Y-m-d H:i:s') }}</p>
+            </div>
+            <div class="group">
+                <label>Date limite d'inscription :</label>
+                <p>{{ outing.limitSubscriptionDate |date('Y-m-d') }}</p>
+            </div>
+            <div class="group">
+                <label>Nombre de places :</label>
+                <p>{{ outing.maxUsers - outing.users|length }}</p>
+            </div>
+            <div class="group">
+                <label>Durée :</label>
+                <p>{{ outing.duration }} minutes</p>
+            </div>
+            <div class="group">
+                <label>Description et infos :</label>
+                <p>{{ outing.about }}</p>
+            </div>
+        </div>
+        <div class="display-right">
+            <div class="group">
+                <label>Campus :</label>
+                <p>{{ outing.campus }}</p>
+            </div>
+            <div class="group">
+                <label>Lieu :</label>
+                <p>{{ outing.place }}</p>
+            </div>
+            <div class="group">
+                <label>Rue :</label>
+                <p>{{ outing.place.street }}</p>
+            </div>
+            <div class="group">
+                <label>Code postal :</label>
+                <p>{{ outing.place.town.postalCode }}</p>
+            </div>
+            <div class="group">
+                <label>Latitude :</label>
+                <p>{{ outing.place.latitude }}</p>
+            </div>
+            <div class="group">
+                <label>Longitude :</label>
+                <p>{{ outing.place.longitude }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="registered-users">
+        <h2>Liste des participants inscrits :</h2>
+
+        <table class="liste-participant">
+            <thead class="title">
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in outing.users %}
+                    <tr>
+                        {# TODO -> create the list #}
+                        <td><a href="{{ path('show_profile', { username: user.nickName}) }}" target="_blank">{{ user.nickName }}</a></td>
+                        <td><a href="{{ path('show_profile', { username: user.nickName}) }}" target="_blank">{{ user.firstName|capitalize }} {{ user.lastName|upper }}</a></td>
+                    </tr>
+                {% else %}
+                    <p>Personne ne s'est encore inscrit à cette sortie</p>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    {% if app.user and app.user not in outing.users and outing.status.libelle == "Ouverte" %}
+        <a style="font-weight: bold" href="{{ path('subscription', {id: outing.id}) }}">S'inscrire</a>
+    {% elseif app.user and app.user in outing.users %}
+        <a title="Se désister" href="{{ path('outing_unregister', { id: outing.id }) }}">Se désister</a>
+    {% elseif app.user and outing.status.libelle == "Clôturée" %}
+        Nous sommes désolés, cette sortie est clôturée
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+#outing-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#informations-wrapper .group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+}
+
+#informations-wrapper .group label {
+    min-width: 150px;
+}
+
+#informations-wrapper .input-wrapper label {
+    min-width: 140px;
+}
+
+#informations-wrapper .group p {
+    font-weight: 500;
+}
+
+#outing-actions {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 24px;
+}
+
+#reason {
+    align-items: flex-start;
+}
+
+#reason textarea {
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 150px;
+}
+
+#outing .error {
+    text-align: center;
+    font-weight: 700;
+    color: var(--error-color);
+}

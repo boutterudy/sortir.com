@@ -6,13 +6,20 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
+ * @Vich\Uploadable()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -23,75 +30,106 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un pseudo")
      */
     private $nickName;
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Regex (
+     *     "~^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&/*-+])[A-Za-z\d@$!%*?&/*-+]{8,}$~"
+     *     )
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un nom")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'utilisateur doit avoir un prénom")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex (
+     *     "/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/",
+     *     message="Le numéro de téléphone n'est pas valide"
+     *  )
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="L'email saisi est invalide")
      */
     private $email;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isAdmin;
+    private $isAdmin = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
+     * @var string|null
      * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="profile_pictures", fileNameProperty="imageFilename")
      */
     private $imageFile;
 
     /**
-     * @ORM\OneToMany(targetEntity=Outlet::class, mappedBy="organizer")
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer", cascade={"remove"}, orphanRemoval=true)
      */
-    private $organizedOutlets;
+    private $organizedOutings;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Outlet::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="users", cascade={"remove"}, orphanRemoval=true)
      */
-    private $outlets;
+    private $outings;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull(message="Chaque utilisateur doit être rattaché à un campus")
+     * @Assert\Type("App\Entity\Campus", message="Ce campus n'est pas valide")
      */
     private $campus;
 
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
     public function __construct()
     {
-        $this->organizedOutlets = new ArrayCollection();
-        $this->outlets = new ArrayCollection();
+        $this->organizedOutings = new ArrayCollection();
+        $this->outings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,18 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
+        return $this->isAdmin ? ['ROLE_ADMIN', 'ROLE_USER'] : ['ROLE_USER'];
     }
 
     /**
@@ -255,42 +282,73 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImageFile(): ?string
+    /**
+     * @return string|null
+     */
+    public function getImageFilename(): ?string
     {
-        return $this->imageFile;
+        return $this->imageFilename;
     }
 
-    public function setImageFile(?string $imageFile): self
+    /**
+     * @param string|null $imageFilename
+     * @return User
+     */
+    public function setImageFilename(?string $imageFilename): User
     {
-        $this->imageFile = $imageFile;
-
+        $this->imageFilename = $imageFilename;
         return $this;
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return File|null
      */
-    public function getOrganizedOutlets(): Collection
+    public function getImageFile(): ?File
     {
-        return $this->organizedOutlets;
+        return $this->imageFile;
     }
 
-    public function addOrganizedOutlet(Outlet $organizedOutlet): self
+    /**
+     * @param File|null $imageFile
+     * @return User
+     */
+    public function setImageFile(?File $imageFile): User
     {
-        if (!$this->organizedOutlets->contains($organizedOutlet)) {
-            $this->organizedOutlets[] = $organizedOutlet;
-            $organizedOutlet->setOrganizer($this);
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
         }
 
         return $this;
     }
 
-    public function removeOrganizedOutlet(Outlet $organizedOutlet): self
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getOrganizedOutings(): Collection
     {
-        if ($this->organizedOutlets->removeElement($organizedOutlet)) {
+        return $this->organizedOutings;
+    }
+
+    public function addOrganizedOuting(Outing $organizedOuting): self
+    {
+        if (!$this->organizedOutings->contains($organizedOuting)) {
+            $this->organizedOutings[] = $organizedOuting;
+            $organizedOuting->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedOuting(Outing $organizedOuting): self
+    {
+        if ($this->organizedOutings->removeElement($organizedOuting)) {
             // set the owning side to null (unless already changed)
-            if ($organizedOutlet->getOrganizer() === $this) {
-                $organizedOutlet->setOrganizer(null);
+            if ($organizedOuting->getOrganizer() === $this) {
+                $organizedOuting->setOrganizer(null);
             }
         }
 
@@ -298,27 +356,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Outlet[]
+     * @return Collection|Outing[]
      */
-    public function getOutlets(): Collection
+    public function getOutings(): Collection
     {
-        return $this->outlets;
+        return $this->outings;
     }
 
-    public function addOutlet(Outlet $outlet): self
+    public function addOuting(Outing $outing): self
     {
-        if (!$this->outlets->contains($outlet)) {
-            $this->outlets[] = $outlet;
-            $outlet->addUser($this);
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeOutlet(Outlet $outlet): self
+    public function removeOuting(Outing $outing): self
     {
-        if ($this->outlets->removeElement($outlet)) {
-            $outlet->removeUser($this);
+        if ($this->outings->removeElement($outing)) {
+            $outing->removeUser($this);
         }
 
         return $this;
@@ -332,6 +390,87 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getNickName();
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->nickName,
+            $this->password,
+            $this->lastName,
+            $this->firstName,
+            $this->phoneNumber,
+            $this->email,
+            $this->isAdmin,
+            $this->isActive,
+            $this->imageFilename,
+            $this->organizedOutings,
+            $this->outings,
+            $this->campus,
+            $this->updatedAt,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->nickName,
+            $this->password,
+            $this->lastName,
+            $this->firstName,
+            $this->phoneNumber,
+            $this->email,
+            $this->isAdmin,
+            $this->isActive,
+            $this->imageFilename,
+            $this->organizedOutings,
+            $this->outings,
+            $this->campus,
+            $this->updatedAt,
+            ) = unserialize($serialized);
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $reset_token): self
+    {
+        $this->reset_token = $reset_token;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
