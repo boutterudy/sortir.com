@@ -1,5 +1,6 @@
 <?php
 
+
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -58,37 +59,37 @@ final class Version20220202130302 extends AbstractMigration
                     Except outings with states: en création, en cours, terminée and annulée
                     
                     Update state to clôturée */
-                UPDATE outings SET outing_status_id = @cloturee WHERE outing_status_id != @enCreation AND outing_status_id != @enCours AND outing_status_id != @terminee AND outing_status_id != @annulee AND (outing_nb_users = outing_max_users OR CURRENT_TIMESTAMP > outing_limit_subscription_date);
+                UPDATE outings SET outing_status_id = @cloturee WHERE outing_status_id != @enCreation AND outing_status_id != @enCours AND outing_status_id != @terminee AND outing_status_id != @annulee AND (outing_nb_users = outing_max_users OR CURRENT_TIMESTAMP > TIMESTAMP(outing_limit_subscription_date));
             
                 /* 	If outing_nb_users < outing_max_users and date <= outing_limit_subscription_date
                     Except outings with states: en création, en cours, terminée and annulée
                     
                     Update state to ouverte */
-                UPDATE outings SET outing_status_id = @ouverte WHERE outing_status_id != @enCreation AND outing_status_id != @enCours AND outing_status_id != @terminee AND outing_status_id != @annulee AND outing_nb_users < outing_max_users AND CURRENT_TIMESTAMP <= outing_limit_subscription_date;
+                UPDATE outings SET outing_status_id = @ouverte WHERE outing_status_id != @enCreation AND outing_status_id != @enCours AND outing_status_id != @terminee AND outing_status_id != @annulee AND outing_nb_users < outing_max_users AND CURRENT_TIMESTAMP <= TIMESTAMP(outing_limit_subscription_date);
                 
                 /* 	If date >= outing_start_at_date and date < outing_end_date
                     Except outings with states: en création and annulée
                     
                     Update state to en cours */
-                UPDATE outings SET outing_status_id = @enCours WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP >= outing_start_at_date AND CURRENT_TIMESTAMP < outing_end_date;
+                UPDATE outings SET outing_status_id = @enCours WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP >= TIMESTAMP(outing_start_at_date) AND CURRENT_TIMESTAMP < TIMESTAMP(outing_end_date);
             
                 /*	If date > outing_end_date
                     Except outings with states: en création and annulée
             
                     Update state to terminée */
-                UPDATE outings SET outing_status_id = @terminee WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP > outing_end_date;
+                UPDATE outings SET outing_status_id = @terminee WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP > TIMESTAMP(outing_end_date);
             
                 /* 	If date > 1 month after outing_start_at_date
                     Only outings with state: annulée
             
                     Update state to archivée */
-                UPDATE outings SET outing_status_id = @archivee WHERE outing_status_id = @annulee AND CURRENT_TIMESTAMP > DATE_ADD(outing_start_at_date, INTERVAL 1 MONTH);
+                UPDATE outings SET outing_status_id = @archivee WHERE outing_status_id = @annulee AND CURRENT_TIMESTAMP > TIMESTAMP(DATE_ADD(outing_start_at_date, INTERVAL 1 MONTH));
             
                 /*	If date > outing_end_date
                     Except outings with states: en création and annulée
             
                     Update state to archivée */
-                UPDATE outings SET outing_status_id = @archivee WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP > DATE_ADD(outing_end_date, INTERVAL 1 MONTH);
+                UPDATE outings SET outing_status_id = @archivee WHERE outing_status_id != @enCreation AND outing_status_id != @annulee AND CURRENT_TIMESTAMP > TIMESTAMP(DATE_ADD(outing_end_date, INTERVAL 1 MONTH));
             
                 /* Update in database */
                 UPDATE outing
