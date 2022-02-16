@@ -25,14 +25,13 @@ class OutingController extends AbstractController
      * @Route("/", name="accueil")
      */
     public function home(
-        ManagerRegistry $managerRegistry,
         UserRepository $userRepository,
         Request $request,
         PaginatorInterface $paginator,
-        EntityManagerInterface $entityManager
+        OutingRepository $outingRepository
     ): Response
     {
-        $outingRepository = new OutingRepository($managerRegistry, $entityManager);
+        $outingRepository->updateStatuses();
         $form = $this->createForm(OutingsFilterType::class);
         $form->handleRequest($request);
         $subscribed = null;

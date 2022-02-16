@@ -15,12 +15,20 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OutingRepository extends ServiceEntityRepository
 {
+    private ManagerRegistry $registry;
+    private EntityManagerInterface $entityManager;
+
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
-        $connection = $entityManager->getConnection();
+        $this->entityManager = $entityManager;
+        $this->registry = $registry;
+        parent::__construct($this->registry, Outing::class);
+    }
+
+    public function updateStatuses(){
+        $connection = $this->entityManager->getConnection();
         $stmt = $connection->prepare('CALL updateOutingsStatus();');
         $stmt->executeQuery();
-        parent::__construct($registry, Outing::class);
     }
 
     public function findFullOuting($id)
